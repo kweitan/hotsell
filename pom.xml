@@ -24,6 +24,7 @@
         <aspectj.version>1.9.2</aspectj.version>
         <common.codec.version>1.9</common.codec.version>
         <log4j.version>1.2.17</log4j.version>
+        <commons.lang3.version>3.3.2</commons.lang3.version>
     </properties>
 
     <dependencies>
@@ -54,7 +55,6 @@
             </exclusions>
         </dependency>
 
-
         <!-- freemarker -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -76,7 +76,7 @@
             <version>${common.codec.version}</version>
         </dependency>
 
-        <!-- Spring AOP 切面 模块 -->
+        <!-- Spring AOP -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
@@ -126,11 +126,33 @@
             <artifactId>spring-jdbc</artifactId>
         </dependency>
 
+        <!-- log4j -->
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>${log4j.version}</version>
         </dependency>
+
+        <!-- redis -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <!-- junit test -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- commons lang3 StringUtils -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons.lang3.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

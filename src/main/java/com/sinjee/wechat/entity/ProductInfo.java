@@ -11,7 +11,7 @@ import java.math.BigDecimal;
  * 描述 ProductInfo 实体表
  **/
 @Data
-public class ProductInfoEntity extends BaseEntity{
+public class ProductInfo extends BaseEntity{
     //主键
     private Integer productId ;
 

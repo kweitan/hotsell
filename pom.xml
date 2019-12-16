@@ -26,7 +26,7 @@
         <log4j.version>1.2.17</log4j.version>
         <commons.lang3.version>3.3.2</commons.lang3.version>
         <jwt.version>0.9.1</jwt.version>
-        <mybatis.plus>2.1.8</mybatis.plus>
+        <mybatis.plus>3.3.0</mybatis.plus>
     </properties>
 
     <dependencies>
@@ -115,13 +115,6 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
-        <!-- mybatis  -->
-        <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>${mybatis.version}</version>
-        </dependency>
-
         <!-- jdbc connector -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -171,7 +164,7 @@
         <!-- mybatis.plus -->
         <dependency>
             <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus</artifactId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>${mybatis.plus}</version>
         </dependency>
 
@@ -190,7 +183,8 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <includes>
-                    <include>**/*.*</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.yml</include>
                 </includes>
                 <filtering>false</filtering>
             </resource>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinjee.wechat.mapper.ProductCategoryMapper">
+    <resultMap id="BaseResultMap" type="com.sinjee.wechat.entity.ProductCategory">
+        <result column="category_id" jdbcType="INTEGER" property="categoryId" />
+        <result column="category_name" jdbcType="VARCHAR" property="categoryName" />
+        <result column="category_number" jdbcType="VARCHAR" property="categoryNumber" />
+        <result column="enable_flag" jdbcType="INTEGER" property="productStock" />
+        <result column="enable_flag" jdbcType="TINYINT" property="enableFlag" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="creator" jdbcType="VARCHAR" property="creator" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="updater" jdbcType="VARCHAR" property="updater" />
+    </resultMap>
+
+    <!-- 保存商品类目信息 -->
+    <insert id="saveProductCategoryInfo" parameterType="com.sinjee.wechat.entity.ProductCategory">
+      insert into product_category(
+        category_name,
+        category_number,
+        create_time,
+        creator,
+        update_time,
+        updater
+      ) values (
+        #{categoryName},
+        #{categoryNumber},
+        now(),
+        #{creator},
+        now(),
+        #{updater}
+      )
+    </insert>
+
+    <update id="updateProductCategoryInfo" parameterType="com.sinjee.wechat.entity.ProductCategory">
+        update product_category set
+          category_name=#{categoryName},
+          update_time=now(),
+          updater=#{updater}
+        where
+          enable_flag=1 and category_number=#{categoryNumber}
+    </update>
+
+    <update id="invalidProductCategoryInfo" parameterType="java.lang.String">
+        update product_category set
+          enable_flag=0,
+          update_time=now(),
+          updater=#{updater}
+        where
+          enable_flag=1 and category_number=#{categoryNumber}
+    </update>
+    
+    <select id="selectProductCategoryInfoBypage" resultType="com.sinjee.wechat.entity.ProductCategory">
+        select * from product_category
+        where enable_flag=1 ;
+    </select>
+
+</mapper>

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sinjee.wechat.mapper.ProductInfoMapper">
-
-    <resultMap id="BaseResultMap" type="com.sinjee.wechat.entity.ProductInfoEntity">
+    <resultMap id="BaseResultMap" type="com.sinjee.wechat.entity.ProductInfo">
         <result column="product_id" jdbcType="INTEGER" property="productId" />
         <result column="product_name" jdbcType="VARCHAR" property="productName" />
         <result column="product_price" jdbcType="DECIMAL" property="productPrice" />
@@ -24,7 +23,7 @@
     </resultMap>
 
     <!-- 保存商品信息 -->
-    <insert id="saveProductInfo" parameterType="com.sinjee.wechat.entity.ProductInfoEntity">
+    <insert id="saveProductInfo" parameterType="com.sinjee.wechat.entity.ProductInfo">
         insert into product_info (
           product_name,
           product_price,
@@ -65,8 +64,55 @@
       update product_info set enable_flag=0 where product_id = #{productId}
     </delete>
 
-    <select id="selectProductInfosByPage" resultType="com.sinjee.wechat.entity.ProductInfoEntity">
-      select * from product_info where product_status=#{status} and enable_flag=1
+    <select id="selectProductInfosByPage" resultType="com.sinjee.wechat.entity.ProductInfo">
+      select
+          *
+      from product_info ${ew.customSqlSegment}
     </select>
+
+    <select id="selectProductInfosByProductStatus" resultType="com.sinjee.wechat.entity.ProductInfo">
+      select
+          *
+      from product_info where enable_flag=1 and product_status=#{status}
+    </select>
+
+    <update id="updateProductInfo" parameterType="com.sinjee.wechat.entity.ProductInfo">
+        update product_info set
+          product_name=#{productName},
+          product_price=#{productPrice},
+          product_stock=#{productStock},
+          product_description=#{productDescription},
+          product_icon=#{productIcon},
+          product_standard=#{productStandard},
+          product_tips=#{productTips},
+          product_labels=#{productLabels},
+          product_unit=#{productUnit},
+          product_number=#{productNumber},
+          category_number=#{categoryNumber},
+          update_time=now(),
+          updater=#{updater}
+        where
+          product_id=#{productId} and enable_flag=1
+    </update>
+
+    <select id="selectProductInfoEntityById" parameterType="java.lang.Integer">
+        select * from product_info where product_id=#{productId} and enable_flag=1
+    </select>
+
+    <select id="selecttProductInfoEntityByProductNumber" parameterType="java.lang.String">
+        select * from product_info where product_number=#{productNumber} and enable_flag=1
+    </select>
+
+    <update id="onProductInfo" parameterType="java.lang.Integer">
+        update product_info set
+          product_status=1
+        WHERE product_id=#{productId} and enable_flag=1 and product_status=0
+    </update>
+
+    <update id="offProductInfo" parameterType="java.lang.Integer">
+        update product_info set
+          product_status=0
+        WHERE product_id=#{productId} and enable_flag=1 and product_status=1
+    </update>
 
 </mapper>

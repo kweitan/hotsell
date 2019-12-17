@@ -73,7 +73,8 @@
     <select id="selectProductInfosByProductStatus" resultType="com.sinjee.wechat.entity.ProductInfo">
       select
           *
-      from product_info where enable_flag=1 and product_status=#{status}
+      from product_info
+      where enable_flag=1 and product_status=#{status}
     </select>
 
     <update id="updateProductInfo" parameterType="com.sinjee.wechat.entity.ProductInfo">

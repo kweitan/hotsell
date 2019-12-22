@@ -1,56 +1,63 @@
-package com.sinjee.wechat.dto;
+package com.sinjee.vo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
 
 /**
- * @author 小小极客
- * 时间 2019/12/15 16:32
- * @ClassName ProductInfoDTO
- * 描述 商品信息 DTO
- **/
+ * 创建时间 2019 - 12 -22
+ *
+ * @author kweitan
+ */
 @Data
-public class ProductInfoDTO extends BaseDTO{
-
-    //主键
-    private Integer productId ;
+public class ProductInfoVO {
 
     //商品名称
+    @JsonProperty("goodName")
     private String productName ;
 
     //商品价格
+    @JsonProperty("goodPrice")
     private BigDecimal productPrice ;
 
     //商品库存
+    @JsonProperty("goodStock")
     private Integer productStock ;
 
     //商品描述
+    @JsonProperty("goodDescription")
     private String productDescription;
 
     //商品图标
+    @JsonProperty("goodIcon")
     private String productIcon ;
 
     //商品规格
+    @JsonProperty("goodStandard")
     private String productStandard ;
 
     //商品提示 比如[热销 活动 爆销 优惠]
+    @JsonProperty("goodTips")
     private String productTips ;
 
     //商品标签
+    @JsonProperty("goodLabels")
     private String productLabels ;
 
     //商品单位
+    @JsonProperty("goodUnit")
     private String productUnit ;
 
     //商品编码
+    @JsonProperty("goodNumber")
     private String productNumber ;
 
-    //商品状态
-    private String productStatus ;
-
     //类目编码
+    @JsonProperty("goodCategoryNumber")
     private String categoryNumber ;
 
-    private Integer hashNumber ;
+    @JsonProperty("goodHashNumber")
+    private String hashNumber ;
+
 }

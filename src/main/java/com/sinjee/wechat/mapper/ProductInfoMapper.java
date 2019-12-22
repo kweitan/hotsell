@@ -49,6 +49,7 @@ public interface ProductInfoMapper extends BaseMapper<ProductInfo> {
             IPage<ProductInfo> page, @Param(Constants.WRAPPER) Wrapper<ProductInfo> queryWrapper);
 
 
+    //自定义分页
     IPage<ProductInfo> selectProductInfosByProductStatus(
             IPage<ProductInfo> page, @Param("status") Integer status);
 }

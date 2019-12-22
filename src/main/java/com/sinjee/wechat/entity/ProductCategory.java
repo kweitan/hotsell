@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * @author 小小极客
  * 时间 2019/12/16 23:36
- * @ClassName ProductCategory
+ * @ClassName ProductCategoryService
  * 描述 商品类目表
  **/
 @Data

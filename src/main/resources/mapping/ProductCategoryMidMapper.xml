@@ -13,7 +13,7 @@
     </resultMap>
 
     <!-- 保存商品类目中间表信息 -->
-    <insert id="saveProductCategoryMid" parameterType="com.sinjee.wechat.entity.ProductCategoryMid">
+    <insert id="saveProductCategoryMidInfo" parameterType="com.sinjee.wechat.entity.ProductCategoryMid">
       insert into product_category_mid (
         product_number,
         category_number,
@@ -31,7 +31,7 @@
       )
     </insert>
 
-    <update id="updateProductCategoryMid" parameterType="com.sinjee.wechat.entity.ProductCategoryMid">
+    <update id="updateProductCategoryMidInfo" parameterType="com.sinjee.wechat.entity.ProductCategoryMid">
         update product_category_mid set
           product_number=#{productNumber},
           category_number=#{categoryNumber},
@@ -41,7 +41,7 @@
           enable_flag=1 and product_category_mid=#{productCategoryMidId}
     </update>
 
-    <update id="invalidProductCategoryMid" parameterType="java.lang.Integer">
+    <update id="invalidProductCategoryMidInfo" parameterType="java.lang.Integer">
         update product_category_mid set
           enable_flag=0,
           update_time=now(),
@@ -50,7 +50,7 @@
           enable_flag=1 and product_category_mid=#{productCategoryMidId}
     </update>
 
-    <select id="selectProductCategoryMidByPage" resultType="com.sinjee.wechat.entity.ProductCategoryMid">
+    <select id="selectProductCategoryMidInfoBypage" resultType="com.sinjee.wechat.entity.ProductCategoryMid">
         select * from product_category_mid
         where enable_flag=1 ;
     </select>

@@ -101,3 +101,6 @@ mybatis-plus:
   mapper-locations: classpath:mapping/*Mapper.xml
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+myWechat:
+  salt: ueowijjsu932u9ajf3973jnvnnajbowurljwnfvf2q3iuo2jskjk

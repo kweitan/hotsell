@@ -49,9 +49,8 @@
           enable_flag=1 and category_number=#{categoryNumber}
     </update>
     
-    <select id="selectProductCategoryInfoBypage" resultType="com.sinjee.wechat.entity.ProductCategory">
+    <select id="selectProductCategoryInfoByPage" resultType="com.sinjee.wechat.entity.ProductCategory">
         select * from product_category
-        where enable_flag=1 ;
     </select>
 
 </mapper>

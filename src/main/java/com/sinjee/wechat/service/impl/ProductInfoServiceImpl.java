@@ -40,7 +40,6 @@ public class ProductInfoServiceImpl implements ProductInfoService {
         log.info("总页数"+mapPage.getPages());
         log.info("总记录数"+mapPage.getTotal());
         List<ProductInfo> productInfoEntityList = mapPage.getRecords() ;
-//        productInfoEntityList.forEach(System.out::println);
         List<ProductInfoDTO> productInfoDTOList = BeanConversionUtils.CopyToAnotherList(ProductInfoDTO.class,productInfoEntityList);
 
         Page<ProductInfoDTO> productInfoDTOPage = new Page<>(currentPage,pageSize) ;

@@ -1,9 +1,10 @@
 package com.sinjee.wechat.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.sinjee.wechat.entity.ProductCategory;
-import com.sinjee.wechat.entity.ProductInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -24,7 +25,6 @@ public interface ProductCategoryMapper extends BaseMapper<ProductCategory> {
     Integer invalidProductCategoryInfo(String categoryNumber);
 
     /**分页查找类目信息**/
-    IPage<ProductCategory> selectProductCategoryInfoBypage(
-            IPage<ProductCategory> page);
+    IPage<ProductCategory> selectProductCategoryInfoByPage(IPage<ProductCategory> page, @Param(Constants.WRAPPER) Wrapper<ProductCategory> queryWrapper);
 
 }

@@ -40,7 +40,7 @@ public class ProductInfoController {
     public ResultVO getProductInfosByPage(@RequestParam(value = "currentPage", defaultValue = "0")
                                                       Integer currentPage){
 
-        Integer productStatus = 1 ; //1-表示已上架
+        Integer productStatus = 0 ; //1-表示已上架
         Integer pageSize = 6 ; //默认最大页数是6
 
         //最大到1000页
@@ -56,13 +56,16 @@ public class ProductInfoController {
         List<ProductInfoDTO> productInfoDTOList = page.getRecords() ;
         List<ProductInfoVO> productInfoVOList = new ArrayList<>() ;
         //遍历放到productInfoVOList中
-        productInfoDTOList.stream().forEach(productInfoDTO -> {
-            //根据商品编码生成唯一HASH编码
-            String hashNumber = HashUtil.sign(productInfoDTO.getProductNumber(),salt);
-            ProductInfoVO productInfoVO = new ProductInfoVO() ;
-            CacheBeanCopier.copy(productInfoDTO,productInfoVO);
-            productInfoVO.setHashNumber(hashNumber);
-        });
+        if(null != productInfoDTOList && productInfoDTOList.size()>0){
+            productInfoDTOList.stream().forEach(productInfoDTO -> {
+                //根据商品编码生成唯一HASH编码
+                String hashNumber = HashUtil.sign(productInfoDTO.getProductNumber(),salt);
+                ProductInfoVO productInfoVO = new ProductInfoVO() ;
+                CacheBeanCopier.copy(productInfoDTO,productInfoVO);
+                productInfoVO.setHashNumber(hashNumber);
+                productInfoVOList.add(productInfoVO);
+            });
+        }
 
         //返回前端
         ResultVO resultVO = new ResultVO();

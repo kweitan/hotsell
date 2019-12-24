@@ -37,7 +37,7 @@ public class ProductInfoController {
      * @return
      */
     @GetMapping("/getProductInfosByPage")
-    public ResultVO getProductInfosByPage(@RequestParam(value = "currentPage", defaultValue = "0")
+    public ResultVO getProductInfosByPage(@RequestParam(value = "currentPage", defaultValue = "1")
                                                       Integer currentPage){
 
         Integer productStatus = 0 ; //1-表示已上架

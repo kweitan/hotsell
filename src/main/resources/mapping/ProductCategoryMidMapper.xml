@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.sinjee.wechat.mapper.ProductCategoryMidMapper">
-    <resultMap id="BaseResultMap" type="com.sinjee.wechat.entity.ProductCategoryMid">
+<mapper namespace="com.sinjee.admin.mapper.ProductCategoryMidMapper">
+    <resultMap id="BaseResultMap" type="com.sinjee.admin.entity.ProductCategoryMid">
         <result column="product_category_mid_id" jdbcType="INTEGER" property="productCategoryMidId" />
         <result column="product_number" jdbcType="VARCHAR" property="productNumber" />
         <result column="category_number" jdbcType="VARCHAR" property="categoryNumber" />
@@ -13,7 +13,7 @@
     </resultMap>
 
     <!-- 保存商品类目中间表信息 -->
-    <insert id="saveProductCategoryMidInfo" parameterType="com.sinjee.wechat.entity.ProductCategoryMid">
+    <insert id="saveProductCategoryMidInfo" parameterType="com.sinjee.admin.entity.ProductCategoryMid">
       insert into product_category_mid (
         product_number,
         category_number,
@@ -31,7 +31,7 @@
       )
     </insert>
 
-    <update id="updateProductCategoryMidInfo" parameterType="com.sinjee.wechat.entity.ProductCategoryMid">
+    <update id="updateProductCategoryMidInfo" parameterType="com.sinjee.admin.entity.ProductCategoryMid">
         update product_category_mid set
           product_number=#{productNumber},
           category_number=#{categoryNumber},
@@ -50,7 +50,7 @@
           enable_flag=1 and product_category_mid=#{productCategoryMidId}
     </update>
 
-    <select id="selectProductCategoryMidInfoBypage" resultType="com.sinjee.wechat.entity.ProductCategoryMid">
+    <select id="selectProductCategoryMidInfoBypage" resultType="com.sinjee.admin.entity.ProductCategoryMid">
         select * from product_category_mid
         where enable_flag=1 ;
     </select>

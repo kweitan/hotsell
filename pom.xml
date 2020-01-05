@@ -27,6 +27,7 @@
         <commons.lang3.version>3.3.2</commons.lang3.version>
         <jwt.version>0.9.1</jwt.version>
         <mybatis.plus>3.3.0</mybatis.plus>
+        <wechat.pay.version>3.6.0</wechat.pay.version>
     </properties>
 
     <dependencies>
@@ -160,6 +161,13 @@
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>${mybatis.plus}</version>
+        </dependency>
+
+        <!-- https://github.com/wechat-group/WxJava -->
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-miniapp</artifactId>
+            <version>${wechat.pay.version}</version>
         </dependency>
 
     </dependencies>

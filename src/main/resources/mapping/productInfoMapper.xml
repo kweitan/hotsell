@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.sinjee.wechat.mapper.ProductInfoMapper">
-    <resultMap id="BaseResultMap" type="com.sinjee.wechat.entity.ProductInfo">
+<mapper namespace="com.sinjee.admin.mapper.ProductInfoMapper">
+    <resultMap id="BaseResultMap" type="com.sinjee.admin.entity.ProductInfo">
         <result column="product_id" jdbcType="INTEGER" property="productId" />
         <result column="product_name" jdbcType="VARCHAR" property="productName" />
         <result column="product_price" jdbcType="DECIMAL" property="productPrice" />
@@ -23,7 +23,7 @@
     </resultMap>
 
     <!-- 保存商品信息 -->
-    <insert id="saveProductInfo" parameterType="com.sinjee.wechat.entity.ProductInfo">
+    <insert id="saveProductInfo" parameterType="com.sinjee.admin.entity.ProductInfo">
         insert into product_info (
           product_name,
           product_price,
@@ -64,20 +64,20 @@
       update product_info set enable_flag=0 where product_id = #{productId}
     </delete>
 
-    <select id="selectProductInfosByPage" resultType="com.sinjee.wechat.entity.ProductInfo">
+    <select id="selectProductInfosByPage" resultType="com.sinjee.admin.entity.ProductInfo">
       select
           *
       from product_info ${ew.customSqlSegment}
     </select>
 
-    <select id="selectProductInfosByProductStatus" resultType="com.sinjee.wechat.entity.ProductInfo">
+    <select id="selectProductInfosByProductStatus" resultType="com.sinjee.admin.entity.ProductInfo">
       select
           *
       from product_info
       where enable_flag=1 and product_status=#{status}
     </select>
 
-    <update id="updateProductInfo" parameterType="com.sinjee.wechat.entity.ProductInfo">
+    <update id="updateProductInfo" parameterType="com.sinjee.admin.entity.ProductInfo">
         update product_info set
           product_name=#{productName},
           product_price=#{productPrice},

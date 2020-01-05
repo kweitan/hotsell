@@ -1,8 +1,8 @@
 package com.sinjee.wechat.service.impl;
 
+import com.sinjee.admin.dto.ProductInfoDTO;
+import com.sinjee.admin.service.ProductInfoService;
 import com.sinjee.common.IdUtil;
-import com.sinjee.wechat.dto.ProductInfoDTO;
-import com.sinjee.wechat.service.ProductInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;

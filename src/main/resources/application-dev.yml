@@ -1,5 +1,9 @@
 ### 开发环境
 spring:
+  mvc:
+    static-path-pattern: /**
+  resources:
+    static-locations: classpath:/static/,classpath:/templates/
   # 配制freemarker
   freemarker:
     suffix: .ftl
@@ -104,3 +108,5 @@ mybatis-plus:
 
 myWechat:
   salt: ueowijjsu932u9ajf3973jnvnnajbowurljwnfvf2q3iuo2jskjk
+
+

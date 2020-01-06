@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinjee.wechat.mapper.BuyerReviewMapper">
+    <resultMap id="BaseResultMap" type="com.sinjee.wechat.entity.BuyerReview">
+        <result column="buyer_review_id" jdbcType="INTEGER" property="buyerReviewId" />
+        <result column="buyer_review_level" jdbcType="VARCHAR" property="buyerReviewLevel" />
+        <result column="buyer_review_product" jdbcType="VARCHAR" property="buyerReviewProduct" />
+        <result column="order_number" jdbcType="VARCHAR" property="orderNumber" />
+        <result column="open_id" jdbcType="VARCHAR" property="openId" />
+        <result column="buyer_review_content" jdbcType="VARCHAR" property="buyerReviewContent" />
+        <result column="enable_flag" jdbcType="TINYINT" property="enableFlag" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="creator" jdbcType="VARCHAR" property="creator" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="updater" jdbcType="VARCHAR" property="updater" />
+    </resultMap>
+
+
+</mapper>

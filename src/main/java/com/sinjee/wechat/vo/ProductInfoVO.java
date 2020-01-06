@@ -1,4 +1,4 @@
-package com.sinjee.vo;
+package com.sinjee.wechat.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 /**
  * 创建时间 2019 - 12 -22
- *
+ * 商品信息表
  * @author kweitan
  */
 @Data

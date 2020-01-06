@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinjee.admin.mapper.ProductDetailInfoMapper">
+    <resultMap id="BaseResultMap" type="com.sinjee.admin.entity.ProductDetailInfo">
+        <result column="product_detail_id" jdbcType="INTEGER" property="productDetailId" />
+        <result column="product_number" jdbcType="VARCHAR" property="productNumber" />
+        <result column="product_detail_icon" jdbcType="VARCHAR" property="productDetailIcon" />
+        <result column="product_detail_field" jdbcType="VARCHAR" property="productDetailField" />
+        <result column="product_detail_description" jdbcType="TEXT" property="productDetailDescription" />
+        <result column="enable_flag" jdbcType="TINYINT" property="enableFlag" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="creator" jdbcType="VARCHAR" property="creator" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="updater" jdbcType="VARCHAR" property="updater" />
+    </resultMap>
+
+
+</mapper>

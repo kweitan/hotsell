@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinjee.wechat.mapper.BuyerInfoMapper">
+    <resultMap id="BaseResultMap" type="com.sinjee.wechat.entity.BuyerInfo">
+        <result column="buyer_id" jdbcType="INTEGER" property="buyerId" />
+        <result column="buyer_name" jdbcType="VARCHAR" property="buyerName" />
+        <result column="buyer_password" jdbcType="VARCHAR" property="buyerPassword" />
+        <result column="buyer_icon" jdbcType="VARCHAR" property="buyerIcon" />
+        <result column="open_id" jdbcType="VARCHAR" property="openId" />
+        <result column="enable_flag" jdbcType="TINYINT" property="enableFlag" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="creator" jdbcType="VARCHAR" property="creator" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="updater" jdbcType="VARCHAR" property="updater" />
+    </resultMap>
+
+
+</mapper>

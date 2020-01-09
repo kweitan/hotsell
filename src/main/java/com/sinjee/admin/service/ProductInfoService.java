@@ -16,4 +16,8 @@ public interface ProductInfoService {
     int saveProductInfo(ProductInfoDTO productInfoDTO);
 
     /****/
+
+
+    /** 小程序端**/
+
 }

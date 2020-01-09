@@ -21,6 +21,9 @@ public class ResultVO<T> implements Serializable {
     /** 当前页 **/
     private Integer currentPage ;
 
+    /** 页大小 **/
+    private Integer pageSize ;
+
     /** 具体内容. */
     private T data;
 }

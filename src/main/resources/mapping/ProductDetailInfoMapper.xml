@@ -6,7 +6,7 @@
         <result column="product_number" jdbcType="VARCHAR" property="productNumber" />
         <result column="product_detail_icon" jdbcType="VARCHAR" property="productDetailIcon" />
         <result column="product_detail_field" jdbcType="VARCHAR" property="productDetailField" />
-        <result column="product_detail_description" jdbcType="TEXT" property="productDetailDescription" />
+        <result column="product_detail_description" jdbcType="LONGVARCHAR" property="productDetailDescription" />
         <result column="enable_flag" jdbcType="TINYINT" property="enableFlag" />
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
         <result column="creator" jdbcType="VARCHAR" property="creator" />

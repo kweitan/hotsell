@@ -14,39 +14,51 @@ import java.math.BigDecimal;
 @Data
 public class ProductInfoVO {
 
-    /** 商品ID **/
-    @JsonProperty("id")
-    private String productId;
+    //商品名称
+    @JsonProperty("goodName")
+    private String productName ;
 
-    /** 商品名称 **/
-    @JsonProperty("name")
-    private String productName;
+    //商品价格
+    @JsonProperty("goodPrice")
+    private BigDecimal productPrice ;
 
-    /** 商品价格 **/
-    @JsonProperty("price")
-    private BigDecimal productPrice;
+    //商品库存
+    @JsonProperty("goodStock")
+    private Integer productStock ;
 
-    /** 商品描述 **/
-    @JsonProperty("description")
+    //商品描述
+    @JsonProperty("goodDescription")
     private String productDescription;
 
-    /** 商品图标 **/
-    @JsonProperty("icon")
-    private String productIcon;
+    //商品图标
+    @JsonProperty("goodIcon")
+    private String productIcon ;
 
-    /** 商品单元 **/
-    @JsonProperty("unit")
-    private String productUnit;
+    //商品规格
+    @JsonProperty("goodStandard")
+    private String productStandard ;
 
-    /** 商品标签 **/
-    @JsonProperty("labels")
-    private String productLabels;
+    //商品提示 比如[热销 活动 爆销 优惠]
+    @JsonProperty("goodTips")
+    private String productTips ;
 
-    /** 商品规格 **/
-    @JsonProperty("standard")
-    private String productStandard;
+    //商品标签
+    @JsonProperty("goodLabels")
+    private String productLabels ;
 
-    /** 商品提示 **/
-    @JsonProperty("tips")
-    private String productTips;
+    //商品单位
+    @JsonProperty("goodUnit")
+    private String productUnit ;
+
+    //商品编码
+    @JsonProperty("goodNumber")
+    private String productNumber ;
+
+    //类目编码
+    @JsonProperty("goodCategoryNumber")
+    private String categoryNumber ;
+
+    /** 哈希编码 **/
+    @JsonProperty("goodHashNumber")
+    private String hashNumber ;
 }

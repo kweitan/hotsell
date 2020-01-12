@@ -9,10 +9,7 @@ import com.sinjee.vo.ResultVO;
 import com.sinjee.wechat.vo.ProductInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +29,7 @@ public class WechatProductController {
     @Value("${myWechat.salt}")
     private String salt ;
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/list")
     public ResultVO list(@RequestParam(value = "currentPage", defaultValue = "1")
                                      Integer currentPage,
@@ -47,7 +45,7 @@ public class WechatProductController {
         }
 
         //2.查询数据
-        Integer productStatus = 1 ; //1-表示已上架
+        Integer productStatus = 0 ; //1-表示已上架 0-表示下架
 
         IPage<ProductInfoDTO> page = productInfoService.selectProductInfosByPage(currentPage,pageSize,productStatus);
 
@@ -70,8 +68,10 @@ public class WechatProductController {
         ResultVO resultVO = new ResultVO();
         resultVO.setData(productInfoVOList);
         resultVO.setCurrentPage(currentPage);
+        resultVO.setTotalSize(page.getTotal());
         resultVO.setCode(0);
         resultVO.setMessage("成功");
+
         return resultVO;
     }
 }

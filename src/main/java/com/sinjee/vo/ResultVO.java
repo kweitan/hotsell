@@ -22,7 +22,7 @@ public class ResultVO<T> implements Serializable {
     private Integer currentPage ;
 
     /** 页大小 **/
-    private Integer pageSize ;
+    private Long totalSize ;
 
     /** 具体内容. */
     private T data;

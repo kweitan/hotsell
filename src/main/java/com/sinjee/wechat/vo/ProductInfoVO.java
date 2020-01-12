@@ -3,6 +3,7 @@ package com.sinjee.wechat.vo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -11,7 +12,7 @@ import java.math.BigDecimal;
  * @author kweitan
  */
 @Data
-public class ProductInfoVO {
+public class ProductInfoVO implements Serializable {
 
     //商品名称
     @JsonProperty("goodName")
@@ -57,6 +58,7 @@ public class ProductInfoVO {
     @JsonProperty("goodCategoryNumber")
     private String categoryNumber ;
 
+    /** 哈希编码 **/
     @JsonProperty("goodHashNumber")
     private String hashNumber ;
 

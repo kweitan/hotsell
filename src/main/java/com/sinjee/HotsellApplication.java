@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan("com.sinjee.admin.mapper")
+@MapperScan("com.sinjee.*.mapper")
 public class HotsellApplication {
 
     public static void main(String[] args) {

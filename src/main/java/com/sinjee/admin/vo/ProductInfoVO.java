@@ -3,6 +3,7 @@ package com.sinjee.admin.vo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -12,7 +13,7 @@ import java.math.BigDecimal;
  * 描述 商品信息
  **/
 @Data
-public class ProductInfoVO {
+public class ProductInfoVO extends BaseVO implements Serializable {
 
     //商品名称
     @JsonProperty("goodName")

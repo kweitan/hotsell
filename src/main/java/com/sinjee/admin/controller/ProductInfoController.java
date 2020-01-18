@@ -3,16 +3,13 @@ package com.sinjee.admin.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sinjee.admin.dto.ProductInfoDTO;
 import com.sinjee.admin.service.ProductInfoService;
+import com.sinjee.admin.vo.ProductInfoVO;
 import com.sinjee.common.CacheBeanCopier;
 import com.sinjee.common.HashUtil;
 import com.sinjee.vo.ResultVO;
-import com.sinjee.wechat.vo.ProductInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,25 +29,26 @@ public class ProductInfoController {
     @Value("${myWechat.salt}")
     private String salt ;
 
-    /***
-     * 微信小程序前端获取 商品信息列表
-     * @return
-     */
-    @GetMapping("/getProductInfosByPage")
-    public ResultVO getProductInfosByPage(@RequestParam(value = "currentPage", defaultValue = "1")
-                                                      Integer currentPage){
 
-        Integer productStatus = 0 ; //1-表示已上架
-        Integer pageSize = 6 ; //默认最大页数是6
-
-        //最大到1000页
-        if (currentPage > 1000){
-            currentPage = 1000 ;
+    @CrossOrigin(origins = "*")
+    @GetMapping("/list")
+    public ResultVO list(@RequestParam(value = "currentPage", defaultValue = "1")
+                                 Integer currentPage,
+                         @RequestParam(value = "pageSize", defaultValue = "8")
+                                 Integer pageSize){
+        //1.加载页数不超过20页
+        if (currentPage > 20){
+            currentPage = 20 ;
         }
 
-        //分页获取上架的商品
-        IPage<ProductInfoDTO> page = productInfoService.selectProductInfosByPage
-                (currentPage,pageSize,productStatus) ;
+        if(pageSize > 10){
+            pageSize = 10 ;
+        }
+
+        //2.查询数据
+        Integer productStatus = 0 ; //1-表示已上架 0-表示下架
+
+        IPage<ProductInfoDTO> page = productInfoService.selectProductInfosByPage(currentPage,pageSize,productStatus);
 
         //从分页中获取List
         List<ProductInfoDTO> productInfoDTOList = page.getRecords() ;
@@ -71,10 +69,11 @@ public class ProductInfoController {
         ResultVO resultVO = new ResultVO();
         resultVO.setData(productInfoVOList);
         resultVO.setCurrentPage(currentPage);
+        resultVO.setTotalSize(page.getTotal());
         resultVO.setCode(0);
         resultVO.setMessage("成功");
-        return resultVO;
 
+        return resultVO;
     }
 
     /**根据商品编号获取商品详细信息**/

@@ -21,4 +21,6 @@ public interface ProductCategoryService {
             Integer currentPage, Integer pageSize);
 
     List<ProductCategoryDTO> getAllProductCategoryDTOList();
+
+
 }

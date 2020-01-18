@@ -39,6 +39,7 @@ public class ProductCategoryMidServiceImpl implements ProductCategoryMidService 
     public Integer updateProductCategoryMidInfo(ProductCategoryMidDTO productCategoryMidDTO) {
         ProductCategoryMid productCategoryMid = new ProductCategoryMid();
         CacheBeanCopier.copy(productCategoryMidDTO,productCategoryMid);
+
         return productCategoryMidMapper.updateProductCategoryMidInfo(productCategoryMid);
     }
 

@@ -69,7 +69,11 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     }
 
     public List<ProductCategoryDTO> getAllProductCategoryDTOList(){
-        List<ProductCategory> productCategoryList = productCategoryMapper.selectList(null) ;
+        QueryWrapper<ProductCategory> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1);
+
+        List<ProductCategory> productCategoryList = productCategoryMapper.selectList(wrapper) ;
+
         List<ProductCategoryDTO> productCategoryDTOList = BeanConversionUtils.CopyToAnotherList(ProductCategoryDTO.class,productCategoryList);
         return productCategoryDTOList ;
     }

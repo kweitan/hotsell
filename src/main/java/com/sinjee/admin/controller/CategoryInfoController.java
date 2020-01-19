@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sinjee.admin.dto.ProductCategoryDTO;
 import com.sinjee.admin.form.DeleteAllProductForm;
 import com.sinjee.admin.form.ProductCategoryForm;
-import com.sinjee.admin.service.ProductCategoryMidService;
 import com.sinjee.admin.service.ProductCategoryService;
 import com.sinjee.admin.vo.ProductCategoryVO;
 import com.sinjee.common.CacheBeanCopier;

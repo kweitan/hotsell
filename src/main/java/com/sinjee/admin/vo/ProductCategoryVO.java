@@ -15,14 +15,15 @@ import java.util.List;
 @Data
 public class ProductCategoryVO extends BaseVO implements Serializable {
 
-    @JsonProperty("id")
-    private Integer categoryId ;
-
     @JsonProperty("categoryName")
     private String categoryName;
 
     @JsonProperty("categoryNumber")
     private String categoryNumber ;
+
+    /**0-未上架 1-上架*/
+    @JsonProperty("categoryStatus")
+    private Integer categoryStatus ;
 
     /** 哈希编码 **/
     @JsonProperty("goodHashNumber")

@@ -5,6 +5,7 @@
         <result column="category_id" jdbcType="INTEGER" property="categoryId" />
         <result column="category_name" jdbcType="VARCHAR" property="categoryName" />
         <result column="category_number" jdbcType="VARCHAR" property="categoryNumber" />
+        <result column="category_status" jdbcType="TINYINT" property="categoryStatus" />
         <result column="enable_flag" jdbcType="TINYINT" property="enableFlag" />
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
         <result column="creator" jdbcType="VARCHAR" property="creator" />
@@ -17,6 +18,7 @@
       insert into product_category(
         category_name,
         category_number,
+        category_status,
         create_time,
         creator,
         update_time,
@@ -24,6 +26,7 @@
       ) values (
         #{categoryName},
         #{categoryNumber},
+        #{categoryStatus},
         now(),
         #{creator},
         now(),
@@ -34,6 +37,7 @@
     <update id="updateProductCategoryInfo" parameterType="com.sinjee.admin.entity.ProductCategory">
         update product_category set
           category_name=#{categoryName},
+          category_status=#{categoryStatus},
           update_time=now(),
           updater=#{updater}
         where

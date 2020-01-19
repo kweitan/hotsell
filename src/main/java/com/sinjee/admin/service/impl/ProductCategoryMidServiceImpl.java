@@ -66,4 +66,57 @@ public class ProductCategoryMidServiceImpl implements ProductCategoryMidService 
         productCategoryMidDTOPage.setRecords(productCategoryMidDTOList) ; //设置内容
         return productCategoryMidDTOPage;
     }
+
+    @Override
+    public Integer update(ProductCategoryMidDTO productCategoryMidDTO) {
+        QueryWrapper<ProductCategoryMid> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1).eq("category_number",productCategoryMidDTO.getCategoryNumber())
+        .eq("product_number",productCategoryMidDTO.getProductNumber());
+
+        ProductCategoryMid productCategoryMid = new ProductCategoryMid() ;
+        productCategoryMid.setEnableFlag(0);
+
+        return productCategoryMidMapper.update(productCategoryMid,wrapper) ;
+    }
+
+    @Override
+    public Integer delete(ProductCategoryMidDTO productCategoryMidDTO) {
+        QueryWrapper<ProductCategoryMid> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1).eq("category_number",productCategoryMidDTO.getCategoryNumber())
+                .eq("product_number",productCategoryMidDTO.getProductNumber());
+        return productCategoryMidMapper.delete(wrapper);
+    }
+
+    @Override
+    public List<ProductCategoryMidDTO> getListByProductNumber(String productNumber) {
+        QueryWrapper<ProductCategoryMid> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1).eq("product_number",productNumber);
+        List<ProductCategoryMid> productCategoryMidList = productCategoryMidMapper.selectList(wrapper) ;
+
+        return BeanConversionUtils.CopyToAnotherList(ProductCategoryMidDTO.class,productCategoryMidList);
+    }
+
+    @Override
+    public List<ProductCategoryMidDTO> getListByProductCategoryNumber(String categoryNumber) {
+        QueryWrapper<ProductCategoryMid> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1).eq("category_number",categoryNumber);
+        List<ProductCategoryMid> productCategoryMidList = productCategoryMidMapper.selectList(wrapper) ;
+
+        return BeanConversionUtils.CopyToAnotherList(ProductCategoryMidDTO.class,productCategoryMidList);
+    }
+
+    @Override
+    public Integer deleteByProductNumber(String productNumber) {
+        QueryWrapper<ProductCategoryMid> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1).eq("product_number",productNumber);
+        return productCategoryMidMapper.delete(wrapper);
+    }
+
+    @Override
+    public Integer deleteByCategoryNumber(String categoryNumber) {
+        QueryWrapper<ProductCategoryMid> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1).eq("category_number",categoryNumber);
+        return productCategoryMidMapper.delete(wrapper);
+    }
+
 }

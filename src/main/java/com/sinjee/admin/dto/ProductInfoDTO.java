@@ -3,6 +3,7 @@ package com.sinjee.admin.dto;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author 小小极客
@@ -49,8 +50,8 @@ public class ProductInfoDTO extends BaseDTO{
     //商品状态
     private String productStatus ;
 
-    //类目编码
-    private String categoryNumber ;
 
     private Integer hashNumber ;
+
+    private List<String> allCategoryLists ;
 }

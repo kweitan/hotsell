@@ -13,7 +13,6 @@
         <result column="product_labels" jdbcType="VARCHAR" property="productLabels" />
         <result column="product_unit" jdbcType="VARCHAR" property="productUnit" />
         <result column="product_number" jdbcType="VARCHAR" property="productNumber" />
-        <result column="category_number" jdbcType="VARCHAR" property="categoryNumber" />
         <result column="product_status" jdbcType="TINYINT" property="productStatus" />
         <result column="enable_flag" jdbcType="TINYINT" property="enableFlag" />
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />

@@ -62,4 +62,7 @@ public class ProductInfoVO extends BaseVO implements Serializable {
     /** 哈希编码 **/
     @JsonProperty("goodHashNumber")
     private String hashNumber ;
+
+    @JsonProperty("selectName")
+    private String selectName ;
 }

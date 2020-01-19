@@ -18,4 +18,7 @@ public class ProductCategoryDTO extends BaseDTO{
 
     /**类目编号**/
     private String categoryNumber ;
+
+    /**0-未上架 1-上架*/
+    private Integer categoryStatus ;
 }

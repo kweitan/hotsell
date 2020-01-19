@@ -4,6 +4,8 @@ package com.sinjee.admin.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sinjee.admin.dto.ProductCategoryDTO;
 
+import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 public interface ProductCategoryService {
@@ -18,9 +20,16 @@ public interface ProductCategoryService {
 
     /**分页查找类目信息**/
     IPage<ProductCategoryDTO> selectProductCategoryInfoByPage(
-            Integer currentPage, Integer pageSize);
+            Integer currentPage, Integer pageSize,String selectName);
 
     List<ProductCategoryDTO> getAllProductCategoryDTOList();
 
+    ProductCategoryDTO getProductCategoryDTOByNumber(String categoryNumber);
+
+    /**上架**/
+    Integer upCategoryInfo(String categoryNumber);
+
+    /**下架**/
+    Integer downCategoryInfo(String categoryNumber);
 
 }

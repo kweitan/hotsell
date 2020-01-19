@@ -46,9 +46,6 @@ public class ProductInfo extends BaseEntity{
     private String productNumber ;
 
     //商品状态
-    private String productStatus ;
-
-    //类目编码
-    private String categoryNumber ;
+    private Integer productStatus ;
 
 }

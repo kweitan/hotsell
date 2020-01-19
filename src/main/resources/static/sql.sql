@@ -42,6 +42,7 @@ create table `product_category` (
 	`category_id` int not null auto_increment,
 	`category_name` varchar(64) not null comment '类目名字',
 	`category_number` varchar(32) not null unique key comment '类目编码',
+	`category_status` tinyint(3) DEFAULT '0' COMMENT '类目状态,1-可用 0-不可用',
 	`enable_flag` tinyint(3) DEFAULT '1' COMMENT '状态,1-可用 0-不可用',
 	`create_time` timestamp not null comment '创建时间',
   `creator` varchar(32) not null comment '创建者',

@@ -27,4 +27,14 @@ public class ResultVOUtil {
         resultVO.setMessage(msg);
         return resultVO;
     }
+
+    public static ResultVO success(Integer currentPagesize,Long pageSize,Object object) {
+        ResultVO resultVO = new ResultVO();
+        resultVO.setData(object);
+        resultVO.setCode(0);
+        resultVO.setMessage("成功");
+        resultVO.setCurrentPage(currentPagesize);
+        resultVO.setTotalSize(pageSize);
+        return resultVO;
+    }
 }

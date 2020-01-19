@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sinjee.admin.dto.ProductCategoryDTO;
 import com.sinjee.admin.entity.ProductCategory;
 import com.sinjee.admin.mapper.ProductCategoryMapper;
+import com.sinjee.admin.service.ProductCategoryMidService;
 import com.sinjee.admin.service.ProductCategoryService;
 import com.sinjee.common.BeanConversionUtils;
 import com.sinjee.common.CacheBeanCopier;
@@ -13,6 +14,7 @@ import com.sinjee.common.CacheBeanCopier;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,10 +26,15 @@ import java.util.List;
  **/
 @Service
 @Slf4j
+@Transactional
 public class ProductCategoryServiceImpl implements ProductCategoryService {
 
     @Autowired
     private ProductCategoryMapper productCategoryMapper;
+
+
+    @Autowired
+    private ProductCategoryMidService productCategoryMidService ;
 
     @Override
     public Integer saveProductCategoryInfo(ProductCategoryDTO productCategoryDTO) {
@@ -45,13 +52,14 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 
     @Override
     public Integer invalidProductCategoryInfo(String categoryNumber) {
+        productCategoryMidService.deleteByCategoryNumber(categoryNumber) ;
         return productCategoryMapper.invalidProductCategoryInfo(categoryNumber);
     }
 
     @Override
-    public IPage<ProductCategoryDTO> selectProductCategoryInfoByPage(Integer currentPage, Integer pageSize) {
+    public IPage<ProductCategoryDTO> selectProductCategoryInfoByPage(Integer currentPage, Integer pageSize,String selectName) {
         QueryWrapper<ProductCategory> wrapper = new QueryWrapper();
-        wrapper.eq("enable_flag",1);
+        wrapper.eq("enable_flag",1).like("category_name",selectName);
         Page<ProductCategory> page = new Page<ProductCategory>(currentPage,pageSize) ;
         //从数据库分页获取数据
         IPage<ProductCategory> mapPage = productCategoryMapper.selectProductCategoryInfoByPage(page,wrapper);
@@ -70,11 +78,42 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 
     public List<ProductCategoryDTO> getAllProductCategoryDTOList(){
         QueryWrapper<ProductCategory> wrapper = new QueryWrapper();
-        wrapper.eq("enable_flag",1);
+        wrapper.eq("enable_flag",1).eq("category_status",1);
 
         List<ProductCategory> productCategoryList = productCategoryMapper.selectList(wrapper) ;
 
         List<ProductCategoryDTO> productCategoryDTOList = BeanConversionUtils.CopyToAnotherList(ProductCategoryDTO.class,productCategoryList);
         return productCategoryDTOList ;
+    }
+
+    @Override
+    public ProductCategoryDTO getProductCategoryDTOByNumber(String categoryNumber) {
+        QueryWrapper<ProductCategory> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1).eq("category_number",categoryNumber);
+        ProductCategory productCategory = productCategoryMapper.selectOne(wrapper) ;
+        ProductCategoryDTO productCategoryDTO = new ProductCategoryDTO() ;
+        CacheBeanCopier.copy(productCategory,productCategoryDTO);
+
+        return productCategoryDTO;
+    }
+
+    @Override
+    public Integer upCategoryInfo(String categoryNumber) {
+        QueryWrapper<ProductCategory> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1).eq("category_number",categoryNumber)
+        .eq("category_status",0);
+        ProductCategory productCategory = new ProductCategory() ;
+        productCategory.setCategoryStatus(1);
+        return productCategoryMapper.update(productCategory,wrapper);
+    }
+
+    @Override
+    public Integer downCategoryInfo(String categoryNumber) {
+        QueryWrapper<ProductCategory> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1).eq("category_number",categoryNumber)
+                .eq("category_status",1);
+        ProductCategory productCategory = new ProductCategory() ;
+        productCategory.setCategoryStatus(0);
+        return productCategoryMapper.update(productCategory,wrapper);
     }
 }

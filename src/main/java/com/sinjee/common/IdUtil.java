@@ -53,6 +53,10 @@ public class IdUtil {
 
     private static long lastEpoch = 0;
 
+    public static String genId(){
+        return nextId()+"" ;
+    }
+
     //生成唯一ID
     public static long nextId() {
         return nextId(System.currentTimeMillis() / 1000);

@@ -27,7 +27,7 @@ class ProductInfoServiceImplTest {
 
     @Test
     void selectProductInfosByPage() {
-        productInfoServiceImpl.selectProductInfosByPage(0,10,0);
+        productInfoServiceImpl.selectProductInfosByPage(0,10,"");
     }
 
     @Test
@@ -37,7 +37,6 @@ class ProductInfoServiceImplTest {
         productInfoDTO.setProductDescription("精选黄牛后腿肉，汕头传统制丸工艺制成，鲜香弹牙，筋道十足");
         productInfoDTO.setProductPrice(new BigDecimal(16.8));
         productInfoDTO.setProductIcon("xxxxx.jpg");
-        productInfoDTO.setCategoryNumber("1111"+IdUtil.nextId());
         productInfoDTO.setProductLabels("好吃,推荐");
         productInfoDTO.setProductStandard("3包");
         productInfoDTO.setProductStock(1000);

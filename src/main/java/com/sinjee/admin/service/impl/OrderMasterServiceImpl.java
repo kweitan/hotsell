@@ -60,20 +60,7 @@ public class OrderMasterServiceImpl implements OrderMasterService {
         QueryWrapper<OrderMaster> wrapper = new QueryWrapper();
         wrapper.eq("buyer_openid",openId).eq("enable_flag",1);
 
-        Page<OrderMaster> page = new Page<>(currentPage,pageSize) ;
-        //从数据库分页获取数据
-        IPage<OrderMaster> mapPage = orderMasterMapper.selectPage(page,wrapper);
-        log.info("总页数"+mapPage.getPages());
-        log.info("总记录数"+mapPage.getTotal());
-        List<OrderMaster> orderMasterList = mapPage.getRecords() ;
-        List<OrderMasterDTO> orderMasterDTOList = BeanConversionUtils.copyToAnotherList(OrderMasterDTO.class,orderMasterList);
-
-        Page<OrderMasterDTO> orderMasterDTOPage = new Page<>(currentPage,pageSize) ;
-        orderMasterDTOPage.setPages(mapPage.getPages());
-        orderMasterDTOPage.setTotal(mapPage.getTotal());
-        orderMasterDTOPage.setRecords(orderMasterDTOList) ;
-
-        return orderMasterDTOPage;
+        return returnPageByMaster(currentPage,pageSize,wrapper);
     }
 
     @Override
@@ -81,41 +68,14 @@ public class OrderMasterServiceImpl implements OrderMasterService {
         QueryWrapper<OrderMaster> wrapper = new QueryWrapper();
         wrapper.eq("buyer_openid",openId).eq("enable_flag",1).eq("order_status",orderStatus);
 
-        Page<OrderMaster> page = new Page<>(currentPage,pageSize) ;
-        //从数据库分页获取数据
-        IPage<OrderMaster> mapPage = orderMasterMapper.selectPage(page,wrapper);
-        log.info("总页数"+mapPage.getPages());
-        log.info("总记录数"+mapPage.getTotal());
-        List<OrderMaster> orderMasterList = mapPage.getRecords() ;
-        List<OrderMasterDTO> orderMasterDTOList = BeanConversionUtils.copyToAnotherList(OrderMasterDTO.class,orderMasterList);
-
-        Page<OrderMasterDTO> orderMasterDTOPage = new Page<>(currentPage,pageSize) ;
-        orderMasterDTOPage.setPages(mapPage.getPages());
-        orderMasterDTOPage.setTotal(mapPage.getTotal());
-        orderMasterDTOPage.setRecords(orderMasterDTOList) ;
-
-        return orderMasterDTOPage;
+        return returnPageByMaster(currentPage,pageSize,wrapper);
     }
 
     @Override
     public IPage<OrderMasterDTO> findAllByPage(Integer currentPage, Integer pageSize, Integer orderStatus, String orderNumber) {
         QueryWrapper<OrderMaster> wrapper = new QueryWrapper();
         wrapper.eq("order_number",orderNumber).eq("enable_flag",1).eq("order_status",orderStatus);
-
-        Page<OrderMaster> page = new Page<>(currentPage,pageSize) ;
-        //从数据库分页获取数据
-        IPage<OrderMaster> mapPage = orderMasterMapper.selectPage(page,wrapper);
-        log.info("总页数"+mapPage.getPages());
-        log.info("总记录数"+mapPage.getTotal());
-        List<OrderMaster> orderMasterList = mapPage.getRecords() ;
-        List<OrderMasterDTO> orderMasterDTOList = BeanConversionUtils.copyToAnotherList(OrderMasterDTO.class,orderMasterList);
-
-        Page<OrderMasterDTO> orderMasterDTOPage = new Page<>(currentPage,pageSize) ;
-        orderMasterDTOPage.setPages(mapPage.getPages());
-        orderMasterDTOPage.setTotal(mapPage.getTotal());
-        orderMasterDTOPage.setRecords(orderMasterDTOList) ;
-
-        return orderMasterDTOPage;
+        return returnPageByMaster(currentPage,pageSize,wrapper);
     }
 
     @Override
@@ -125,5 +85,22 @@ public class OrderMasterServiceImpl implements OrderMasterService {
         QueryWrapper<OrderMaster> wrapper = new QueryWrapper();
         wrapper.eq("order_number",orderNumber).eq("buyer_openid",openId);
         return orderMasterMapper.update(orderMaster,wrapper);
+    }
+
+    private IPage<OrderMasterDTO> returnPageByMaster(Integer currentPage, Integer pageSize,QueryWrapper<OrderMaster> wrapper){
+        Page<OrderMaster> page = new Page<>(currentPage,pageSize) ;
+        //从数据库分页获取数据
+        IPage<OrderMaster> mapPage = orderMasterMapper.selectPage(page,wrapper);
+        log.info("总页数"+mapPage.getPages());
+        log.info("总记录数"+mapPage.getTotal());
+        List<OrderMaster> orderMasterList = mapPage.getRecords() ;
+        List<OrderMasterDTO> orderMasterDTOList = BeanConversionUtils.copyToAnotherList(OrderMasterDTO.class,orderMasterList);
+
+        Page<OrderMasterDTO> orderMasterDTOPage = new Page<>(currentPage,pageSize) ;
+        orderMasterDTOPage.setPages(mapPage.getPages());
+        orderMasterDTOPage.setTotal(mapPage.getTotal());
+        orderMasterDTOPage.setRecords(orderMasterDTOList) ;
+
+        return orderMasterDTOPage;
     }
 }

@@ -34,7 +34,7 @@ public class WechatProductController {
     public ResultVO list(@RequestParam(value = "currentPage", defaultValue = "1")
                                      Integer currentPage,
                          @RequestParam(value = "pageSize", defaultValue = "8")
-                                 Integer pageSize,String selectName){
+                                 Integer pageSize){
         //1.加载页数不超过20页
         if (currentPage > 20){
             currentPage = 20 ;
@@ -45,9 +45,9 @@ public class WechatProductController {
         }
 
         //2.查询数据
-        Integer productStatus = 0 ; //1-表示已上架 0-表示下架
+        Integer productStatus = 1 ; //1-表示已上架 0-表示下架
 
-        IPage<ProductInfoDTO> page = productInfoService.selectProductInfosByPage(currentPage,pageSize,selectName);
+        IPage<ProductInfoDTO> page = productInfoService.selectProductInfosByProductStatus(currentPage,pageSize,productStatus);
 
         //从分页中获取List
         List<ProductInfoDTO> productInfoDTOList = page.getRecords() ;

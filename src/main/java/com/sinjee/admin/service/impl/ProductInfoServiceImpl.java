@@ -45,10 +45,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
     @Autowired
     private ProductDetailInfoService productDetailInfoService ;
 
-    @Override
-    public IPage<ProductInfoDTO> selectProductInfosByPage(Integer currentPage, Integer pageSize,String goodsName) {
-        QueryWrapper<ProductInfo> wrapper = new QueryWrapper();
-        wrapper.eq("enable_flag",1).like("product_name",goodsName);
+    private IPage<ProductInfoDTO> returnPageByWrapper(Integer currentPage, Integer pageSize,QueryWrapper<ProductInfo> wrapper){
         Page<ProductInfo> page = new Page<ProductInfo>(currentPage,pageSize) ;
         //从数据库分页获取数据
         IPage<ProductInfo> mapPage = productInfoMapper.selectProductInfosByPage(page,wrapper);
@@ -65,15 +62,17 @@ public class ProductInfoServiceImpl implements ProductInfoService {
     }
 
     @Override
-    public IPage<ProductInfoDTO> selectProductInfosByProductStatus(Integer currentPage, Integer pageSize, Integer productStatus) {
-        Page<ProductInfo> page = new Page<ProductInfo>(currentPage,pageSize) ;
-        IPage<ProductInfo> mapPage = productInfoMapper.selectProductInfosByProductStatus(page,productStatus);
-        log.info("总页数"+mapPage.getPages());
-        log.info("总记录数"+mapPage.getTotal());
-        List<ProductInfo> productInfoEntityList = mapPage.getRecords() ;
-        productInfoEntityList.forEach(System.out::println);
+    public IPage<ProductInfoDTO> selectProductInfosByPage(Integer currentPage, Integer pageSize,String goodsName) {
+        QueryWrapper<ProductInfo> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1).like("product_name",goodsName);
+        return returnPageByWrapper(currentPage,pageSize,wrapper);
+    }
 
-        return null;
+    @Override
+    public IPage<ProductInfoDTO> selectProductInfosByProductStatus(Integer currentPage, Integer pageSize, Integer productStatus) {
+        QueryWrapper<ProductInfo> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1).eq("product_status",productStatus);
+        return returnPageByWrapper(currentPage,pageSize,wrapper);
     }
 
     @Override

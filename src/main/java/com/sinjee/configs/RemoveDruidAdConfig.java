@@ -43,7 +43,7 @@ public class RemoveDruidAdConfig {
 
         //创建filter进行过滤
         Filter filter = new Filter() {
-            @Override
+
             public void init(FilterConfig filterConfig) throws ServletException {
             }
 

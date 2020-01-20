@@ -44,7 +44,7 @@ public class BeanConversionUtils {
     }
 
     /** BeanCopier*/
-    public static <T,F> List<F> CopyToAnotherList(Class<F> target, List<T> sourceList){
+    public static <T,F> List<F> copyToAnotherList(Class<F> target, List<T> sourceList){
         if (!CollectionUtils.isEmpty(sourceList)) {
             List<F> targetList = new ArrayList();
             try{

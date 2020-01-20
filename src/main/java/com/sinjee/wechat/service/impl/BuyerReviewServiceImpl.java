@@ -75,7 +75,7 @@ public class BuyerReviewServiceImpl implements BuyerReviewService {
         log.info("总页数"+mapPage.getPages());
         log.info("总记录数"+mapPage.getTotal());
         List<BuyerReview> buyerReviewList = mapPage.getRecords() ;
-        List<BuyerReviewDTO> buyerReviewDTOList = BeanConversionUtils.CopyToAnotherList(BuyerReviewDTO.class,buyerReviewList);
+        List<BuyerReviewDTO> buyerReviewDTOList = BeanConversionUtils.copyToAnotherList(BuyerReviewDTO.class,buyerReviewList);
 
         Page<BuyerReviewDTO> buyerReviewDTOPage = new Page<>(currentPage,pageSize) ;
         buyerReviewDTOPage.setPages(mapPage.getPages());

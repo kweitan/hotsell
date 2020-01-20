@@ -48,7 +48,7 @@ public class AddressInfoServiceImpl implements AddressInfoService {
         log.info("总页数"+mapPage.getPages());
         log.info("总记录数"+mapPage.getTotal());
         List<AddressInfo> addressInfoList = mapPage.getRecords() ;
-        List<AddressInfoDTO> addressInfoDTOList = BeanConversionUtils.CopyToAnotherList(AddressInfoDTO.class,addressInfoList);
+        List<AddressInfoDTO> addressInfoDTOList = BeanConversionUtils.copyToAnotherList(AddressInfoDTO.class,addressInfoList);
 
         Page<AddressInfoDTO> addressInfoDTOPage = new Page<>(currentPage,pageSize) ;
         addressInfoDTOPage.setPages(mapPage.getPages());

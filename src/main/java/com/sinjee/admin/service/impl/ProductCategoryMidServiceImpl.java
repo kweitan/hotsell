@@ -58,7 +58,7 @@ public class ProductCategoryMidServiceImpl implements ProductCategoryMidService 
         log.info("总页数"+mapPage.getPages());
         log.info("总记录数"+mapPage.getTotal());
         List<ProductCategoryMid> productCategoryMidList = mapPage.getRecords() ;
-        List<ProductCategoryMidDTO> productCategoryMidDTOList = BeanConversionUtils.CopyToAnotherList(ProductCategoryMidDTO.class,productCategoryMidList);
+        List<ProductCategoryMidDTO> productCategoryMidDTOList = BeanConversionUtils.copyToAnotherList(ProductCategoryMidDTO.class,productCategoryMidList);
 
         Page<ProductCategoryMidDTO> productCategoryMidDTOPage = new Page<>(currentPage,pageSize) ;
         productCategoryMidDTOPage.setPages(mapPage.getPages()); //设置总页数
@@ -93,7 +93,7 @@ public class ProductCategoryMidServiceImpl implements ProductCategoryMidService 
         wrapper.eq("enable_flag",1).eq("product_number",productNumber);
         List<ProductCategoryMid> productCategoryMidList = productCategoryMidMapper.selectList(wrapper) ;
 
-        return BeanConversionUtils.CopyToAnotherList(ProductCategoryMidDTO.class,productCategoryMidList);
+        return BeanConversionUtils.copyToAnotherList(ProductCategoryMidDTO.class,productCategoryMidList);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class ProductCategoryMidServiceImpl implements ProductCategoryMidService 
         wrapper.eq("enable_flag",1).eq("category_number",categoryNumber);
         List<ProductCategoryMid> productCategoryMidList = productCategoryMidMapper.selectList(wrapper) ;
 
-        return BeanConversionUtils.CopyToAnotherList(ProductCategoryMidDTO.class,productCategoryMidList);
+        return BeanConversionUtils.copyToAnotherList(ProductCategoryMidDTO.class,productCategoryMidList);
     }
 
     @Override

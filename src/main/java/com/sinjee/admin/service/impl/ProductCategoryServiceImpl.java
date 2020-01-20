@@ -66,7 +66,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         log.info("总页数"+mapPage.getPages());
         log.info("总记录数"+mapPage.getTotal());
         List<ProductCategory> productCategoryList = mapPage.getRecords() ;
-        List<ProductCategoryDTO> productCategoryDTOList = BeanConversionUtils.CopyToAnotherList(ProductCategoryDTO.class,productCategoryList);
+        List<ProductCategoryDTO> productCategoryDTOList = BeanConversionUtils.copyToAnotherList(ProductCategoryDTO.class,productCategoryList);
 
         Page<ProductCategoryDTO> productCategoryDTOPage = new Page<>(currentPage,pageSize) ;
         productCategoryDTOPage.setPages(mapPage.getPages()); //设置总页数
@@ -82,7 +82,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 
         List<ProductCategory> productCategoryList = productCategoryMapper.selectList(wrapper) ;
 
-        List<ProductCategoryDTO> productCategoryDTOList = BeanConversionUtils.CopyToAnotherList(ProductCategoryDTO.class,productCategoryList);
+        List<ProductCategoryDTO> productCategoryDTOList = BeanConversionUtils.copyToAnotherList(ProductCategoryDTO.class,productCategoryList);
         return productCategoryDTOList ;
     }
 

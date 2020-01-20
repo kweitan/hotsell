@@ -169,4 +169,22 @@ create table `express_delivery` (
 	key `idx_express_number` (`express_number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 comment '快递信息表';
 
+--- 我的转发表 ---
+create table `my_forward` (
+	`my_forward_id` int unsigned not null auto_increment,
+	`product_number` varchar(64) not null comment '商品编码',
+  `product_name` varchar(64) not null comment '商品名称',
+  `product_price` decimal(8,2) not null comment '单价',
+  `product_description` varchar(64) comment '描述',
+  `product_icon` varchar(256) comment '小图',
+  `openid` varchar(64) not null comment '微信openid',
+	`enable_flag` tinyint(3) DEFAULT '1' COMMENT '状态,1-可用 0-不可用',
+	`create_time` timestamp not null comment '创建时间',
+  `creator` varchar(32) not null comment '创建者',
+  `update_time` timestamp not null comment '修改时间',
+  `updater` varchar(32) not null comment '更新者',
+	primary key (`my_forward_id`),
+	key `idx_product_number` (`product_number`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 comment '我的转发表';
+
 

@@ -56,7 +56,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         QueryWrapper<OrderDetail> wrapper = new QueryWrapper();
         wrapper.eq("order_number",orderNumber).eq("enable_flag",1);
         List<OrderDetail> orderDetailList = orderDetailMapper.selectList(wrapper);
-        List<OrderDetailDTO> orderDetailDTOList = BeanConversionUtils.CopyToAnotherList(OrderDetailDTO.class,orderDetailList);
+        List<OrderDetailDTO> orderDetailDTOList = BeanConversionUtils.copyToAnotherList(OrderDetailDTO.class,orderDetailList);
         return orderDetailDTOList ;
     }
 }

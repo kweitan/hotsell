@@ -77,7 +77,7 @@ public class BuyerInfoServiceImpl implements BuyerInfoService {
         log.info("总页数"+mapPage.getPages());
         log.info("总记录数"+mapPage.getTotal());
         List<BuyerInfo> buyerInfoList = mapPage.getRecords() ;
-        List<BuyerInfoDTO> buyerInfoDTOList = BeanConversionUtils.CopyToAnotherList(BuyerInfoDTO.class,buyerInfoList);
+        List<BuyerInfoDTO> buyerInfoDTOList = BeanConversionUtils.copyToAnotherList(BuyerInfoDTO.class,buyerInfoList);
 
         Page<BuyerInfoDTO> buyerInfoDTOPage = new Page<>(currentPage,pageSize) ;
         buyerInfoDTOPage.setPages(mapPage.getPages());

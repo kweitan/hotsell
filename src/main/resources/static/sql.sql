@@ -126,7 +126,7 @@ create table `buyer_info` (
   `buyer_id` int unsigned not null auto_increment,
   `buyer_name` varchar(32) not null,
   `buyer_password` varchar(128) not null,
-  `buyer_icon` varchar(128) not null, '买家微信头像',
+  `buyer_icon` varchar(128), '买家微信头像',
   `openid` varchar(64) not null comment '微信openid',
   `enable_flag` tinyint(3) DEFAULT '1' COMMENT '状态,1-可用 0-不可用',
   `create_time` timestamp not null comment '创建时间',

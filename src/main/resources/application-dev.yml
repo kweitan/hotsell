@@ -108,5 +108,8 @@ mybatis-plus:
 
 myWechat:
   salt: ueowijjsu932u9ajf3973jnvnnajbowurljwnfvf2q3iuo2jskjk
+  miniSalt: qweritidjdjeo89487392ekksooa994t99uwu399u
+  miniAppId: wx90bdeeaf84497bbc
+  miniAppSecret: f58161a1615b1cebc0b2a5d6a2899a68
 
 

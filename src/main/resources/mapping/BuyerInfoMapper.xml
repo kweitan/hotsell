@@ -5,8 +5,14 @@
         <result column="buyer_id" jdbcType="INTEGER" property="buyerId" />
         <result column="buyer_name" jdbcType="VARCHAR" property="buyerName" />
         <result column="buyer_password" jdbcType="VARCHAR" property="buyerPassword" />
-        <result column="buyer_icon" jdbcType="VARCHAR" property="buyerIcon" />
+        <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
+        <result column="buyer_country" jdbcType="VARCHAR" property="buyerCountry" />
+        <result column="buyer_province" jdbcType="VARCHAR" property="buyerProvince" />
+        <result column="buyer_city" jdbcType="VARCHAR" property="buyerCity" />
+        <result column="buyer_gender" jdbcType="TINYINT" property="buyerGender" />
         <result column="open_id" jdbcType="VARCHAR" property="openId" />
+        <result column="union_id" jdbcType="VARCHAR" property="unionId" />
+        <result column="session_key" jdbcType="VARCHAR" property="sessionKey" />
         <result column="enable_flag" jdbcType="TINYINT" property="enableFlag" />
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
         <result column="creator" jdbcType="VARCHAR" property="creator" />

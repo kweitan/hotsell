@@ -74,7 +74,6 @@ public class BuyerInfoController {
 
         // 解密用户信息
         WxMaUserInfo userInfo = wxMaService.getUserService().getUserInfo(sessionKey, encryptedData, iv);
-
         // 可以增加自己的逻辑，关联业务相关数据
         log.info("接收来自微信客户端的userInfo:{}", GsonUtil.getInstance().toStr(userInfo));
         return ResultVOUtil.success();

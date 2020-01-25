@@ -5,7 +5,10 @@
         <result column="category_id" jdbcType="INTEGER" property="categoryId" />
         <result column="category_name" jdbcType="VARCHAR" property="categoryName" />
         <result column="category_number" jdbcType="VARCHAR" property="categoryNumber" />
+        <result column="category_url" jdbcType="VARCHAR" property="categoryUrl" />
+        <result column="category_icon" jdbcType="VARCHAR" property="categoryIcon" />
         <result column="category_status" jdbcType="TINYINT" property="categoryStatus" />
+        <result column="belong_index" jdbcType="TINYINT" property="belongIndex" />
         <result column="enable_flag" jdbcType="TINYINT" property="enableFlag" />
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
         <result column="creator" jdbcType="VARCHAR" property="creator" />

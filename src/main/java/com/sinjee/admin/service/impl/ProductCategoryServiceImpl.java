@@ -116,4 +116,41 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         productCategory.setCategoryStatus(0);
         return productCategoryMapper.update(productCategory,wrapper);
     }
+
+    @Override
+    public Integer save(ProductCategoryDTO productCategoryDTO) {
+        ProductCategory productCategory = new ProductCategory() ;
+        CacheBeanCopier.copy(productCategoryDTO,productCategory);
+        return productCategoryMapper.insert(productCategory);
+    }
+
+    @Override
+    public Integer update(ProductCategoryDTO productCategoryDTO) {
+        QueryWrapper<ProductCategory> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1).eq("category_number",productCategoryDTO.getCategoryNumber())
+                .eq("category_status",1);
+        ProductCategory productCategory = new ProductCategory() ;
+        CacheBeanCopier.copy(productCategoryDTO,productCategory);
+        return productCategoryMapper.update(productCategory,wrapper);
+    }
+
+    @Override
+    public IPage<ProductCategoryDTO> selectProductCategoryBySearchName(Integer currentPage, Integer pageSize, String searchName) {
+        QueryWrapper<ProductCategory> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1).like("category_name",searchName);
+        Page<ProductCategory> page = new Page<ProductCategory>(currentPage,pageSize) ;
+        //从数据库分页获取数据
+        IPage<ProductCategory> mapPage = productCategoryMapper.selectProductCategoryInfoByPage(page,wrapper);
+        log.info("总页数"+mapPage.getPages());
+        log.info("总记录数"+mapPage.getTotal());
+        List<ProductCategory> productCategoryList = mapPage.getRecords() ;
+        List<ProductCategoryDTO> productCategoryDTOList = BeanConversionUtils.copyToAnotherList(ProductCategoryDTO.class,productCategoryList);
+
+        Page<ProductCategoryDTO> productCategoryDTOPage = new Page<>(currentPage,pageSize) ;
+        productCategoryDTOPage.setPages(mapPage.getPages()); //设置总页数
+        productCategoryDTOPage.setTotal(mapPage.getTotal()); //设置总数
+        productCategoryDTOPage.setRecords(productCategoryDTOList) ; //设置内容
+
+        return productCategoryDTOPage;
+    }
 }

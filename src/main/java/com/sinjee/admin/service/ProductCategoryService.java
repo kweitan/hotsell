@@ -32,4 +32,11 @@ public interface ProductCategoryService {
     /**下架**/
     Integer downCategoryInfo(String categoryNumber);
 
+
+    Integer save(ProductCategoryDTO productCategoryDTO) ;
+
+    Integer update(ProductCategoryDTO productCategoryDTO) ;
+
+    IPage<ProductCategoryDTO> selectProductCategoryBySearchName(
+            Integer currentPage, Integer pageSize,String searchName);
 }

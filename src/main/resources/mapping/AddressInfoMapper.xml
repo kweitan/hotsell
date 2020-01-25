@@ -6,7 +6,7 @@
         <result column="buyer_name" jdbcType="VARCHAR" property="buyerName" />
         <result column="buyer_phone" jdbcType="VARCHAR" property="buyerPhone" />
         <result column="buyer_address" jdbcType="VARCHAR" property="buyerAddress" />
-        <result column="select_status" jdbcType="INTEGER" property="selectStatus" />
+        <result column="select_status" jdbcType="TINYINT" property="selectStatus" />
         <result column="address_labels" jdbcType="VARCHAR" property="addressLabels" />
         <result column="enable_flag" jdbcType="TINYINT" property="enableFlag" />
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />

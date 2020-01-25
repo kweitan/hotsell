@@ -15,23 +15,23 @@ import java.math.BigDecimal;
 public class ProductInfoVO implements Serializable {
 
     //商品名称
-    @JsonProperty("goodName")
+    @JsonProperty("productName")
     private String productName ;
 
     //商品价格
-    @JsonProperty("goodPrice")
+    @JsonProperty("productPrice")
     private BigDecimal productPrice ;
 
     //商品库存
-    @JsonProperty("goodStock")
+    @JsonProperty("productStock")
     private Integer productStock ;
 
     //商品描述
-    @JsonProperty("goodDescription")
+    @JsonProperty("productDesc")
     private String productDescription;
 
     //商品图标
-    @JsonProperty("goodIcon")
+    @JsonProperty("productImage")
     private String productIcon ;
 
     //商品规格
@@ -39,19 +39,19 @@ public class ProductInfoVO implements Serializable {
     private String productStandard ;
 
     //商品提示 比如[热销 活动 爆销 优惠]
-    @JsonProperty("goodTips")
+    @JsonProperty("productTips")
     private String productTips ;
 
     //商品标签
-    @JsonProperty("goodLabels")
+    @JsonProperty("productLabes")
     private String productLabels ;
 
     //商品单位
-    @JsonProperty("goodUnit")
+    @JsonProperty("productUnit")
     private String productUnit ;
 
     //商品编码
-    @JsonProperty("goodNumber")
+    @JsonProperty("productId")
     private String productNumber ;
 
     //类目编码
@@ -59,7 +59,7 @@ public class ProductInfoVO implements Serializable {
     private String categoryNumber ;
 
     /** 哈希编码 **/
-    @JsonProperty("goodHashNumber")
+    @JsonProperty("hashId")
     private String hashNumber ;
 
 }

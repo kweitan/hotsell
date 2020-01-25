@@ -45,7 +45,7 @@ public class WechatProductController {
         }
 
         //2.查询数据
-        Integer productStatus = 1 ; //1-表示已上架 0-表示下架
+        Integer productStatus = 0 ; //1-表示已上架 0-表示下架
 
         IPage<ProductInfoDTO> page = productInfoService.selectProductInfosByProductStatus(currentPage,pageSize,productStatus);
 
@@ -69,8 +69,11 @@ public class WechatProductController {
         resultVO.setData(productInfoVOList);
         resultVO.setCurrentPage(currentPage);
         resultVO.setTotalSize(page.getTotal());
+        resultVO.setPageTotal(page.getPages());
         resultVO.setCode(0);
         resultVO.setMessage("成功");
+
+
 
         return resultVO;
     }

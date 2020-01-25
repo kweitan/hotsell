@@ -19,7 +19,16 @@ public class ProductCategory extends BaseEntity{
     /**类目编号**/
     private String categoryNumber ;
 
+    /**类目链接**/
+    private String categoryUrl ;
+
+    /**类目小图**/
+    private String categoryIcon ;
+
     /**0-未上架 1-上架*/
     private Integer categoryStatus ;
+
+    /*** 是否属于首页*/
+    private Integer belongIndex ;
 
 }

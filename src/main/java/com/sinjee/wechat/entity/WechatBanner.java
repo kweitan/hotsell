@@ -18,8 +18,8 @@ public class WechatBanner extends WechatBaseEntity{
 
     private String bannerIcon ;
 
-    private String bannerWidth ;
+    private Integer bannerWidth ;
 
-    private String bannerHeight ;
+    private Integer bannerHeight ;
 
 }

@@ -1,14 +1,15 @@
-package com.sinjee.wechat.dto;
+package com.sinjee.wechat.vo;
 
 import lombok.Data;
 
 /**
- * 创建时间 2020 - 01 -22
+ * 创建时间 2020 - 01 -26
  *
  * @author kweitan
  */
 @Data
-public class WechatBannerDTO extends WechatBaseDTO{
+public class WechatBannerVO {
+
     private Integer bannerId ;
 
     private String bannerUrl ;
@@ -20,4 +21,6 @@ public class WechatBannerDTO extends WechatBaseDTO{
     private Integer bannerWidth ;
 
     private Integer bannerHeight ;
+
+    private String hashNumber ;
 }

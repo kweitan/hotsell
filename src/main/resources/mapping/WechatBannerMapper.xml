@@ -6,8 +6,8 @@
         <result column="banner_url" jdbcType="VARCHAR" property="bannerUrl" />
         <result column="banner_name" jdbcType="VARCHAR" property="bannerName" />
         <result column="banner_icon" jdbcType="VARCHAR" property="bannerIcon" />
-        <result column="banner_width" jdbcType="VARCHAR" property="bannerWidth" />
-        <result column="banner_height" jdbcType="VARCHAR" property="bannerHeight" />
+        <result column="banner_width" jdbcType="INTEGER" property="bannerWidth" />
+        <result column="banner_height" jdbcType="INTEGER" property="bannerHeight" />
         <result column="enable_flag" jdbcType="TINYINT" property="enableFlag" />
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
         <result column="creator" jdbcType="VARCHAR" property="creator" />

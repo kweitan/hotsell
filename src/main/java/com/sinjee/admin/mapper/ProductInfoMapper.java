@@ -9,6 +9,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Map;
+
 
 /**
  * 商品信息 DAO接口
@@ -52,4 +54,8 @@ public interface ProductInfoMapper extends BaseMapper<ProductInfo> {
     //自定义分页
     IPage<ProductInfo> selectProductInfosByProductStatus(
             IPage<ProductInfo> page, @Param("status") Integer status);
+
+    //根据status分页查找商品
+    IPage<ProductInfo> selectProductInfosByCategoryNumber(
+            IPage<ProductInfo> page, @Param("map") Map<String, Object> params);
 }

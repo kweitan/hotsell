@@ -12,6 +12,8 @@ import java.io.Serializable;
 @Data
 public class CategoryInfoVO implements Serializable {
 
+    private Integer categoryId ;
+
     /** 类目名称 **/
     private String categoryName ;
 

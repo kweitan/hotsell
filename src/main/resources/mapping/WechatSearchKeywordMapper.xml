@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinjee.wechat.mapper.WechatSearchKeywordMapper">
+    <resultMap id="BaseResultMap" type="com.sinjee.wechat.entity.WechatSearchKeyword">
+        <result column="search_keyword_id" jdbcType="INTEGER" property="searchKeywordId" />
+        <result column="search_keyword_name" jdbcType="VARCHAR" property="searchKeywordName" />
+        <result column="search_keyword_number" jdbcType="VARCHAR" property="searchKeywordNumber" />
+        <result column="search_keyword_status" jdbcType="TINYINT" property="searchKeywordStatus" />
+        <result column="enable_flag" jdbcType="TINYINT" property="enableFlag" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="creator" jdbcType="VARCHAR" property="creator" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="updater" jdbcType="VARCHAR" property="updater" />
+    </resultMap>
+
+
+</mapper>

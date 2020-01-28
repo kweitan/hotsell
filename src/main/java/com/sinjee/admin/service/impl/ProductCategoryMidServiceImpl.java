@@ -119,4 +119,11 @@ public class ProductCategoryMidServiceImpl implements ProductCategoryMidService 
         return productCategoryMidMapper.delete(wrapper);
     }
 
+    @Override
+    public Integer save(ProductCategoryMidDTO productCategoryMidDTO) {
+        ProductCategoryMid productCategoryMid = new ProductCategoryMid() ;
+        CacheBeanCopier.copy(productCategoryMidDTO,productCategoryMid);
+        return productCategoryMidMapper.insert(productCategoryMid);
+    }
+
 }

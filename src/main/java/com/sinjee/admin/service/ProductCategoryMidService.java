@@ -30,4 +30,6 @@ public interface ProductCategoryMidService {
     Integer deleteByProductNumber(String productNumber);
 
     Integer deleteByCategoryNumber(String categoryNumber);
+
+    Integer save(ProductCategoryMidDTO productCategoryMidDTO) ;
 }

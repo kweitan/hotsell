@@ -11,7 +11,7 @@ public interface ProductInfoService {
             Integer currentPage,Integer pageSize,String selectName);
 
     IPage<ProductInfoDTO> selectProductInfosByProductStatus(
-            Integer currentPage,Integer pageSize,Integer productStatus);
+            Integer currentPage,Integer pageSize,Integer productStatus,String productName);
 
     /**保存**/
     Integer saveProductInfo(ProductInfoDTO productInfoDTO);
@@ -32,5 +32,7 @@ public interface ProductInfoService {
     Integer deleteProductInfo(String productNumber);
 
     ProductInfoDTO findByNumber(String productNumber) ;
+
+    IPage<ProductInfoDTO> selectProductInfosByCategoryNumber(Integer currentPage,Integer pageSize,String categoryNumber);
 
 }

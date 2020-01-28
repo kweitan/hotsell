@@ -20,13 +20,19 @@ class ProductCategoryMidServiceImplTest {
     ProductCategoryMidService productCategoryMidService ;
 
     @Test
-    void saveProductCategoryMidInfo() {
+    void save(){
         ProductCategoryMidDTO productCategoryMidDTO = new ProductCategoryMidDTO() ;
-        productCategoryMidDTO.setCategoryNumber("455445455555");
+        productCategoryMidDTO.setCategoryNumber("1328091225915424");
         productCategoryMidDTO.setCreator("kweitan");
         productCategoryMidDTO.setUpdater("kweitan");
-        productCategoryMidDTO.setProductNumber("5656565555");
-        productCategoryMidService.saveProductCategoryMidInfo(productCategoryMidDTO) ;
+        productCategoryMidDTO.setProductNumber("00001327481590120672");
+        productCategoryMidDTO.setCreateTime(new java.sql.Timestamp(new java.util.Date().getTime()));
+        productCategoryMidDTO.setUpdateTime(new java.sql.Timestamp(new java.util.Date().getTime()));
+        productCategoryMidService.save(productCategoryMidDTO) ;
+    }
+
+    @Test
+    void saveProductCategoryMidInfo() {
     }
 
     @Test
@@ -39,5 +45,45 @@ class ProductCategoryMidServiceImplTest {
 
     @Test
     void selectProductCategoryMidInfoByPage() {
+    }
+
+    @Test
+    void saveProductCategoryMidInfo1() {
+    }
+
+    @Test
+    void updateProductCategoryMidInfo1() {
+    }
+
+    @Test
+    void invalidProductCategoryMidInfo1() {
+    }
+
+    @Test
+    void selectProductCategoryMidInfoByPage1() {
+    }
+
+    @Test
+    void update() {
+    }
+
+    @Test
+    void delete() {
+    }
+
+    @Test
+    void getListByProductNumber() {
+    }
+
+    @Test
+    void getListByProductCategoryNumber() {
+    }
+
+    @Test
+    void deleteByProductNumber() {
+    }
+
+    @Test
+    void deleteByCategoryNumber() {
     }
 }

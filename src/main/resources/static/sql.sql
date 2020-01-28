@@ -212,4 +212,17 @@ create table `wechat_banner` (
     primary key (`banner_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 comment 'banner表';
 
+create table `wechat_search_keyword` (
+	`search_keyword_id` int not null auto_increment,
+	`search_keyword_name` varchar(32) not null comment '商品搜索关键词',
+	`search_keyword_number` varchar(32) not null comment '商品搜索关键词编码',
+	`search_keyword_status` tinyint(3) DEFAULT '0' COMMENT '状态,1-是 0-否 是否设置关键词',
+	`enable_flag` tinyint(3) DEFAULT '1' COMMENT '状态,1-是 0-否 ',
+	`create_time` timestamp not null comment '创建时间',
+  `creator` varchar(32) not null comment '创建者',
+  `update_time` timestamp not null comment '修改时间',
+  `updater` varchar(32) not null comment '更新者',
+	primary key (`search_keyword_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 comment '商品搜索关键词表';
+
 

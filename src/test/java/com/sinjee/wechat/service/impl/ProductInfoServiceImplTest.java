@@ -24,11 +24,6 @@ class ProductInfoServiceImplTest {
     private ProductInfoService productInfoServiceImpl ;
 
     @Test
-    void selectProductInfosByProductStatus(){
-        productInfoServiceImpl.selectProductInfosByProductStatus(0,3,0);
-    }
-
-    @Test
     void selectProductInfosByPage() {
         productInfoServiceImpl.selectProductInfosByPage(0,10,"");
     }

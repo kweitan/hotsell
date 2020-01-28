@@ -35,7 +35,7 @@ public class ProductInfoVO implements Serializable {
     private String productIcon ;
 
     //商品规格
-    @JsonProperty("goodStandard")
+    @JsonProperty("productStandard")
     private String productStandard ;
 
     //商品提示 比如[热销 活动 爆销 优惠]

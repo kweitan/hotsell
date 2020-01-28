@@ -74,6 +74,19 @@
       where enable_flag=1 and product_status=#{status}
     </select>
 
+    <select id="selectProductInfosByCategoryNumber" resultType="com.sinjee.admin.entity.ProductInfo">
+      SELECT
+        *
+        FROM product_info as pi where exists
+        (
+          select product_number from product_category_mid mid
+          where 1=1
+          <if test="map.categoryNumber != null">
+             and mid.category_number=#{map.categoryNumber}
+          </if>
+          and mid.product_number=pi.product_number ) and enable_flag=1
+    </select>
+
     <update id="updateProductInfo" parameterType="com.sinjee.admin.entity.ProductInfo">
         update product_info set
           product_name=#{productName},
@@ -86,7 +99,7 @@
           product_labels=#{productLabels},
           product_unit=#{productUnit},
           product_number=#{productNumber},
-          update_time=now(),
+          update_time=now(),selectProductInfosByPage
           updater=#{updater}
         where
           product_id=#{productId} and enable_flag=1

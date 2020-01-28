@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sinjee.admin.dto.ProductCategoryMidDTO;
 import com.sinjee.admin.dto.ProductDetailInfoDTO;
 import com.sinjee.admin.dto.ProductInfoDTO;
-import com.sinjee.admin.entity.ProductDetailInfo;
 import com.sinjee.admin.entity.ProductInfo;
 import com.sinjee.admin.mapper.ProductInfoMapper;
 import com.sinjee.admin.service.ProductCategoryMidService;
@@ -22,7 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -69,9 +70,9 @@ public class ProductInfoServiceImpl implements ProductInfoService {
     }
 
     @Override
-    public IPage<ProductInfoDTO> selectProductInfosByProductStatus(Integer currentPage, Integer pageSize, Integer productStatus) {
+    public IPage<ProductInfoDTO> selectProductInfosByProductStatus(Integer currentPage, Integer pageSize, Integer productStatus,String productName) {
         QueryWrapper<ProductInfo> wrapper = new QueryWrapper();
-        wrapper.eq("enable_flag",1).eq("product_status",productStatus);
+        wrapper.eq("enable_flag",1).eq("product_status",productStatus).like("product_name",productName);
         return returnPageByWrapper(currentPage,pageSize,wrapper);
     }
 
@@ -215,5 +216,24 @@ public class ProductInfoServiceImpl implements ProductInfoService {
         ProductInfoDTO productInfoDTO = new ProductInfoDTO() ;
         CacheBeanCopier.copy(productInfo,productInfoDTO);
         return productInfoDTO;
+    }
+
+    @Override
+    public IPage<ProductInfoDTO> selectProductInfosByCategoryNumber(Integer currentPage, Integer pageSize, String categoryNumber) {
+        Page<ProductInfo> page = new Page<ProductInfo>(currentPage,pageSize) ;
+        Map<String,Object> map = new HashMap<>() ;
+        map.put("categoryNumber",categoryNumber);
+        //从数据库分页获取数据
+        IPage<ProductInfo> curPage = productInfoMapper.selectProductInfosByCategoryNumber(page,map);
+        log.info("总页数"+curPage.getPages());
+        log.info("总记录数"+curPage.getTotal());
+        List<ProductInfo> productInfoEntityList = curPage.getRecords() ;
+        List<ProductInfoDTO> productInfoDTOList = BeanConversionUtils.copyToAnotherList(ProductInfoDTO.class,productInfoEntityList);
+
+        Page<ProductInfoDTO> productInfoDTOPage = new Page<>(currentPage,pageSize) ;
+        productInfoDTOPage.setPages(curPage.getPages()); //设置总页数
+        productInfoDTOPage.setTotal(curPage.getTotal()); //设置总数
+        productInfoDTOPage.setRecords(productInfoDTOList) ; //设置内容
+        return productInfoDTOPage;
     }
 }

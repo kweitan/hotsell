@@ -1,8 +1,10 @@
 package com.sinjee.wechat.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
  * 创建时间 2020 - 01 -06
@@ -10,7 +12,7 @@ import java.io.Serializable;
  * @author kweitan
  */
 @Data
-public class ProductDetailInfoVO implements Serializable {
+public class ProductDetailInfoVO extends ProductInfoVO implements Serializable {
     /** 商品编码 */
     private String productNumber ;
 
@@ -22,4 +24,26 @@ public class ProductDetailInfoVO implements Serializable {
 
     /** 商品明细描述 **/
     private String productDetailDescription ;
+
+    private Integer productReviewId ;
+
+    private Integer productReviewLevel;
+
+    private String productReviewContent ;
+
+    private Integer buyerReviewId ;
+
+    /**评论数量**/
+    private Integer productReviewCount ;
+
+
+    /**图像**/
+    private String personIcon ;
+
+    /**昵称**/
+    private String personName ;
+
+    //创建时间
+    @JsonFormat(pattern="yyyy-MM-dd")
+    private Timestamp createTime ;
 }

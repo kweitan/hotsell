@@ -148,11 +148,8 @@ create table `buyer_info` (
 ---买家评论表 ----
 create table `buyer_review` (
   `buyer_review_id` int unsigned not null auto_increment,
-  `buyer_review_level` varchar(64) DEFAULT '1' COMMENT '评论级别,1-好评 0-差评',
-  `buyer_review_product` varchar(512) comment '评论商品',
   `order_number` varchar(32) not null comment '订单编码 前三位代表品类 0000 中间日期20191215132700',
   `openid` varchar(64) not null comment '微信openid',
-  `buyer_review_content` varchar(512) comment '评论内容',
   `enable_flag` tinyint(3) DEFAULT '1' COMMENT '状态,1-可用 0-不可用',
   `create_time` timestamp not null comment '创建时间',
   `creator` varchar(32) not null comment '创建者',
@@ -160,6 +157,23 @@ create table `buyer_review` (
   `updater` varchar(32) not null comment '更新者',
     primary key (`buyer_review_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 comment '买家评论表';
+
+---商品评论表 ----
+create table `product_review` (
+  `product_review_id` int unsigned not null auto_increment,
+  `product_review_level` tinyint(3) DEFAULT '1' COMMENT '评论级别,1-好评 0-差评',
+  `product_review_content` varchar(256) comment '评论商品 商品编码-好评差评',
+  `buyer_review_id` int unsigned not null,
+  `product_number` varchar(32) not null comment '商品编码 前三位代表品类 0000 中间日期20191215132700',
+  `person_name` varchar(32) comment '评论者昵称',
+  `person_icon` varchar(128) comment '评论者图像',
+  `enable_flag` tinyint(3) DEFAULT '1' COMMENT '状态,1-可用 0-不可用',
+  `create_time` timestamp not null comment '创建时间',
+  `creator` varchar(32) not null comment '创建者',
+  `update_time` timestamp not null comment '修改时间',
+  `updater` varchar(32) not null comment '更新者',
+    primary key (`product_review_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 comment '商品评论表';
 
 --- 快递信息表 ---
 create table `express_delivery` (

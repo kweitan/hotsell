@@ -9,10 +9,10 @@ import lombok.Data;
  */
 @Data
 public class BuyerReviewDTO extends WechatBaseDTO {
+
     private Integer buyerReviewId ;
-    private String buyerReviewLevel ;
-    private String buyerReviewProduct;
+
     private String orderNumber ;
+
     private String openId ;
-    private String buyerReviewContent;
 }

@@ -236,4 +236,12 @@ public class ProductInfoServiceImpl implements ProductInfoService {
         productInfoDTOPage.setRecords(productInfoDTOList) ; //设置内容
         return productInfoDTOPage;
     }
+
+    @Override
+    public List<ProductInfoDTO> getList() {
+        QueryWrapper<ProductInfo> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1);
+        List<ProductInfo> productInfoList = productInfoMapper.selectList(wrapper);
+        return BeanConversionUtils.copyToAnotherList(ProductInfoDTO.class,productInfoList);
+    }
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinjee.wechat.mapper.">
+    <resultMap id="BaseResultMap" type="com.sinjee.wechat.entity.ProductReview">
+        <result column="product_review_id" jdbcType="INTEGER" property="productReviewId" />
+        <result column="product_review_level" jdbcType="TINYINT" property="productReviewLevel" />
+        <result column="product_review_content" jdbcType="VARCHAR" property="productReviewContent" />
+        <result column="buyer_review_id" jdbcType="INTEGER" property="buyerReviewId" />
+        <result column="product_number" jdbcType="VARCHAR" property="productNumber" />
+        <result column="person_name" jdbcType="VARCHAR" property="personName" />
+        <result column="person_icon" jdbcType="VARCHAR" property="personIcon" />
+        <result column="enable_flag" jdbcType="TINYINT" property="enableFlag" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="creator" jdbcType="VARCHAR" property="creator" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="updater" jdbcType="VARCHAR" property="updater" />
+    </resultMap>
+
+
+</mapper>

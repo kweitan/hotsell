@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sinjee.admin.dto.ProductDetailInfoDTO;
 import com.sinjee.admin.dto.ProductInfoDTO;
 
+import java.util.List;
+
 public interface ProductInfoService {
     //根据status分页查找商品
     IPage<ProductInfoDTO> selectProductInfosByPage(
@@ -34,5 +36,7 @@ public interface ProductInfoService {
     ProductInfoDTO findByNumber(String productNumber) ;
 
     IPage<ProductInfoDTO> selectProductInfosByCategoryNumber(Integer currentPage,Integer pageSize,String categoryNumber);
+
+    List<ProductInfoDTO> getList() ;
 
 }

@@ -1,13 +1,20 @@
 package com.sinjee.wechat.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.sinjee.admin.dto.ProductDetailInfoDTO;
 import com.sinjee.admin.dto.ProductInfoDTO;
 import com.sinjee.admin.service.ProductCategoryMidService;
+import com.sinjee.admin.service.ProductDetailInfoService;
 import com.sinjee.admin.service.ProductInfoService;
 import com.sinjee.common.CacheBeanCopier;
 import com.sinjee.common.HashUtil;
+import com.sinjee.common.ResultVOUtil;
 import com.sinjee.vo.ResultVO;
+import com.sinjee.wechat.dto.ProductReviewDTO;
+import com.sinjee.wechat.service.ProductReviewService;
+import com.sinjee.wechat.vo.ProductDetailInfoVO;
 import com.sinjee.wechat.vo.ProductInfoVO;
+import com.sinjee.wechat.vo.ProductReviewVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,8 +35,60 @@ public class WechatProductController {
     @Autowired
     private ProductInfoService productInfoService ;
 
+    @Autowired
+    private ProductDetailInfoService productDetailInfoService ;
+
+    @Autowired
+    private ProductReviewService productReviewService ;
+
     @Value("${myWechat.salt}")
     private String salt ;
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/review/productNumber")
+    public ResultVO getProductReviewByProductNumber(@RequestParam(value = "currentPage", defaultValue = "1")
+                                                              Integer currentPage,
+                                                  @RequestParam(value = "pageSize", defaultValue = "8")
+                                                              Integer pageSize,@RequestParam String productNumber){
+        //1.加载页数不超过20页
+        if (currentPage > 20){
+            currentPage = 20 ;
+        }
+
+        if(pageSize > 10){
+            pageSize = 10 ;
+        }
+
+        IPage<ProductReviewDTO> productReviewDTOIPage = productReviewService.selectProductReviewByPageProductNumber(currentPage,pageSize,productNumber);
+        List<ProductReviewDTO> productReviewDTOList = productReviewDTOIPage.getRecords() ;
+        List<ProductReviewVO> productReviewVOList = new ArrayList<>() ;
+        if(null != productReviewDTOList && productReviewDTOList.size()>0){
+            productReviewDTOList.stream().forEach(productReviewDTO-> {
+                ProductReviewVO productReviewVO = new ProductReviewVO() ;
+                CacheBeanCopier.copy(productReviewDTO,productReviewVO);
+                productReviewVOList.add(productReviewVO);
+            });
+        }
+
+        //返回前端
+        ResultVO resultVO = new ResultVO();
+        resultVO.setData(productReviewVOList);
+        resultVO.setCurrentPage(currentPage);
+        resultVO.setTotalSize(productReviewDTOIPage.getTotal());
+        resultVO.setPageTotal(productReviewDTOIPage.getPages());
+        resultVO.setCode(0);
+        resultVO.setMessage("成功");
+        return resultVO ;
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/product/productNumber")
+    public ResultVO getProductInfoByProductNumber(@RequestParam String productNumber){
+        ProductInfoDTO productInfoDTO = productInfoService.findByNumber(productNumber);
+        ProductInfoVO productInfoVO = new ProductInfoVO() ;
+        CacheBeanCopier.copy(productInfoDTO,productInfoVO);
+        return ResultVOUtil.success(productInfoVO);
+    }
 
     @CrossOrigin(origins = "*")
     @GetMapping("/number/list")
@@ -58,6 +117,33 @@ public class WechatProductController {
         resultVO.setCurrentPage(currentPage);
         resultVO.setCode(0);
         resultVO.setMessage("成功");
+        return resultVO;
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/detailByProductNumber")
+    public ResultVO detailByProductNumber(@RequestParam String productNumber){
+        ProductDetailInfoVO productDetailInfoVO = new ProductDetailInfoVO() ;
+        ProductInfoDTO productInfoDTO = productInfoService.findByNumber(productNumber) ;
+        CacheBeanCopier.copy(productInfoDTO,productDetailInfoVO);
+
+        ProductReviewDTO productReviewDTO = productReviewService.selecOne(productNumber);
+        CacheBeanCopier.copy(productReviewDTO,productDetailInfoVO);
+        //获取评论数量
+        Integer count = productReviewService.productReviewCount(productNumber) ;
+        productDetailInfoVO.setProductReviewCount(count);
+
+        ProductDetailInfoDTO productDetailInfoDTO = productDetailInfoService.findDetailByProductNumber(productNumber) ;
+        CacheBeanCopier.copy(productDetailInfoDTO,productDetailInfoVO);
+        String hashNumber = HashUtil.sign(productInfoDTO.getProductNumber(),salt);
+        productDetailInfoVO.setHashNumber(hashNumber);
+
+        //返回前端
+        ResultVO resultVO = new ResultVO();
+        resultVO.setData(productDetailInfoVO);
+        resultVO.setCode(0);
+        resultVO.setMessage("成功");
+
         return resultVO;
     }
 

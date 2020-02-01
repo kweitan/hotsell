@@ -1,5 +1,6 @@
 package com.sinjee.wechat.vo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -10,6 +11,7 @@ import java.io.Serializable;
  * @author kweitan
  */
 @Data
+@JsonInclude(value= JsonInclude.Include.NON_NULL)
 public class CategoryIndexVO implements Serializable {
 
     private String categoryNumber ;

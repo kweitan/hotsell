@@ -6,15 +6,14 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 创建时间 2020 - 01 -29
- *
- * @author kweitan
- */
+ * @author 小小极客
+ * 时间 2020/2/1 22:42
+ * @ClassName WechatTokenVO
+ * 描述 WechatTokenVO
+ **/
 @Data
 @JsonInclude(value= JsonInclude.Include.NON_NULL)
-public class WechatSearchKeywordVO implements Serializable {
-    private String searchKeywordName ;
+public class WechatTokenVO implements Serializable {
 
-    private String searchKeywordNumber ;
-
+    private String token ;
 }

@@ -1,6 +1,7 @@
 package com.sinjee.wechat.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -12,6 +13,7 @@ import java.sql.Timestamp;
  * @author kweitan
  */
 @Data
+@JsonInclude(value= JsonInclude.Include.NON_NULL)
 public class ProductDetailInfoVO extends ProductInfoVO implements Serializable {
     /** 商品编码 */
     private String productNumber ;

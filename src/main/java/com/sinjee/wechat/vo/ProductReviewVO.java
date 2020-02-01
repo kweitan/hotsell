@@ -1,6 +1,7 @@
 package com.sinjee.wechat.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -11,6 +12,7 @@ import java.sql.Timestamp;
  * @author kweitan
  */
 @Data
+@JsonInclude(value= JsonInclude.Include.NON_NULL)
 public class ProductReviewVO {
 
     private Integer productReviewId ;

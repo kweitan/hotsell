@@ -1,5 +1,6 @@
 package com.sinjee.admin.vo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
  * 描述 商品信息
  **/
 @Data
+@JsonInclude(value= JsonInclude.Include.NON_NULL)
 public class ProductInfoVO extends BaseVO implements Serializable {
 
     //商品名称

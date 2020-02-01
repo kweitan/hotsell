@@ -1,5 +1,6 @@
 package com.sinjee.wechat.vo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
  * @author kweitan
  */
 @Data
+@JsonInclude(value= JsonInclude.Include.NON_NULL)
 public class ProductInfoVO implements Serializable {
 
     //商品名称

@@ -1,5 +1,6 @@
 package com.sinjee.admin.vo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -11,6 +12,7 @@ import java.io.Serializable;
  * @author kweitan
  */
 @Data
+@JsonInclude(value= JsonInclude.Include.NON_NULL)
 public class AddressVO extends BaseVO implements Serializable {
 
     @JsonProperty("addressId")

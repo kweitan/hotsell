@@ -2,6 +2,7 @@ package com.sinjee.exceptions;
 
 import com.sinjee.common.ResultVOUtil;
 import com.sinjee.vo.ResultVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,11 +14,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  * 描述 统一异常处理
  **/
 @ControllerAdvice
+@Slf4j
 public class MyExceptionHandler {
 
     @ExceptionHandler(value = MyException.class)
     @ResponseBody
     public ResultVO handlerSellerException(MyException e) {
+        log.error("Exception: ", e);
         return ResultVOUtil.error(e.getCode(), e.getMessage());
     }
 

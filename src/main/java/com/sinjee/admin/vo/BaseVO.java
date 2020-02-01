@@ -1,6 +1,7 @@
 package com.sinjee.admin.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -13,6 +14,7 @@ import java.sql.Timestamp;
  * 描述 vo基础类
  **/
 @Data
+@JsonInclude(value= JsonInclude.Include.NON_NULL)
 public class BaseVO {
     //创建时间
     @JsonProperty("createTime")

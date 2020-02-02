@@ -28,7 +28,7 @@
         <jwt.version>0.9.1</jwt.version>
         <mybatis.plus>3.3.0</mybatis.plus>
         <wechat.pay.version>3.6.0</wechat.pay.version>
-        <auth0.jwt.version>2.2.0</auth0.jwt.version>
+        <auth0.jwt.version>3.4.0</auth0.jwt.version>
     </properties>
 
     <dependencies>

@@ -25,35 +25,48 @@ public class WechatAccessTokenUtil {
 
     /**
      * 签名生成
-     * @param user
+     * @param openid
      * @return
      */
-    public static String sign(BuyerInfoDTO user){
-        String token = null;
+    public static String sign(String openid){
+        String accessToken = null;
         try {
             Date expiresAt = new Date(System.currentTimeMillis() + expireTime);
-            token = JWT.create()
+            accessToken = JWT.create()
                     .withIssuer("auth0")
-                    .withClaim("openid", user.getOpenId())
+                    .withClaim("openid", openid)
                     .withExpiresAt(expiresAt)
                     // 使用了HMAC256加密算法。
                     .sign(Algorithm.HMAC256(tokenSecret));
         } catch (Exception e){
             e.printStackTrace();
         }
-        return token;
+        return accessToken;
     }
 
-    public static boolean verify(String token){
+    public static boolean verify(String accessToken){
         try {
             JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(tokenSecret)).withIssuer("auth0").build();
-            DecodedJWT jwt = jwtVerifier.verify(token) ;
+            DecodedJWT jwt = jwtVerifier.verify(accessToken) ;
             //1.取出issuer
             jwt.getIssuer();
             //2.取出openid
             jwt.getClaim("openid");
             //3.取出过期时间
             jwt.getExpiresAt();
+
+            /***
+             *
+             * SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+             * Date date = new Date();
+             * date = s.parse("2007-06-06 15:15:00");
+             * Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+8:00"));
+             * calendar.setTime(date);
+             * long time = calendar.getTimeInMillis() / 1000;
+             * **/
+
+            //获取当前时间毫秒
+            System.currentTimeMillis();
         }catch (Exception e){
 
         }

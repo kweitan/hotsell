@@ -16,6 +16,23 @@ public class HashUtil {
 
     private final static String CHARSET = "UTF-8" ;
 
+
+    public static String signByMD5(String text, String key) {
+        text = text + key;
+        return DigestUtils.md5Hex(getContentBytes(text, CHARSET));
+    }
+
+    public static boolean verifyByMD5(String text, String key,String sign) {
+        text = text + key;
+        String mysign = DigestUtils.md5Hex(getContentBytes(text, CHARSET));
+        if(mysign.equals(sign)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     /**
      * 签名字符
      * @param text 签名的字符串
@@ -26,6 +43,8 @@ public class HashUtil {
         text = text + key;
         return DigestUtils.sha256Hex(getContentBytes(text, CHARSET));
     }
+
+
 
     /**
      * 签名的字符串

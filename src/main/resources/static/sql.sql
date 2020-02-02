@@ -129,6 +129,7 @@ create table `buyer_info` (
   `buyer_id` int unsigned not null auto_increment,
   `buyer_name` varchar(32),
   `buyer_password` varchar(64) DEFAULT 'tempabcdefg' not null,
+  `session_key` varchar(64),
   `avatar_url` varchar(128), '买家微信头像',
   `buyer_country` varchar(32) comment '买家国家',
   `buyer_province` varchar(32) comment '买家省份',

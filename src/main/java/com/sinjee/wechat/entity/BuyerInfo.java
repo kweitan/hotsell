@@ -8,7 +8,7 @@ import lombok.Data;
  * @author kweitan
  */
 @Data
-public class BuyerInfo extends WechatBaseEntity{
+public class BuyerInfo extends WechatBaseEntity {
 
     private Integer buyerId ;
 

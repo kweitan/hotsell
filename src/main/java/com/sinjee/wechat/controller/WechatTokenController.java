@@ -3,11 +3,13 @@ package com.sinjee.wechat.controller;
 import com.sinjee.common.ResultVOUtil;
 import com.sinjee.service.TokenService;
 import com.sinjee.vo.ResultVO;
-import com.sinjee.wechat.vo.WechatTokenVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author 小小极客
@@ -22,11 +24,11 @@ public class WechatTokenController {
     @Autowired
     private TokenService tokenService;
 
-    @GetMapping("/token")
+    @GetMapping("/genOrder/token")
     public ResultVO token() {
-        WechatTokenVO wechatTokenVO = new WechatTokenVO() ;
-        wechatTokenVO.setToken(tokenService.createToken());
-        return ResultVOUtil.success(wechatTokenVO);
+        Map<String,Object> map = new HashMap<>() ;
+        map.put("token",tokenService.createToken());
+        return ResultVOUtil.success(map);
     }
 
 

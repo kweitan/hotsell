@@ -5,6 +5,7 @@
         <result column="buyer_id" jdbcType="INTEGER" property="buyerId" />
         <result column="buyer_name" jdbcType="VARCHAR" property="buyerName" />
         <result column="buyer_password" jdbcType="VARCHAR" property="buyerPassword" />
+        <result column="session_key" jdbcType="VARCHAR" property="sessionKey" />
         <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
         <result column="buyer_country" jdbcType="VARCHAR" property="buyerCountry" />
         <result column="buyer_province" jdbcType="VARCHAR" property="buyerProvince" />

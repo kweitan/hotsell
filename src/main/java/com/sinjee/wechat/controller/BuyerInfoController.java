@@ -7,6 +7,7 @@ import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.sinjee.common.GsonUtil;
 import com.sinjee.common.ResultVOUtil;
 import com.sinjee.vo.ResultVO;
+import com.sinjee.wechat.dto.BuyerInfoDTO;
 import com.sinjee.wechat.service.BuyerInfoService;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -50,8 +51,16 @@ public class BuyerInfoController {
         try {
             WxMaJscode2SessionResult session = wxMaService.getUserService().getSessionInfo(code);
             String openid = session.getOpenid() ;
+            String sessionKey = session.getSessionKey() ;
             log.info("接收来自微信客户端的session:{}", GsonUtil.getInstance().toStr(session));
             log.info("接收来自微信客户端的openid:{}",session.getOpenid());
+            BuyerInfoDTO buyerInfoDTO = new BuyerInfoDTO() ;
+            buyerInfoDTO.setOpenId(openid);
+            buyerInfoDTO.setSessionKey(sessionKey);
+            Integer success = buyerInfoService.save(buyerInfoDTO);
+            if (!(success>0)){
+                return ResultVOUtil.error(101,"获取openid失败!");
+            }
             // 可以增加自己的逻辑，关联业务相关数据
             return ResultVOUtil.success();
         } catch (WxErrorException e) {

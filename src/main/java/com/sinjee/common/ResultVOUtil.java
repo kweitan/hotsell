@@ -28,6 +28,14 @@ public class ResultVOUtil {
         return resultVO;
     }
 
+    public static ResultVO error(Integer code, String msg,Object object) {
+        ResultVO resultVO = new ResultVO();
+        resultVO.setCode(code);
+        resultVO.setMessage(msg);
+        resultVO.setData(object);
+        return resultVO;
+    }
+
     public static ResultVO success(Integer currentPagesize,Long pageSize,Object object) {
         ResultVO resultVO = new ResultVO();
         resultVO.setData(object);

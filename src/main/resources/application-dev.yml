@@ -113,7 +113,7 @@ myWechat:
   miniAppSecret: f58161a1615b1cebc0b2a5d6a2899a68
 
 wechat:
-  accessTokenExpTime: 15*60*1000
+  accessTokenExpTime: 3600*24*1000*7
   accessToekenScret: token3787idlkdkhjfoi4trqlafhslhUWOTAUWW323
   md5Salt: ywqhdgeAFWE34375923JJjskf
 

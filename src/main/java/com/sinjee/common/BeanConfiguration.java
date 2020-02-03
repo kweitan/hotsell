@@ -1,5 +1,6 @@
 package com.sinjee.common;
 
+import com.sinjee.interceptor.AccessTokenInterceptor;
 import com.sinjee.interceptor.ApiIdempotencyInterceptor;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
@@ -38,12 +39,18 @@ public class BeanConfiguration extends WebMvcConfigurationSupport {
     public void addInterceptors(InterceptorRegistry registry) {
         // 接口幂等性拦截器
         registry.addInterceptor(apiIdempotencyInterceptor());
+        registry.addInterceptor(accessTokenInterceptor()) ;
         super.addInterceptors(registry);
     }
 
     @Bean
     public ApiIdempotencyInterceptor apiIdempotencyInterceptor() {
         return new ApiIdempotencyInterceptor();
+    }
+
+    @Bean
+    public AccessTokenInterceptor accessTokenInterceptor(){
+        return new AccessTokenInterceptor() ;
     }
 
 }

@@ -32,10 +32,10 @@ import java.util.TimeZone;
 public class AccessTokenInterceptor implements HandlerInterceptor {
 
     @Value("${wechat.md5Salt}")
-    private static String md5Salt ;
+    private String md5Salt ;
 
     @Value("${wechat.accessTokenExpTime}")
-    private static long expireTime ;
+    private  String expireTime ;
 
     @Autowired
     private RedisUtil redisUtil ;
@@ -76,7 +76,7 @@ public class AccessTokenInterceptor implements HandlerInterceptor {
                 }
 
                 //重新更新redis
-                redisUtil.setString(openid,buyerInfoDTO,expireTime) ;
+                redisUtil.setString(openid,buyerInfoDTO,Long.valueOf(expireTime)) ;
             }
 
             //205 表示token日期失效 重新刷新token 告诉微信小程序刷新token

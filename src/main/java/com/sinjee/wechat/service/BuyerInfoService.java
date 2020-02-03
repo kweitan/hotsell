@@ -18,4 +18,8 @@ public interface BuyerInfoService {
     Integer updateBlack(String openId);
 
     IPage<BuyerInfoDTO> selectBuyerByPage(Integer currentPage, Integer pageSize, String selectName);
+
+    boolean saveOrUpdate(BuyerInfoDTO buyerInfoDTO);
+
+    String login(String code);
 }

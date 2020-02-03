@@ -71,7 +71,7 @@ public class AccessTokenInterceptor implements HandlerInterceptor {
 
                 //从数据库查
                 BuyerInfoDTO buyerInfoDTO = buyerInfoService.find(openid) ;
-                if (null == buyerInfoDTO){
+                if (null == buyerInfoDTO || buyerInfoDTO.getOpenId() == null){
                     throw new MyException(201,"请还未授权登录过");
                 }
 

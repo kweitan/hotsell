@@ -60,9 +60,10 @@ public class BuyerInfoController {
             String openid = session.getOpenid();
             //1.先查询是否存在openid
             BuyerInfoDTO selectBuyerInfo = buyerInfoService.find(openid) ;
-            if (null == selectBuyerInfo){
+            if (null == selectBuyerInfo || null == selectBuyerInfo.getOpenId()){
                 return ResultVOUtil.error(101,"请先授权");
             }
+
             log.info("openid={}",openid);
             String accessToken = WechatAccessTokenUtil.sign(openid) ;
             Map<String,Object> map = new HashMap<>() ;
@@ -85,52 +86,25 @@ public class BuyerInfoController {
             return ResultVOUtil.error(101,"code为空！");
         }
 
+        String sessionKey = buyerInfoService.login(code);
+        Map<String,Object> map = new HashMap<>() ;
         try {
-            WxMaJscode2SessionResult session = wxMaService.getUserService().getSessionInfo(code);
-            String openid = session.getOpenid() ;
-            String sessionKey = session.getSessionKey() ;
-            log.info("接收来自微信客户端的session:{}", GsonUtil.getInstance().toStr(session));
-            log.info("接收来自微信客户端的openid:{}",session.getOpenid());
-
-            //1.先查询是否存在openid
-            BuyerInfoDTO selectBuyerInfo = buyerInfoService.find(openid) ;
-            if(null == selectBuyerInfo){
-                BuyerInfoDTO buyerInfoDTO = new BuyerInfoDTO() ;
-                buyerInfoDTO.setOpenId(openid);
-                buyerInfoDTO.setSessionKey(sessionKey);
-                buyerInfoDTO.setCreator(IdUtil.genId());
-                buyerInfoDTO.setCreateTime(new java.sql.Timestamp(new java.util.Date().getTime()));
-                buyerInfoDTO.setUpdater(IdUtil.genId());
-                buyerInfoDTO.setUpdateTime(new java.sql.Timestamp(new java.util.Date().getTime()));
-                Integer success = buyerInfoService.save(buyerInfoDTO);
-                if (!(success>0)){
-                    return ResultVOUtil.error(101,"获取openid失败!");
-                }
-
-            }else{
-                selectBuyerInfo.setSessionKey(sessionKey);
-                Integer success = buyerInfoService.update(selectBuyerInfo) ;
-                if (!(success>0)){
-                    return ResultVOUtil.error(101,"更新user失败");
-                }
+            if (!sessionKey.equals("")){
+                map.put("sessionKeys",AESCBCUtil.encrypt(sessionKey,md5Salt)) ;
+                return ResultVOUtil.success(map) ;
             }
 
-            Map<String,Object> map = new HashMap<>() ;
-            map.put("sessionKeys",AESCBCUtil.encrypt(sessionKey,md5Salt)) ;
-            // 可以增加自己的逻辑，关联业务相关数据
-            return ResultVOUtil.success(map);
-
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return ResultVOUtil.error(101,"获取openid失败!");
+            log.error(e.getMessage());
+            return ResultVOUtil.error(101,"user check failed");
         }
-
+        return ResultVOUtil.error(101,"user check failed");
     }
 
     /**
      * 获取用户信息接口
      */
-    @GetMapping("/info")
+    @PostMapping("/info")
     public ResultVO info(String sessionKeys,String signature, String rawData, String encryptedData, String iv) {
 
         // 取出sessionkey

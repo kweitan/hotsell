@@ -4,8 +4,10 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.sinjee.common.ConfigInfoUtil;
 import com.sinjee.exceptions.MyException;
 import com.sinjee.wechat.dto.BuyerInfoDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Date;
@@ -18,13 +20,9 @@ import java.util.Map;
  * @ClassName WechatAccessTokenUtil
  * 描述 WechatAccessTokenUtil
  **/
+@Slf4j
 public class WechatAccessTokenUtil {
 
-    @Value("${wechat.accessTokenExpTime}")
-    private static String expireTime ;
-
-    @Value("${wechat.accessToekenScret}")
-    private static String tokenSecret ;
 
     /**
      * 签名生成
@@ -32,15 +30,18 @@ public class WechatAccessTokenUtil {
      * @return
      */
     public static String sign(String openid){
+
         String accessToken = null;
+        log.info("expireTime={}",ConfigInfoUtil.expireTime);
+        log.info("tokenSecret={}",ConfigInfoUtil.tokenSecret);
         try {
-            Date expiresAt = new Date(System.currentTimeMillis() + expireTime);
+            Date expiresAt = new Date(System.currentTimeMillis() + Long.valueOf(ConfigInfoUtil.expireTime));
             accessToken = JWT.create()
                     .withIssuer("auth0")
                     .withClaim("openid", openid)
                     .withExpiresAt(expiresAt)
                     // 使用了HMAC256加密算法。
-                    .sign(Algorithm.HMAC256(tokenSecret));
+                    .sign(Algorithm.HMAC256(ConfigInfoUtil.tokenSecret));
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -50,7 +51,7 @@ public class WechatAccessTokenUtil {
     public static Map<String,Object> getMap(String accessToken){
         Map<String,Object> map = new HashMap<>() ;
         try {
-            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(tokenSecret)).withIssuer("auth0").build();
+            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(ConfigInfoUtil.tokenSecret)).withIssuer("auth0").build();
             DecodedJWT jwt = jwtVerifier.verify(accessToken) ;
             map.put("issuer",jwt.getIssuer()) ;
             map.put("openid",jwt.getClaim("openid"));
@@ -65,7 +66,7 @@ public class WechatAccessTokenUtil {
 
     public static boolean verify(String accessToken){
         try {
-            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(tokenSecret)).withIssuer("auth0").build();
+            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(ConfigInfoUtil.tokenSecret)).withIssuer("auth0").build();
             DecodedJWT jwt = jwtVerifier.verify(accessToken) ;
             //1.取出issuer
             jwt.getIssuer();

@@ -44,8 +44,6 @@ public class BuyerInfoController {
     @Autowired
     private RedisUtil redisUtil ;
 
-    @Value("${wechat.accessTokenExpTime}")
-    private static long expireTime ;
 
     /**
      * 重新生成token
@@ -60,6 +58,12 @@ public class BuyerInfoController {
         try {
             WxMaJscode2SessionResult session = wxMaService.getUserService().getSessionInfo(code);
             String openid = session.getOpenid();
+            //1.先查询是否存在openid
+            BuyerInfoDTO selectBuyerInfo = buyerInfoService.find(openid) ;
+            if (null == selectBuyerInfo){
+                return ResultVOUtil.error(101,"请先授权");
+            }
+            log.info("openid={}",openid);
             String accessToken = WechatAccessTokenUtil.sign(openid) ;
             Map<String,Object> map = new HashMap<>() ;
             map.put("accessToken",accessToken) ;
@@ -168,7 +172,7 @@ public class BuyerInfoController {
             return ResultVOUtil.error(101,"更新user失败");
         }
         //将用户存到redis中
-        boolean res = redisUtil.setString(userInfo.getOpenId(),buyerInfoDTO,expireTime);
+        boolean res = redisUtil.setString(userInfo.getOpenId(),buyerInfoDTO,Long.valueOf(ConfigInfoUtil.expireTime));
         if (!res){
             return ResultVOUtil.error(101,"存放redis失败");
         }

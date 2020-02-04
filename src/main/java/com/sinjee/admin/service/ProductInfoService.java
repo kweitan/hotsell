@@ -4,6 +4,7 @@ package com.sinjee.admin.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sinjee.admin.dto.ProductDetailInfoDTO;
 import com.sinjee.admin.dto.ProductInfoDTO;
+import com.sinjee.wechat.form.ShopCartModel;
 
 import java.util.List;
 
@@ -38,5 +39,9 @@ public interface ProductInfoService {
     IPage<ProductInfoDTO> selectProductInfosByCategoryNumber(Integer currentPage,Integer pageSize,String categoryNumber);
 
     List<ProductInfoDTO> getList() ;
+
+    void increaseStock(List<ShopCartModel> shopCartModelList) ;
+
+    void decreaseStock(List<ShopCartModel> shopCartModelList) ;
 
 }

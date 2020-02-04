@@ -1,6 +1,13 @@
 package com.sinjee.common;
 
 import com.google.gson.Gson;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 创建时间 2020 - 01 -19
@@ -25,8 +32,36 @@ public class GsonUtil {
         return this.gson.toJson(src) ;
     }
 
+    public <T> List<T> parseString2List(String result,Class clazz){
+        Type type = new ParameterizedTypeImpl(clazz);
+        return this.gson.fromJson(result,type);
+    }
+
     private static class Inner {
         private static final GsonUtil instance = new GsonUtil();
+    }
+
+    private  class ParameterizedTypeImpl implements ParameterizedType {
+        Class clazz;
+
+        public ParameterizedTypeImpl(Class clz) {
+            clazz = clz;
+        }
+
+        @Override
+        public Type[] getActualTypeArguments() {
+            return new Type[]{clazz};
+        }
+
+        @Override
+        public Type getRawType() {
+            return List.class;
+        }
+
+        @Override
+        public Type getOwnerType() {
+            return null;
+        }
     }
 
 }

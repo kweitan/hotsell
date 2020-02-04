@@ -1,8 +1,11 @@
 package com.sinjee.admin.dto;
 
+import com.sinjee.admin.entity.OrderDetail;
+import com.sinjee.wechat.form.ShopCartModel;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 创建时间 2020 - 01 -06
@@ -39,4 +42,8 @@ public class OrderMasterDTO extends BaseDTO{
     private String payStatus ;
 
     private String transactionId ;
+
+    List<ShopCartModel> shopCartModelList ;
+
+    List<OrderDetail> orderDetailList ;
 }

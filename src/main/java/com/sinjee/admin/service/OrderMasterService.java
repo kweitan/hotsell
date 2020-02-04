@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface OrderMasterService {
 
-    Integer save(OrderMasterDTO orderMasterDTO);
+    OrderMasterDTO save(OrderMasterDTO orderMasterDTO);
+
+    OrderMasterDTO findByOrderNumber(String orderNumber);
 
     Integer update(OrderMasterDTO orderMasterDTO) ;
 

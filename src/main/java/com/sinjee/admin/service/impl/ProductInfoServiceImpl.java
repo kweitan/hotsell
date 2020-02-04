@@ -15,7 +15,10 @@ import com.sinjee.common.BeanConversionUtils;
 import com.sinjee.common.CacheBeanCopier;
 
 import com.sinjee.common.IdUtil;
+import com.sinjee.exceptions.MyException;
+import com.sinjee.wechat.form.ShopCartModel;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -243,5 +246,40 @@ public class ProductInfoServiceImpl implements ProductInfoService {
         wrapper.eq("enable_flag",1);
         List<ProductInfo> productInfoList = productInfoMapper.selectList(wrapper);
         return BeanConversionUtils.copyToAnotherList(ProductInfoDTO.class,productInfoList);
+    }
+
+    @Override
+    @Transactional
+    public void increaseStock(List<ShopCartModel> shopCartModelList) {
+        for (ShopCartModel shopCartModel: shopCartModelList) {
+            ProductInfo productInfo = productInfoMapper.selecttProductInfoEntityByProductNumber(shopCartModel.getProductNumber());
+            if (productInfo == null || StringUtils.isBlank(productInfo.getProductNumber())) {
+                throw new MyException(255,"商品不存在");
+            }
+            Integer result = productInfo.getProductStock() + shopCartModel.getProductCount();
+            productInfo.setProductStock(result);
+            productInfoMapper.updateProductInfo(productInfo);
+        }
+
+    }
+
+    @Override
+    @Transactional
+    public void decreaseStock(List<ShopCartModel> shopCartModelList) {
+        for (ShopCartModel shopCartModel: shopCartModelList) {
+            ProductInfo productInfo = productInfoMapper.selecttProductInfoEntityByProductNumber(shopCartModel.getProductNumber());
+            if (productInfo == null || StringUtils.isBlank(productInfo.getProductNumber())) {
+                throw new MyException(255,"商品不存在");
+            }
+
+            Integer result = productInfo.getProductStock() - shopCartModel.getProductCount();
+            if (result < 0) {
+                throw new MyException(256,"商品库存不对");
+            }
+
+            productInfo.setProductStock(result);
+
+            productInfoMapper.updateProductInfo(productInfo);
+        }
     }
 }

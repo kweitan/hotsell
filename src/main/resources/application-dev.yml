@@ -107,14 +107,36 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 myWechat:
+  #中台盐值
   salt: ueowijjsu932u9ajf3973jnvnnajbowurljwnfvf2q3iuo2jskjk
+  #微信小程序盐值
   miniSalt: qweritidjdjeo89487392ekksooa994t99uwu399u
+
+  #微信小程序 appId appSecret
   miniAppId: wx90bdeeaf84497bbc
   miniAppSecret: f58161a1615b1cebc0b2a5d6a2899a68
 
+  #中台扫码登录用
+  openAppId:
+  openAppSecret:
+
+  #支付/商户号
+  mchId:
+  mchKey:
+
+  #支付不需要证书 退款需要
+  keyPath:
+
+  #用户支付后 微信调用开发者服务器通知支付情况
+  notifyUrl:
+
+
 wechat:
+  #accessToken 过期时间 1周 单位S
   accessTokenExpTime: 604800000
+  #accessToken 盐值
   accessToekenScret: token3787idlkdkhjfoi4trqlafhslhUWOTAUWW323
+  #AES 密钥
   md5Salt: ywqhdgeAFWE34375
 
 

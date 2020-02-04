@@ -130,6 +130,9 @@ myWechat:
   #用户支付后 微信调用开发者服务器通知支付情况
   notifyUrl:
 
+  #交易类型
+  tradeType: JSAPI
+
 
 wechat:
   #accessToken 过期时间 1周 单位S

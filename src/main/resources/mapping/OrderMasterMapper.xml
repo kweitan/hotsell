@@ -8,9 +8,10 @@
         <result column="buyer_phone" jdbcType="VARCHAR" property="buyerPhone" />
         <result column="buyer_address" jdbcType="VARCHAR" property="buyerAddress" />
         <result column="buyer_openid" jdbcType="VARCHAR" property="buyerOpenid" />
+        <result column="transaction_id" jdbcType="VARCHAR" property="transactionId" />
         <result column="order_amount" jdbcType="DECIMAL" property="orderAmount" />
-        <result column="order_status" jdbcType="TINYINT" property="orderStatus" />
-        <result column="pay_status" jdbcType="TINYINT" property="payStatus" />
+        <result column="order_status" jdbcType="VARCHAR" property="orderStatus" />
+        <result column="pay_status" jdbcType="VARCHAR" property="payStatus" />
         <result column="enable_flag" jdbcType="TINYINT" property="enableFlag" />
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
         <result column="creator" jdbcType="VARCHAR" property="creator" />

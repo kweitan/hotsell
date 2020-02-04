@@ -1,5 +1,8 @@
 package com.sinjee.wechat;
 
+import com.github.binarywang.wxpay.service.WxPayService;
+import com.github.binarywang.wxpay.service.impl.WxPayServiceImpl;
+
 import java.security.SecureRandom;
 
 /**
@@ -11,6 +14,10 @@ import java.security.SecureRandom;
 public class WechatTest {
 
     public static void main(String[] args){
+
+        WxPayService wxPayService = new WxPayServiceImpl();
+//        wxPayService.createOrder()
+
         for (int i = 0;i < 99; i ++){
             int random = new SecureRandom().nextInt(5) ;
             System.out.println(random);

@@ -31,9 +31,9 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public String createToken() {
         String str = UUIDUtil.genUUID() ;
-        StrBuilder token = new StrBuilder();
+        StringBuffer token = new StringBuffer();
         token.append(Constant.Redis.TOKEN_PREFIX).append(str);
-        redisUtil.setString(token.toString(), token.toString(), Constant.Redis.EXPIRE_TIME_MINUTE) ;
+        redisUtil.setString(token.toString(), token.toString(), Constant.Redis.EXPIRE_TIME_2MINUTE) ;
         return token.toString();
     }
 

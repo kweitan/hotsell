@@ -7,6 +7,8 @@ public interface AddressInfoService {
 
     AddressInfoDTO getAddressById(Integer id);
 
+    AddressInfoDTO getAddressByOpenid(String openid);
+
     IPage<AddressInfoDTO> selectAddressByPage(Integer currentPage, Integer pageSize,String selectName);
 
     Integer save(AddressInfoDTO addressInfoDTO) ;

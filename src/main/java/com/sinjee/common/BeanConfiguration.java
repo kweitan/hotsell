@@ -38,8 +38,9 @@ public class BeanConfiguration extends WebMvcConfigurationSupport {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 接口幂等性拦截器
-        registry.addInterceptor(apiIdempotencyInterceptor());
         registry.addInterceptor(accessTokenInterceptor()) ;
+        registry.addInterceptor(apiIdempotencyInterceptor());
+
         super.addInterceptors(registry);
     }
 

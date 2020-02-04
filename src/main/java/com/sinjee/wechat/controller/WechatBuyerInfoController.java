@@ -10,7 +10,6 @@ import com.sinjee.wechat.dto.BuyerInfoDTO;
 import com.sinjee.wechat.service.BuyerInfoService;
 import com.sinjee.wechat.utils.WechatAccessTokenUtil;
 import lombok.extern.slf4j.Slf4j;
-import me.chanjar.weixin.common.error.WxErrorException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +26,7 @@ import java.util.Map;
 @RestController
 @Slf4j
 @RequestMapping("wechat/buyer")
-public class BuyerInfoController {
+public class WechatBuyerInfoController {
 
     @Value("${myWechat.miniSalt}")
     private String miniSalt ;
@@ -46,7 +45,7 @@ public class BuyerInfoController {
 
 
     /**
-     * 重新生成token
+     * 重新生成accessToken
      */
     @GetMapping("/genToken")
     public ResultVO reGenToken(String code){
@@ -58,10 +57,15 @@ public class BuyerInfoController {
         try {
             WxMaJscode2SessionResult session = wxMaService.getUserService().getSessionInfo(code);
             String openid = session.getOpenid();
-            //1.先查询是否存在openid
-            BuyerInfoDTO selectBuyerInfo = buyerInfoService.find(openid) ;
-            if (null == selectBuyerInfo || null == selectBuyerInfo.getOpenId()){
-                return ResultVOUtil.error(101,"请先授权");
+
+            //1.先从redis中查询
+            boolean isExist = redisUtil.existsKey(openid);
+            if (!isExist){
+                //2.没有 再查询数据库是否存在openid
+                BuyerInfoDTO selectBuyerInfo = buyerInfoService.find(openid) ;
+                if (null == selectBuyerInfo || null == selectBuyerInfo.getOpenId()){
+                    return ResultVOUtil.error(101,"请先授权");
+                }
             }
 
             log.info("openid={}",openid);
@@ -96,7 +100,6 @@ public class BuyerInfoController {
 
         } catch (Exception e) {
             log.error(e.getMessage());
-            return ResultVOUtil.error(101,"user check failed");
         }
         return ResultVOUtil.error(101,"user check failed");
     }
@@ -109,49 +112,52 @@ public class BuyerInfoController {
 
         // 取出sessionkey
         String sessionKey = null;
+        String openid = null ;
         try {
             sessionKey = AESCBCUtil.decrypt(sessionKeys,md5Salt);
+            if (null == sessionKey){
+                return ResultVOUtil.error(101,"user check failed");
+            }
+
+            // 用户信息校验
+            if (!wxMaService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
+                return ResultVOUtil.error(101,"user check failed");
+            }
+
+            // 解密用户信息
+            WxMaUserInfo userInfo = wxMaService.getUserService().getUserInfo(sessionKey, encryptedData, iv);
+            // 可以增加自己的逻辑，关联业务相关数据
+            log.info("接收来自微信客户端的userInfo:{}", GsonUtil.getInstance().toStr(userInfo));
+            openid = userInfo.getOpenId() ;
+            BuyerInfoDTO buyerInfoDTO = new BuyerInfoDTO() ;
+            buyerInfoDTO.setAvatarUrl(userInfo.getAvatarUrl());
+            buyerInfoDTO.setBuyerCity(userInfo.getCity());
+            buyerInfoDTO.setBuyerCountry(userInfo.getCountry());
+            buyerInfoDTO.setBuyerGender(Integer.valueOf(userInfo.getGender()));
+            buyerInfoDTO.setBuyerProvince(userInfo.getProvince());
+            buyerInfoDTO.setBuyerName(userInfo.getNickName());
+            buyerInfoDTO.setCreator(userInfo.getNickName());
+            buyerInfoDTO.setUpdater(userInfo.getNickName());
+            buyerInfoDTO.setUpdateTime(new java.sql.Timestamp(new java.util.Date().getTime()));
+            buyerInfoDTO.setOpenId(userInfo.getOpenId());
+
+            Integer success = buyerInfoService.update(buyerInfoDTO) ;
+            if (!(success>0)){
+                return ResultVOUtil.error(101,"更新user失败");
+            }
+            //将用户存到redis中
+            boolean res = redisUtil.setString(userInfo.getOpenId(),buyerInfoDTO,Constant.Redis.EXPIRE_TIME_7DAY);
+            if (!res){
+                return ResultVOUtil.error(101,"存放redis失败");
+            }
         } catch (Exception e) {
             return ResultVOUtil.error(101,"user check failed");
         }
 
-        if (null == sessionKey){
-            return ResultVOUtil.error(101,"user check failed");
+        if (null == openid){
+            return ResultVOUtil.error(101,"openid 为空");
         }
-
-        // 用户信息校验
-        if (!wxMaService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
-            return ResultVOUtil.error(101,"user check failed");
-        }
-
-        // 解密用户信息
-        WxMaUserInfo userInfo = wxMaService.getUserService().getUserInfo(sessionKey, encryptedData, iv);
-        // 可以增加自己的逻辑，关联业务相关数据
-        log.info("接收来自微信客户端的userInfo:{}", GsonUtil.getInstance().toStr(userInfo));
-
-        BuyerInfoDTO buyerInfoDTO = new BuyerInfoDTO() ;
-        buyerInfoDTO.setAvatarUrl(userInfo.getAvatarUrl());
-        buyerInfoDTO.setBuyerCity(userInfo.getCity());
-        buyerInfoDTO.setBuyerCountry(userInfo.getCountry());
-        buyerInfoDTO.setBuyerGender(Integer.valueOf(userInfo.getGender()));
-        buyerInfoDTO.setBuyerProvince(userInfo.getProvince());
-        buyerInfoDTO.setBuyerName(userInfo.getNickName());
-        buyerInfoDTO.setCreator(userInfo.getNickName());
-        buyerInfoDTO.setUpdater(userInfo.getNickName());
-        buyerInfoDTO.setUpdateTime(new java.sql.Timestamp(new java.util.Date().getTime()));
-        buyerInfoDTO.setOpenId(userInfo.getOpenId());
-
-        Integer success = buyerInfoService.update(buyerInfoDTO) ;
-        if (!(success>0)){
-            return ResultVOUtil.error(101,"更新user失败");
-        }
-        //将用户存到redis中
-        boolean res = redisUtil.setString(userInfo.getOpenId(),buyerInfoDTO,Long.valueOf(ConfigInfoUtil.expireTime));
-        if (!res){
-            return ResultVOUtil.error(101,"存放redis失败");
-        }
-
-        String accessToken = WechatAccessTokenUtil.sign(userInfo.getOpenId()) ;
+        String accessToken = WechatAccessTokenUtil.sign(openid) ;
         Map<String,Object> map = new HashMap<>() ;
         map.put("accessToken",accessToken) ;
         return ResultVOUtil.success(map);

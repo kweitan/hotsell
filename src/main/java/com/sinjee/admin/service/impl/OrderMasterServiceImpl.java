@@ -42,7 +42,7 @@ public class OrderMasterServiceImpl implements OrderMasterService {
         CacheBeanCopier.copy(orderMasterDTO,orderMaster);
 
         QueryWrapper<OrderMaster> wrapper = new QueryWrapper();
-        wrapper.eq("order_number",orderMasterDTO.getOrderNumber());
+        wrapper.eq("order_number",orderMasterDTO.getOrderNumber()).eq("enable_flag",1);
         return orderMasterMapper.update(orderMaster,wrapper);
     }
 
@@ -51,7 +51,7 @@ public class OrderMasterServiceImpl implements OrderMasterService {
         OrderMaster orderMaster = new OrderMaster() ;
         orderMaster.setEnableFlag(0);
         QueryWrapper<OrderMaster> wrapper = new QueryWrapper();
-        wrapper.eq("order_number",orderNumber);
+        wrapper.eq("order_number",orderNumber).eq("enable_flag",1);
         return orderMasterMapper.update(orderMaster,wrapper);
     }
 
@@ -83,7 +83,7 @@ public class OrderMasterServiceImpl implements OrderMasterService {
         OrderMaster orderMaster = new OrderMaster() ;
         orderMaster.setEnableFlag(0);
         QueryWrapper<OrderMaster> wrapper = new QueryWrapper();
-        wrapper.eq("order_number",orderNumber).eq("buyer_openid",openId);
+        wrapper.eq("order_number",orderNumber).eq("buyer_openid",openId).eq("enable_flag",1);
         return orderMasterMapper.update(orderMaster,wrapper);
     }
 

@@ -8,6 +8,7 @@
         <result column="buyer_address" jdbcType="VARCHAR" property="buyerAddress" />
         <result column="select_status" jdbcType="TINYINT" property="selectStatus" />
         <result column="address_labels" jdbcType="VARCHAR" property="addressLabels" />
+        <result column="open_id" jdbcType="VARCHAR" property="openId" />
         <result column="enable_flag" jdbcType="TINYINT" property="enableFlag" />
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
         <result column="creator" jdbcType="VARCHAR" property="creator" />

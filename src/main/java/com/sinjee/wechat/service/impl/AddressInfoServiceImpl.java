@@ -38,6 +38,16 @@ public class AddressInfoServiceImpl implements AddressInfoService {
     }
 
     @Override
+    public AddressInfoDTO getAddressByOpenid(String openid) {
+        QueryWrapper<AddressInfo> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1).eq("open_id",openid).eq("select_status",1);
+        AddressInfo addressInfo = addressInfoMapper.selectOne(wrapper) ;
+        AddressInfoDTO addressInfoDTO = new AddressInfoDTO() ;
+        CacheBeanCopier.copy(addressInfo,addressInfoDTO);
+        return addressInfoDTO;
+    }
+
+    @Override
     public IPage<AddressInfoDTO> selectAddressByPage(Integer currentPage, Integer pageSize,String selectName) {
 
         QueryWrapper<AddressInfo> wrapper = new QueryWrapper();

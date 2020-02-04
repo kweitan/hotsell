@@ -40,14 +40,14 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         OrderDetail orderDetail = new OrderDetail();
         CacheBeanCopier.copy(orderDetailDTO,orderDetail);
         QueryWrapper<OrderDetail> wrapper = new QueryWrapper();
-        wrapper.eq("detail_id",orderDetailDTO.getDetailId());
+        wrapper.eq("detail_id",orderDetailDTO.getDetailId()).eq("enable_flag",1);
         return orderDetailMapper.update(orderDetail,wrapper);
     }
 
     @Override
     public Integer delete(OrderDetailDTO orderDetailDTO) {
         QueryWrapper<OrderDetail> wrapper = new QueryWrapper();
-        wrapper.eq("detail_id",orderDetailDTO.getDetailId());
+        wrapper.eq("detail_id",orderDetailDTO.getDetailId()).eq("enable_flag",1);
         return orderDetailMapper.delete(wrapper);
     }
 

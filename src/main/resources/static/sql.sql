@@ -116,6 +116,7 @@ create table `address_info` (
 	`buyer_address` varchar(128) not null comment '买家地址',
 	`select_status` tinyint(3) DEFAULT '0' COMMENT '商品状态,0-普通状态 1-默认选择状态',
 	`address_labels` varchar(32) not null comment '标签 家 公司 岳父母家 父母家',
+	`openid` varchar(64) not null comment '微信openid',
 	`enable_flag` tinyint(3) DEFAULT '1' COMMENT '状态,1-可用 0-不可用',
 	`create_time` timestamp not null comment '创建时间',
   `creator` varchar(32) not null comment '创建者',

@@ -1,6 +1,7 @@
 package com.sinjee.interceptor;
 
 import com.sinjee.annotation.AccessTokenIdempotency;
+import com.sinjee.common.Constant;
 import com.sinjee.common.HashUtil;
 import com.sinjee.common.RedisUtil;
 import com.sinjee.exceptions.MyException;
@@ -76,7 +77,7 @@ public class AccessTokenInterceptor implements HandlerInterceptor {
                 }
 
                 //重新更新redis
-                redisUtil.setString(openid,buyerInfoDTO,Long.valueOf(expireTime)) ;
+                redisUtil.setString(openid,buyerInfoDTO, Constant.Redis.EXPIRE_TIME_7DAY) ;
             }
 
             //205 表示token日期失效 重新刷新token 告诉微信小程序刷新token
@@ -89,6 +90,8 @@ public class AccessTokenInterceptor implements HandlerInterceptor {
             if (System.currentTimeMillis() > lastTime){
                 throw new MyException(205,"已经过期,重新请求token");
             }
+
+            request.setAttribute("openid",openid);
 
         }
         return true;

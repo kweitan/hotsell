@@ -56,7 +56,8 @@ public class BuyerInfoServiceImpl implements BuyerInfoService {
         CacheBeanCopier.copy(buyerInfoDTO,buyerInfo);
 
         QueryWrapper<BuyerInfo> wrapper = new QueryWrapper();
-        wrapper.eq("open_id",buyerInfoDTO.getOpenId());
+        wrapper.eq("open_id",buyerInfoDTO.getOpenId()).eq("enable_flag",1);
+
         return buyerInfoMapper.update(buyerInfo,wrapper);
     }
 
@@ -64,7 +65,7 @@ public class BuyerInfoServiceImpl implements BuyerInfoService {
     public BuyerInfoDTO find(String openId) {
         BuyerInfoDTO buyerInfoDTO = new BuyerInfoDTO();
         QueryWrapper<BuyerInfo> wrapper = new QueryWrapper();
-        wrapper.eq("open_id",openId);
+        wrapper.eq("open_id",openId).eq("enable_flag",1);
         BuyerInfo buyerInfo = buyerInfoMapper.selectOne(wrapper) ;
         CacheBeanCopier.copy(buyerInfo,buyerInfoDTO);
         return buyerInfoDTO;
@@ -82,7 +83,7 @@ public class BuyerInfoServiceImpl implements BuyerInfoService {
     @Override
     public IPage<BuyerInfoDTO> selectBuyerByPage(Integer currentPage, Integer pageSize, String selectName) {
         QueryWrapper<BuyerInfo> wrapper = new QueryWrapper();
-        wrapper.like("buyer_name",selectName);
+        wrapper.like("buyer_name",selectName).eq("enable_flag",1);
         Page<BuyerInfo> page = new Page<>(currentPage,pageSize) ;
         //从数据库分页获取数据
         IPage<BuyerInfo> mapPage = buyerInfoMapper.selectPage(page,wrapper);

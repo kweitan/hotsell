@@ -50,7 +50,7 @@
           enable_flag=1 and product_category_mid=#{productCategoryMidId}
     </update>
 
-    <select id="selectProductCategoryMidInfoBypage" resultType="com.sinjee.admin.entity.ProductCategoryMid">
+    <select id="selectProductCategoryMidInfoByPage" resultType="com.sinjee.admin.entity.ProductCategoryMid">
         select * from product_category_mid
         where enable_flag=1 ;
     </select>

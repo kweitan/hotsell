@@ -138,7 +138,7 @@ public class WechatBuyerInfoController {
             buyerInfoDTO.setBuyerName(userInfo.getNickName());
             buyerInfoDTO.setCreator(userInfo.getNickName());
             buyerInfoDTO.setUpdater(userInfo.getNickName());
-            buyerInfoDTO.setUpdateTime(new java.sql.Timestamp(new java.util.Date().getTime()));
+            buyerInfoDTO.setUpdateTime(DateUtils.getTimestamp());
             buyerInfoDTO.setOpenId(userInfo.getOpenId());
 
             Integer success = buyerInfoService.update(buyerInfoDTO) ;

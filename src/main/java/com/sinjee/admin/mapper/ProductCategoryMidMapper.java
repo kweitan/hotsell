@@ -25,7 +25,7 @@ public interface ProductCategoryMidMapper extends BaseMapper<ProductCategoryMid>
     Integer invalidProductCategoryMidInfo(Integer productCategoryMidId);
 
     /**分页查找类目中间表**/
-    IPage<ProductCategoryMid> selectProductCategoryMidInfoBypage(
+    IPage<ProductCategoryMid> selectProductCategoryMidInfoByPage(
             IPage<ProductCategoryMid> page, @Param(Constants.WRAPPER) Wrapper<ProductCategoryMid> queryWrapper);
 
     /** 根据商品编码*/

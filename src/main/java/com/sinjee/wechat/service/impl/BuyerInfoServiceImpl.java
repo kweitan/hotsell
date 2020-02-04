@@ -124,9 +124,9 @@ public class BuyerInfoServiceImpl implements BuyerInfoService {
                 buyerInfoDTO.setOpenId(openid);
                 buyerInfoDTO.setSessionKey(sessionKey);
                 buyerInfoDTO.setCreator(IdUtil.genId());
-                buyerInfoDTO.setCreateTime(new java.sql.Timestamp(new java.util.Date().getTime()));
+                buyerInfoDTO.setCreateTime(DateUtils.getTimestamp());
                 buyerInfoDTO.setUpdater(IdUtil.genId());
-                buyerInfoDTO.setUpdateTime(new java.sql.Timestamp(new java.util.Date().getTime()));
+                buyerInfoDTO.setUpdateTime(DateUtils.getTimestamp());
                 Integer success = save(buyerInfoDTO);
                 if (!(success>0)){
                     throw new MyException(101,"获取openid失败!") ;

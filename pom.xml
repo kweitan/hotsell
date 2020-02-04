@@ -29,6 +29,7 @@
         <mybatis.plus>3.3.0</mybatis.plus>
         <wechat.pay.version>3.6.0</wechat.pay.version>
         <auth0.jwt.version>3.4.0</auth0.jwt.version>
+        <weixin.java.pay.version>3.6.0</weixin.java.pay.version>
     </properties>
 
     <dependencies>
@@ -175,6 +176,13 @@
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
             <version>${auth0.jwt.version}</version>
+        </dependency>
+
+        <!-- weixin pay -->
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-pay</artifactId>
+            <version>${weixin.java.pay.version}</version>
         </dependency>
 
     </dependencies>

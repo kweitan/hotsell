@@ -54,7 +54,7 @@ public class ProductCategoryMidServiceImpl implements ProductCategoryMidService 
         wrapper.eq("enable_flag",1);
         Page<ProductCategoryMid> page = new Page<ProductCategoryMid>(currentPage,pageSize) ;
         //从数据库分页获取数据
-        IPage<ProductCategoryMid> mapPage = productCategoryMidMapper.selectProductCategoryMidInfoBypage(page,wrapper);
+        IPage<ProductCategoryMid> mapPage = productCategoryMidMapper.selectProductCategoryMidInfoByPage(page,wrapper);
         log.info("总页数"+mapPage.getPages());
         log.info("总记录数"+mapPage.getTotal());
         List<ProductCategoryMid> productCategoryMidList = mapPage.getRecords() ;

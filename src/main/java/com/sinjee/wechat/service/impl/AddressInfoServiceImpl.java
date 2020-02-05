@@ -93,4 +93,13 @@ public class AddressInfoServiceImpl implements AddressInfoService {
         addressInfo.setEnableFlag(0);
         return addressInfoMapper.update(addressInfo,wrapper);
     }
+
+    @Override
+    public List<AddressInfoDTO> getAllAddressByOpenid(String openid) {
+        QueryWrapper<AddressInfo> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1).eq("open_id",openid) ;
+
+        List<AddressInfo> addressInfoList = addressInfoMapper.selectList(wrapper) ;
+        return BeanConversionUtils.copyToAnotherList(AddressInfoDTO.class,addressInfoList);
+    }
 }

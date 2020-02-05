@@ -3,6 +3,8 @@ package com.sinjee.wechat.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sinjee.wechat.dto.AddressInfoDTO;
 
+import java.util.List;
+
 public interface AddressInfoService {
 
     AddressInfoDTO getAddressById(Integer id);
@@ -16,4 +18,6 @@ public interface AddressInfoService {
     Integer update(AddressInfoDTO addressInfoDTO) ;
 
     Integer delete(Integer id);
+
+    List<AddressInfoDTO> getAllAddressByOpenid(String openid);
 }

@@ -6,15 +6,20 @@ import com.sinjee.common.CacheBeanCopier;
 import com.sinjee.common.ResultVOUtil;
 import com.sinjee.vo.ResultVO;
 import com.sinjee.wechat.dto.AddressInfoDTO;
+import com.sinjee.wechat.form.ShopCartForm;
+import com.sinjee.wechat.form.WechatAddressForm;
 import com.sinjee.wechat.service.AddressInfoService;
 import com.sinjee.wechat.vo.WechatAddressVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -52,9 +57,38 @@ public class WechatAddressController {
         log.info("openid={}",openid);
         List<AddressInfoDTO> addressInfoDTOList = addressInfoService.getAllAddressByOpenid(openid) ;
         if (null == addressInfoDTOList || addressInfoDTOList.size() == 0){
-            ResultVOUtil.error(261,"尚无默认地址");
+            ResultVOUtil.error(262,"尚无地址");
         }
 
         return ResultVOUtil.success(BeanConversionUtils.copyToAnotherList(WechatAddressVO.class,addressInfoDTOList)) ;
+    }
+
+
+    @PostMapping("/addOrEdit")
+    @AccessTokenIdempotency
+    public ResultVO addOrEdit(String type,String openid, @Valid WechatAddressForm wechatAddressForm, BindingResult bindingResult){
+
+        if (bindingResult.hasErrors()){
+            ResultVOUtil.error(263,bindingResult.getFieldError().getDefaultMessage()) ;
+        }
+
+        AddressInfoDTO addressInfoDTO = new AddressInfoDTO() ;
+        addressInfoDTO.setOpenId(openid);
+        addressInfoDTO.setAddressLabels(wechatAddressForm.getLabel());
+        addressInfoDTO.setBuyerAddress(wechatAddressForm.getAddress());
+        addressInfoDTO.setBuyerName(wechatAddressForm.getName());
+        addressInfoDTO.setBuyerPhone(wechatAddressForm.getPhone());
+        Integer res = 0 ;
+        if ("add".equals(type)){
+            res = addressInfoService.save(addressInfoDTO);
+        }else if ("edit".equals(type)){
+            res = addressInfoService.update(addressInfoDTO);
+        }
+
+        if (!(res > 0)){
+            ResultVOUtil.error(263,"地址保存失败") ;
+        }
+
+        return ResultVOUtil.success() ;
     }
 }

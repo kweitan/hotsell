@@ -10,6 +10,7 @@
         <result column="buyer_openid" jdbcType="VARCHAR" property="buyerOpenid" />
         <result column="transaction_id" jdbcType="VARCHAR" property="transactionId" />
         <result column="order_amount" jdbcType="DECIMAL" property="orderAmount" />
+        <result column="act_amount" jdbcType="DECIMAL" property="actAmount" />
         <result column="order_status" jdbcType="VARCHAR" property="orderStatus" />
         <result column="pay_status" jdbcType="VARCHAR" property="payStatus" />
         <result column="enable_flag" jdbcType="TINYINT" property="enableFlag" />

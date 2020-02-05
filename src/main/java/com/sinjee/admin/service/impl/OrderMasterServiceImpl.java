@@ -14,10 +14,7 @@ import com.sinjee.admin.mapper.OrderMasterMapper;
 import com.sinjee.admin.service.OrderDetailService;
 import com.sinjee.admin.service.OrderMasterService;
 import com.sinjee.admin.service.ProductInfoService;
-import com.sinjee.common.BeanConversionUtils;
-import com.sinjee.common.CacheBeanCopier;
-import com.sinjee.common.DateUtils;
-import com.sinjee.common.KeyUtil;
+import com.sinjee.common.*;
 import com.sinjee.enums.OrderStatusEnum;
 import com.sinjee.enums.PayStatusEnum;
 import com.sinjee.exceptions.MyException;
@@ -126,10 +123,10 @@ public class OrderMasterServiceImpl implements OrderMasterService {
     }
 
     @Override
+    @Transactional
     public Integer update(OrderMasterDTO orderMasterDTO) {
         OrderMaster orderMaster = new OrderMaster() ;
         CacheBeanCopier.copy(orderMasterDTO,orderMaster);
-
         QueryWrapper<OrderMaster> wrapper = new QueryWrapper();
         wrapper.eq("order_number",orderMasterDTO.getOrderNumber()).eq("enable_flag",1);
         return orderMasterMapper.update(orderMaster,wrapper);
@@ -174,6 +171,42 @@ public class OrderMasterServiceImpl implements OrderMasterService {
         QueryWrapper<OrderMaster> wrapper = new QueryWrapper();
         wrapper.eq("order_number",orderNumber).eq("buyer_openid",openId).eq("enable_flag",1);
         return orderMasterMapper.update(orderMaster,wrapper);
+    }
+
+    @Override
+    @Transactional
+    public OrderMasterDTO pay(OrderMasterDTO orderMasterDTO) {
+
+        //判断订单状态
+        if (!orderMasterDTO.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())) {
+            log.error("订单状态不正确, orderId={}, orderStatus={}",
+                    orderMasterDTO.getOrderNumber(), orderMasterDTO.getOrderStatus());
+            throw new MyException(257,"订单状态不正确");
+        }
+
+        //判断支付状态
+        if (!orderMasterDTO.getPayStatus().equals(PayStatusEnum.WAIT.getCode())) {
+            log.error("订单支付状态不正确, orderDTO={}", GsonUtil.getInstance().toStr(orderMasterDTO));
+            throw new MyException(257,"订单支付状态不正确");
+        }
+
+
+        //修改支付状态
+        orderMasterDTO.setPayStatus(PayStatusEnum.SUCCESS.getCode());
+        OrderMaster orderMaster = new OrderMaster() ;
+        CacheBeanCopier.copy(orderMasterDTO,orderMaster);
+
+        QueryWrapper<OrderMaster> wrapper = new QueryWrapper();
+        wrapper.eq("order_number",orderMasterDTO.getOrderNumber()).
+                eq("buyer_openid",orderMasterDTO.getBuyerOpenid()).eq("enable_flag",1);
+
+        Integer res = orderMasterMapper.update(orderMaster,wrapper) ;
+        if (null == res || !(res > 0)){
+            log.error("修改支付状态失败");
+            throw new MyException(257,"修改支付状态失败");
+        }
+
+        return orderMasterDTO ;
     }
 
     private IPage<OrderMasterDTO> returnPageByMaster(Integer currentPage, Integer pageSize,QueryWrapper<OrderMaster> wrapper){

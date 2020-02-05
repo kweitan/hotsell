@@ -23,4 +23,6 @@ public interface OrderMasterService {
 
     Integer deleteByOpenId(String orderNumber,String openId);
 
+    OrderMasterDTO pay(OrderMasterDTO orderMasterDTO);
+
 }

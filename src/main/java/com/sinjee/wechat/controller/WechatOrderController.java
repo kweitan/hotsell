@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 小小极客
@@ -96,9 +98,11 @@ public class WechatOrderController {
 
             orderMasterDTO.setBuyerOpenid(openid);
             orderMasterDTO.setShopCartModelList(shopCartModelList);
-            orderMasterService.save(orderMasterDTO) ;
+            OrderMasterDTO orderMasterDTO1 = orderMasterService.save(orderMasterDTO) ;
 
-            return null ;
+            Map<String,Object> map = new HashMap<>() ;
+            map.put("orderNumber",orderMasterDTO1.getOrderNumber());
+            return ResultVOUtil.success(map) ;
 
         }else {
             return ResultVOUtil.error(121,"购物车无数据");

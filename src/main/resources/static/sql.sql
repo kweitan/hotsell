@@ -76,6 +76,7 @@ create table `order_master` (
 	`buyer_address` varchar(128) not null comment '买家地址',
 	`buyer_openid` varchar(64) not null comment '买家微信openid',
 	`order_amount` decimal(8,2) not null comment '订单总金额',
+	`act_amount` decimal(8,2) not null comment '订单实际支付金额',
 	`transaction_id` varchar(32) comment '微信支付订单号',
 	`order_status` varchar(16) not null comment '订单状态，默认0-新下单（等待支付） 1-完结 2-取消 3-等待发货 4-等待收货 5-已收货 6-等待评价',
 	`pay_status` varchar(16) not null comment '支付状态，默认0-等待支付 1-支付成功',

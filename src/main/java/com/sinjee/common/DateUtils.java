@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * @ClassName DateUtils
@@ -19,12 +20,30 @@ public class DateUtils {
 
     public static String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
+    public static String DATE_DTIME_FORMAT = "yyyyMMddHHmmss";
+
     public static String DATE_FORMAT_CHINESE = "yyyy年M月d日";
 
     public static Timestamp getTimestamp(){
         return new Timestamp(new Date().getTime()) ;
     }
 
+    public static String getCurrentDateAdd(int seconds) {
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+8:00")) ;
+        calendar.set(Calendar.MINUTE,seconds);
+
+        String datestr = null;
+        SimpleDateFormat df = new SimpleDateFormat(DateUtils.DATE_DTIME_FORMAT);
+        datestr = df.format(calendar.getTime());
+        return datestr;
+    }
+
+    public static String getCurrentDateBy() {
+        String datestr = null;
+        SimpleDateFormat df = new SimpleDateFormat(DateUtils.DATE_DTIME_FORMAT);
+        datestr = df.format(new Date());
+        return datestr;
+    }
 
     /**
      * 获取当前日期

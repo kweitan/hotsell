@@ -35,6 +35,9 @@ public class OrderMasterDTO extends BaseDTO{
     /*** 订单总金额 **/
     private BigDecimal orderAmount ;
 
+    /**订单实际支付金额**/
+    private BigDecimal actAmount ;
+
     /*** 订单状态，默认0-新下单（等待支付） 1-完结 2-取消 3-等待发货 4-等待收货 5-已收货 6-等待评价 **/
     private String orderStatus ;
 

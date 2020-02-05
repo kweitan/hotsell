@@ -77,7 +77,7 @@ public class WechatOrderController {
                     parseString2List(shopCartForm.getShopCartList(),ShopCartModel.class);
         }catch (Exception e){
             log.error(e.getMessage());
-            return ResultVOUtil.error(123,"购物车数据转换粗错");
+            return ResultVOUtil.error(123,"购物车数据转换出错");
         }
 
         if (null != shopCartModelList && shopCartModelList.size()>0){

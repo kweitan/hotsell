@@ -85,13 +85,14 @@ public class WechatPayController {
 
             /**
              * 发起预支付 wxPayService.createOrder(orderRequest)
-             * **/
+             */
 
             /***
              * 查询支付订单状态 wxPayService.queryOrder()
              */
 
             return ResultVOUtil.success(wxPayService.createOrder(orderRequest));
+
         } catch (Exception e) {
             log.error("微信支付失败！订单号：{},原因:{}", orderNumber, e.getMessage());
             e.printStackTrace();
@@ -122,7 +123,6 @@ public class WechatPayController {
             /**订单金额**/
             String totalFee = BaseWxPayResult.fenToYuan(result.getTotalFee());
 
-
             OrderMasterDTO orderMasterDTO = orderMasterService.findByOrderNumber(orderId) ;
             if (null == orderMasterDTO || StringUtils.isBlank(orderMasterDTO.getOrderNumber())){
                 log.error("【微信支付】异步通知, 订单不存在, orderId={}", orderId);
@@ -144,7 +144,6 @@ public class WechatPayController {
 
             //修改订单的支付状态
             orderMasterService.pay(orderMasterDTO) ;
-
 
         } catch (Exception e) {
             log.error("微信回调结果异常,异常原因{}", e.getMessage());

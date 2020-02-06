@@ -57,7 +57,7 @@ public class WechatPayController {
 
             OrderMasterDTO orderMasterDTO = orderMasterService.findByOrderNumber(orderNumber) ;
             if(null == orderMasterDTO || StringUtils.isBlank(orderMasterDTO.getOrderNumber())){
-                ResultVOUtil.error(230,"订单不存在");
+                return ResultVOUtil.error(230,"订单不存在");
             }
 
             WxPayUnifiedOrderRequest orderRequest = new WxPayUnifiedOrderRequest();

@@ -115,15 +115,16 @@ public class WechatBuyerInfoController {
         String openid = null ;
         try {
             sessionKey = AESCBCUtil.decrypt(sessionKeys,md5Salt);
+            log.info("sessionKey="+sessionKey);
             if (null == sessionKey){
                 return ResultVOUtil.error(101,"user check failed");
             }
 
             // 用户信息校验
             if (!wxMaService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
-                return ResultVOUtil.error(101,"user check failed");
+                return ResultVOUtil.error(105,"user check failed");
             }
-
+            log.info("用户信息校验通过");
             // 解密用户信息
             WxMaUserInfo userInfo = wxMaService.getUserService().getUserInfo(sessionKey, encryptedData, iv);
             // 可以增加自己的逻辑，关联业务相关数据
@@ -151,7 +152,9 @@ public class WechatBuyerInfoController {
                 return ResultVOUtil.error(101,"存放redis失败");
             }
         } catch (Exception e) {
-            return ResultVOUtil.error(101,"user check failed");
+            log.error(e.getMessage());
+
+            return ResultVOUtil.error(101,e.getMessage());
         }
 
         if (null == openid){

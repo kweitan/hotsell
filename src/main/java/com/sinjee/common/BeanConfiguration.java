@@ -2,11 +2,9 @@ package com.sinjee.common;
 
 import com.sinjee.interceptor.AccessTokenInterceptor;
 import com.sinjee.interceptor.ApiIdempotencyInterceptor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.annotation.Bean;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
@@ -17,41 +15,29 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
  * 描述 配制自定义Bean
  **/
 @Configurable
+@Slf4j
 public class BeanConfiguration extends WebMvcConfigurationSupport {
 
-    /**
-     * 跨域
-     * @return
-     */
-    @Bean
-    public CorsFilter corsFilter() {
-        final UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
-        final CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.addAllowedOrigin("*");
-        corsConfiguration.addAllowedHeader("*");
-        corsConfiguration.addAllowedMethod("*");
-        urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
-        return new CorsFilter(urlBasedCorsConfigurationSource);
-    }
+    @Autowired
+    private AccessTokenInterceptor accessTokenInterceptor ;
+
+    @Autowired
+    private ApiIdempotencyInterceptor apiIdempotencyInterceptor ;
+
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        // 接口幂等性拦截器
-        registry.addInterceptor(accessTokenInterceptor()) ;
-        registry.addInterceptor(apiIdempotencyInterceptor());
-
+        log.info("添加拦截器={}","accessTokenInterceptor");
+        registry.addInterceptor(accessTokenInterceptor)
+                // addPathPatterns 用于添加拦截规则 ， 先把所有路径都加入拦截， 再一个个排除
+                .addPathPatterns("/webchat/**");
+        // excludePathPatterns 表示改路径不用拦截
+//                .excludePathPatterns("/");
+        registry.addInterceptor(apiIdempotencyInterceptor)
+                // addPathPatterns 用于添加拦截规则 ， 先把所有路径都加入拦截， 再一个个排除
+                .addPathPatterns("/webchat/**");
+        // excludePathPatterns 表示改路径不用拦截
+//                .excludePathPatterns("/");
         super.addInterceptors(registry);
     }
-
-    @Bean
-    public ApiIdempotencyInterceptor apiIdempotencyInterceptor() {
-        return new ApiIdempotencyInterceptor();
-    }
-
-    @Bean
-    public AccessTokenInterceptor accessTokenInterceptor(){
-        return new AccessTokenInterceptor() ;
-    }
-
 }

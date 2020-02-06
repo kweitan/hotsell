@@ -1,6 +1,7 @@
 package com.sinjee.common;
 
 import com.sinjee.exceptions.MyException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.DataType;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -18,6 +19,7 @@ import java.util.concurrent.TimeUnit;
  * 描述 Redis工具
  **/
 @Component
+@Slf4j
 public class RedisUtil {
 
     private static final Long SUCCESS = 1L;
@@ -105,6 +107,7 @@ public class RedisUtil {
             redisTemplate.opsForValue().set(key, value);
             return true;
         } catch (Exception ex) {
+            log.error(ex.getMessage());
             throw new MyException(2,"插入缓存失败！");
         }
     }
@@ -132,6 +135,7 @@ public class RedisUtil {
             redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
             return true;
         } catch (Exception ex) {
+            log.error(ex.getMessage());
             throw new MyException(2,"插入缓存失败！");
         }
     }

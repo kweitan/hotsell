@@ -40,7 +40,7 @@ public class AddressInfoServiceImpl implements AddressInfoService {
     @Override
     public AddressInfoDTO getAddressByOpenid(String openid) {
         QueryWrapper<AddressInfo> wrapper = new QueryWrapper();
-        wrapper.eq("enable_flag",1).eq("open_id",openid).eq("select_status",1);
+        wrapper.eq("enable_flag",1).eq("openid",openid).eq("select_status",1);
         AddressInfo addressInfo = addressInfoMapper.selectOne(wrapper) ;
         AddressInfoDTO addressInfoDTO = new AddressInfoDTO() ;
         CacheBeanCopier.copy(addressInfo,addressInfoDTO);
@@ -97,7 +97,7 @@ public class AddressInfoServiceImpl implements AddressInfoService {
     @Override
     public List<AddressInfoDTO> getAllAddressByOpenid(String openid) {
         QueryWrapper<AddressInfo> wrapper = new QueryWrapper();
-        wrapper.eq("enable_flag",1).eq("open_id",openid) ;
+        wrapper.eq("enable_flag",1).eq("openid",openid) ;
 
         List<AddressInfo> addressInfoList = addressInfoMapper.selectList(wrapper) ;
         return BeanConversionUtils.copyToAnotherList(AddressInfoDTO.class,addressInfoList);

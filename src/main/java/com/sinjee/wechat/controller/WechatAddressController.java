@@ -14,10 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -36,13 +33,15 @@ public class WechatAddressController {
     @Autowired
     private AddressInfoService addressInfoService ;
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/getAddressByOpenid")
     @AccessTokenIdempotency
     public ResultVO getAddressByOpenid(String openid){
+
         log.info("openid={}",openid);
         AddressInfoDTO addressInfoDTO = addressInfoService.getAddressByOpenid(openid) ;
-        if (null == addressInfoDTO || StringUtils.isBlank(addressInfoDTO.getOpenId())){
-            ResultVOUtil.error(261,"尚无默认地址");
+        if (null == addressInfoDTO || StringUtils.isBlank(addressInfoDTO.getOpenid())){
+            return ResultVOUtil.error(261,"尚无默认地址");
         }
 
         WechatAddressVO wechatAddressVO = new WechatAddressVO() ;
@@ -51,29 +50,31 @@ public class WechatAddressController {
         return ResultVOUtil.success(wechatAddressVO) ;
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/getAllAddressByOpenid")
     @AccessTokenIdempotency
     public ResultVO getAllAddressByOpenid(String openid){
         log.info("openid={}",openid);
         List<AddressInfoDTO> addressInfoDTOList = addressInfoService.getAllAddressByOpenid(openid) ;
         if (null == addressInfoDTOList || addressInfoDTOList.size() == 0){
-            ResultVOUtil.error(262,"尚无地址");
+            return ResultVOUtil.error(262,"尚无地址");
         }
 
         return ResultVOUtil.success(BeanConversionUtils.copyToAnotherList(WechatAddressVO.class,addressInfoDTOList)) ;
     }
 
 
+    @CrossOrigin(origins = "*")
     @PostMapping("/addOrEdit")
     @AccessTokenIdempotency
     public ResultVO addOrEdit(String type,String openid, @Valid WechatAddressForm wechatAddressForm, BindingResult bindingResult){
 
         if (bindingResult.hasErrors()){
-            ResultVOUtil.error(263,bindingResult.getFieldError().getDefaultMessage()) ;
+            return ResultVOUtil.error(263,bindingResult.getFieldError().getDefaultMessage()) ;
         }
 
         AddressInfoDTO addressInfoDTO = new AddressInfoDTO() ;
-        addressInfoDTO.setOpenId(openid);
+        addressInfoDTO.setOpenid(openid);
         addressInfoDTO.setAddressLabels(wechatAddressForm.getLabel());
         addressInfoDTO.setBuyerAddress(wechatAddressForm.getAddress());
         addressInfoDTO.setBuyerName(wechatAddressForm.getName());
@@ -86,7 +87,7 @@ public class WechatAddressController {
         }
 
         if (!(res > 0)){
-            ResultVOUtil.error(263,"地址保存失败") ;
+            return ResultVOUtil.error(263,"地址保存失败") ;
         }
 
         return ResultVOUtil.success() ;

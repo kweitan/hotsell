@@ -138,7 +138,7 @@ wechat:
   #accessToken 过期时间 1周 单位S
   accessTokenExpTime: 604800000
   #accessToken 盐值
-  accessToekenScret: token3787idlkdkhjfoi4trqlafhslhUWOTAUWW323
+  accessToekenScret: 3787idlkdkhjfoi4trqlafhslhUWOTAUWW323
   #AES 密钥
   md5Salt: ywqhdgeAFWE34375
 

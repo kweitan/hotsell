@@ -1,6 +1,7 @@
 package com.sinjee.wechat.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -14,13 +15,20 @@ import java.io.Serializable;
 @Data
 @JsonInclude(value= JsonInclude.Include.NON_NULL)
 public class WechatAddressVO implements Serializable {
+
+    @JsonProperty("name")
     private String buyerName;
+
+    @JsonProperty("phone")
     private String buyerPhone;
+
+    @JsonProperty("addressInfo")
     private String buyerAddress;
 
     /** 是否选中 **/
     private Integer selectStatus;
 
     /** 地址标签 **/
+    @JsonProperty("label")
     private String addressLabels;
 }

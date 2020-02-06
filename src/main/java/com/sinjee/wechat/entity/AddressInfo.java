@@ -21,5 +21,5 @@ public class AddressInfo extends WechatBaseEntity {
     /** 地址标签 **/
     private String addressLabels;
 
-    private String openId ;
+    private String openid ;
 }

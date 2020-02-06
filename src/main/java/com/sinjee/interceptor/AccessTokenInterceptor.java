@@ -8,9 +8,12 @@ import com.sinjee.exceptions.MyException;
 import com.sinjee.wechat.dto.BuyerInfoDTO;
 import com.sinjee.wechat.service.BuyerInfoService;
 import com.sinjee.wechat.utils.WechatAccessTokenUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -30,6 +33,8 @@ import java.util.TimeZone;
  * @ClassName AccessTokenInterceptor
  * 描述 AccessTokenInterceptor
  **/
+@Slf4j
+@Component
 public class AccessTokenInterceptor implements HandlerInterceptor {
 
     @Value("${wechat.md5Salt}")
@@ -46,11 +51,14 @@ public class AccessTokenInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object) throws Exception {
-        String accessToken = request.getHeader("accessToken");// 从 http 请求头中取出 token
+        log.info("进入拦截器AccessTokenInterceptor");
+
         // 如果不是映射到方法直接通过
         if(!(object instanceof HandlerMethod)){
             return true;
         }
+        String accessToken = request.getHeader("accessToken");// 从 http 请求头中取出 token
+        log.info("accessToken={}",accessToken);
         HandlerMethod handlerMethod=(HandlerMethod)object;
         Method method=handlerMethod.getMethod();
 

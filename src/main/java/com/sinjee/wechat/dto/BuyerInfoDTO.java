@@ -2,13 +2,15 @@ package com.sinjee.wechat.dto;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * 创建时间 2020 - 01 -06
  *
  * @author kweitan
  */
 @Data
-public class BuyerInfoDTO extends WechatBaseDTO {
+public class BuyerInfoDTO extends WechatBaseDTO implements Serializable {
     private Integer buyerId ;
 
     private String buyerName ;

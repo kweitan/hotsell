@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -50,14 +51,15 @@ public class WechatOrderController {
 
     /***
      * 创建订单
-     * @param openid
+     * @param request
      * @param shopCartForm
      * @return
      */
     @GetMapping("/createOrder")
     @AccessTokenIdempotency
     @ApiIdempotency
-    public ResultVO create(String openid, @Valid ShopCartForm shopCartForm, BindingResult bindingResult){
+    public ResultVO create(HttpServletRequest request, @Valid ShopCartForm shopCartForm, BindingResult bindingResult){
+        String openid = (String)request.getAttribute("openid") ;
         if (bindingResult.hasErrors()){
             log.error("创建订单不对");
             return ResultVOUtil.error(122,bindingResult.getFieldError().getDefaultMessage());

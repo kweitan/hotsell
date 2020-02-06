@@ -12,6 +12,7 @@ import com.sinjee.wechat.service.AddressInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -70,13 +71,23 @@ public class AddressInfoServiceImpl implements AddressInfoService {
     }
 
     @Override
+    @Transactional
     public Integer save(AddressInfoDTO addressInfoDTO) {
         AddressInfo addressInfo = new AddressInfo() ;
         CacheBeanCopier.copy(addressInfoDTO,addressInfo);
+
+        QueryWrapper<AddressInfo> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1).eq("openid",addressInfoDTO.getOpenid());
+        List<AddressInfo> addressInfoList = addressInfoMapper.selectList(wrapper);
+        if (addressInfoList != null && addressInfoList.size() < 2){
+            addressInfo.setSelectStatus(1);
+        }
+
         return addressInfoMapper.insert(addressInfo);
     }
 
     @Override
+    @Transactional
     public Integer update(AddressInfoDTO addressInfoDTO) {
         AddressInfo addressInfo = new AddressInfo() ;
         CacheBeanCopier.copy(addressInfoDTO,addressInfo);

@@ -22,4 +22,6 @@ public class AddressInfoDTO extends WechatBaseDTO{
     private String addressLabels;
 
     private String openid ;
+
+    private String hashNumber ;
 }

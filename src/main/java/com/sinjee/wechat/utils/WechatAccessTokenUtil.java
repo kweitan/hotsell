@@ -54,7 +54,7 @@ public class WechatAccessTokenUtil {
             JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(ConfigInfoUtil.tokenSecret)).withIssuer("auth0").build();
             DecodedJWT jwt = jwtVerifier.verify(accessToken) ;
             map.put("issuer",jwt.getIssuer()) ;
-            map.put("openid",jwt.getClaim("openid"));
+            map.put("openid",jwt.getClaim("openid").asString());
             map.put("expiresTime",jwt.getExpiresAt()) ;
 
         }catch (Exception e){

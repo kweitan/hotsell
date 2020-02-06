@@ -16,6 +16,9 @@ import java.io.Serializable;
 @JsonInclude(value= JsonInclude.Include.NON_NULL)
 public class WechatAddressVO implements Serializable {
 
+    @JsonProperty("number")
+    private Integer addressId;
+
     @JsonProperty("name")
     private String buyerName;
 
@@ -31,4 +34,6 @@ public class WechatAddressVO implements Serializable {
     /** 地址标签 **/
     @JsonProperty("label")
     private String addressLabels;
+
+    private String hashNumber ;
 }

@@ -21,8 +21,18 @@ public class WechatAddressForm implements Serializable {
     private String phone ;
 
     @NotEmpty(message="地址必填")
-    private String address ;
+    private String addressInfo ;
 
+    @NotEmpty(message="标签必选")
     private String label ;
+
+    @NotEmpty(message="类型必填")
+    private String type ;
+
+    @NotEmpty(message="编码不能为空")
+    private String number ;
+
+    @NotEmpty(message="哈希不能为空")
+    private String hashNumber ;
 
 }

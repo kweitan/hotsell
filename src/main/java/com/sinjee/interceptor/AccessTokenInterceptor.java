@@ -58,6 +58,9 @@ public class AccessTokenInterceptor implements HandlerInterceptor {
             return true;
         }
         String accessToken = request.getHeader("accessToken");// 从 http 请求头中取出 token
+        if (StringUtils.isBlank(accessToken)){
+            return true ;
+        }
         log.info("accessToken={}",accessToken);
         HandlerMethod handlerMethod=(HandlerMethod)object;
         Method method=handlerMethod.getMethod();
@@ -72,7 +75,7 @@ public class AccessTokenInterceptor implements HandlerInterceptor {
             Map<String,Object> map = WechatAccessTokenUtil.getMap(accessToken) ;
 
             //校验openid
-            String openid = (String) map.get("openid") ;
+            String openid = (String)map.get("openid") ;
             //String key = HashUtil.signByMD5(openid,md5Salt);
 
             boolean isExist = redisUtil.existsKey(openid);
@@ -100,6 +103,7 @@ public class AccessTokenInterceptor implements HandlerInterceptor {
             }
 
             request.setAttribute("openid",openid);
+
 
         }
         return true;

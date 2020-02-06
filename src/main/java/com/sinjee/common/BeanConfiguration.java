@@ -4,9 +4,9 @@ import com.sinjee.interceptor.AccessTokenInterceptor;
 import com.sinjee.interceptor.ApiIdempotencyInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * @author 小小极客
@@ -14,9 +14,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
  * @ClassName BeanConfiguration
  * 描述 配制自定义Bean
  **/
-@Configurable
+@Configuration
 @Slf4j
-public class BeanConfiguration extends WebMvcConfigurationSupport {
+public class BeanConfiguration implements WebMvcConfigurer {
 
     @Autowired
     private AccessTokenInterceptor accessTokenInterceptor ;
@@ -30,14 +30,15 @@ public class BeanConfiguration extends WebMvcConfigurationSupport {
         log.info("添加拦截器={}","accessTokenInterceptor");
         registry.addInterceptor(accessTokenInterceptor)
                 // addPathPatterns 用于添加拦截规则 ， 先把所有路径都加入拦截， 再一个个排除
-                .addPathPatterns("/webchat/**");
+                .addPathPatterns("/**");
         // excludePathPatterns 表示改路径不用拦截
 //                .excludePathPatterns("/");
         registry.addInterceptor(apiIdempotencyInterceptor)
                 // addPathPatterns 用于添加拦截规则 ， 先把所有路径都加入拦截， 再一个个排除
-                .addPathPatterns("/webchat/**");
+                .addPathPatterns("/**");
         // excludePathPatterns 表示改路径不用拦截
 //                .excludePathPatterns("/");
-        super.addInterceptors(registry);
+
+        WebMvcConfigurer.super.addInterceptors(registry);
     }
 }

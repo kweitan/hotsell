@@ -52,9 +52,9 @@ public class WechatPayController {
     @ResponseBody
     @RequestMapping(value = "wxpay")
     @AccessTokenIdempotency
-    public ResultVO pay(String openid, HttpServletRequest request, String orderNumber, String subject){
+    public ResultVO pay(HttpServletRequest request, String orderNumber, String subject){
+        String openid = (String)request.getAttribute("openid") ;
         try {
-
             OrderMasterDTO orderMasterDTO = orderMasterService.findByOrderNumber(orderNumber) ;
             if(null == orderMasterDTO || StringUtils.isBlank(orderMasterDTO.getOrderNumber())){
                 return ResultVOUtil.error(230,"订单不存在");
@@ -109,6 +109,7 @@ public class WechatPayController {
     @ResponseBody
     @RequestMapping(value = "payNotify")
     public String payNotify(HttpServletRequest request, HttpServletResponse response){
+        String openid = (String)request.getAttribute("openid") ;
         try {
             String xmlResult = IOUtils.toString(request.getInputStream(), request.getCharacterEncoding());
             WxPayOrderNotifyResult result = wxPayService.parseOrderNotifyResult(xmlResult);

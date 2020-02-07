@@ -32,4 +32,5 @@ public class BuyerInfoDTO extends WechatBaseDTO implements Serializable {
     private String unionId ;
 
     private String sessionKey ;
+
 }

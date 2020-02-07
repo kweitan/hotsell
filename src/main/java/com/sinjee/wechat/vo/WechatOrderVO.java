@@ -54,4 +54,6 @@ public class WechatOrderVO implements Serializable {
     private Timestamp createTime ;
 
     List<WechatOrderDetailVO> orderDetailList ;
+
+    private String buyerMessage ;
 }

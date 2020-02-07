@@ -137,4 +137,20 @@ public class WechatOrderController {
 
         return ResultVOUtil.success(wechatOrderVO) ;
     }
+
+    /**
+     * 根据操作类型 订单处理
+     * @param request
+     * @param type
+     * @return
+     */
+    @GetMapping("/selectOrder")
+    @AccessTokenIdempotency
+    @ApiIdempotency
+    public ResultVO selectOrder(HttpServletRequest request, String type){
+        String openid = (String)request.getAttribute("openid") ;
+        log.info("openid={}",openid);
+
+        return null ;
+    }
 }

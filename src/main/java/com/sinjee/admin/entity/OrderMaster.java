@@ -41,4 +41,6 @@ public class OrderMaster extends BaseEntity{
     private String payStatus ;
 
     private String transactionId ;
+
+    private String buyerMessage ;
 }

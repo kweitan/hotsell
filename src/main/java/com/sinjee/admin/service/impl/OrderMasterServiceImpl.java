@@ -226,18 +226,57 @@ public class OrderMasterServiceImpl implements OrderMasterService {
     @Override
     @Transactional
     public Integer cancelOrder(String orderNumber, String openid) {
-        QueryWrapper<OrderMaster> wrapper = new QueryWrapper();
-        wrapper.eq("order_number",orderNumber).
+        QueryWrapper<OrderMaster> uWrapper = new QueryWrapper();
+        uWrapper.eq("order_number",orderNumber).
                 eq("buyer_openid",openid).eq("enable_flag",1)
-        .eq("order_status","NEW")
-        .eq("pay_status","WAIT");
+        .eq("order_status","NEW");
+        uWrapper.and(wrapper -> wrapper.eq("pay_status","WAIT").or().eq("pay_status","SUCCESS"));
 
         OrderMaster orderMaster = new OrderMaster();
         orderMaster.setPayStatus(PayStatusEnum.CLOSED.getCode());
         orderMaster.setOrderStatus(OrderStatusEnum.CANCEL.getCode());
         orderMaster.setUpdateTime(DateUtils.getTimestamp());
 
-        return orderMasterMapper.update(orderMaster,wrapper);
+        return orderMasterMapper.update(orderMaster,uWrapper);
+    }
+
+    @Override
+    public IPage<OrderMasterDTO> findByTpye(Integer currentPage, Integer pageSize, String openid, String type) {
+        QueryWrapper<OrderMaster> wrapper = new QueryWrapper();
+
+        if ("WAIT".equals(type)){
+            //待支付(继续支付 取消订单)【继续支付】 【取消订单】
+            wrapper.eq("buyer_openid",openid)
+                    .eq("enable_flag",1)
+                    .eq("order_status","NEW")
+            .eq("pay_status","WAIT");
+        }else if ("SUCCESS".equals(type)){
+            //待发货【申请退款】【取消订单】
+            wrapper.eq("buyer_openid",openid)
+                    .eq("enable_flag",1)
+                    .eq("order_status","NEW")
+                    .eq("pay_status","SUCCESS");
+        }else if ("SUCCESS".equals(type)){
+            //待收货(不能退款)【查看物流】 【催单】
+            wrapper.eq("buyer_openid",openid)
+                    .eq("enable_flag",1)
+                    .eq("order_status","SHIPMENT")
+                    .eq("pay_status","SUCCESS");
+        }else if ("FINISHED".equals(type)){
+            //已经完成(申请退款 继续评价 也就是待评价)【申请退款】 【继续评价】 (orderStatus:NEW AND payStatus:SUCCESS || orderStatus:NEW AND payStatus:WAIT) 都可以取消订单
+            wrapper.eq("buyer_openid",openid)
+                    .eq("enable_flag",1)
+                    .eq("order_status","FINISHED")
+                    .eq("pay_status","CLOSED");
+        }else if ("CANCEL".equals(type)){
+            //已经取消(再来一单)(包括退款和取消)【再来一单)】
+            wrapper.eq("buyer_openid",openid)
+                    .eq("enable_flag",1)
+                    .eq("order_status","CANCEL")
+                    .eq("pay_status","CLOSED");
+        }
+
+        return returnPageByMaster(currentPage,pageSize,wrapper);
     }
 
     private IPage<OrderMasterDTO> returnPageByMaster(Integer currentPage, Integer pageSize,QueryWrapper<OrderMaster> wrapper){

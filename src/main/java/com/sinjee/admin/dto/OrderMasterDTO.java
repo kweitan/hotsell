@@ -49,4 +49,6 @@ public class OrderMasterDTO extends BaseDTO{
     List<ShopCartModel> shopCartModelList ;
 
     List<OrderDetail> orderDetailList ;
+
+    private String buyerMessage;
 }

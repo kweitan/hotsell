@@ -7,6 +7,7 @@
         <result column="buyer_name" jdbcType="VARCHAR" property="buyerName" />
         <result column="buyer_phone" jdbcType="VARCHAR" property="buyerPhone" />
         <result column="buyer_address" jdbcType="VARCHAR" property="buyerAddress" />
+        <result column="buyer_message" jdbcType="VARCHAR" property="buyerMessage" />
         <result column="buyer_openid" jdbcType="VARCHAR" property="buyerOpenid" />
         <result column="transaction_id" jdbcType="VARCHAR" property="transactionId" />
         <result column="order_amount" jdbcType="DECIMAL" property="orderAmount" />

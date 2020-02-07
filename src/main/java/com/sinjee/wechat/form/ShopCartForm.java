@@ -27,6 +27,8 @@ public class ShopCartForm implements Serializable {
     @NotEmpty(message="地址必填")
     private String buyerAddress ;
 
+    private String buyerMessage ;
+
     @NotEmpty(message="购物车不能为空")
     private String shopCartList ;
 }

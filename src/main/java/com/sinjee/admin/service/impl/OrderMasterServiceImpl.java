@@ -223,6 +223,22 @@ public class OrderMasterServiceImpl implements OrderMasterService {
         return orderMasterDTO ;
     }
 
+    @Override
+    @Transactional
+    public Integer cancelOrder(String orderNumber, String openid) {
+        QueryWrapper<OrderMaster> wrapper = new QueryWrapper();
+        wrapper.eq("order_number",orderNumber).
+                eq("buyer_openid",openid).eq("enable_flag",1)
+        .eq("order_status","NEW")
+        .eq("pay_status","WAIT");
+
+        OrderMaster orderMaster = new OrderMaster();
+        orderMaster.setPayStatus(PayStatusEnum.CLOSED.getCode());
+        orderMaster.setOrderStatus(OrderStatusEnum.CANCEL.getCode());
+
+        return orderMasterMapper.update(orderMaster,wrapper);
+    }
+
     private IPage<OrderMasterDTO> returnPageByMaster(Integer currentPage, Integer pageSize,QueryWrapper<OrderMaster> wrapper){
         Page<OrderMaster> page = new Page<>(currentPage,pageSize) ;
         //从数据库分页获取数据

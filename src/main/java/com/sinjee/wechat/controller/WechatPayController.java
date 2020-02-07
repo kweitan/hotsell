@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -165,13 +166,34 @@ public class WechatPayController {
 
     //退款
     @ResponseBody
-    @RequestMapping(value = "repay")
+    @PostMapping(value = "refund")
     @AccessTokenIdempotency
-    public ResultVO rePay(HttpServletRequest request, String orderNumber, String subject){
+    public ResultVO refund(HttpServletRequest request, String orderNumber, String subject){
         WxPayRefundRequest wxPayRefundRequest = new WxPayRefundRequest() ;
 //        wxPayRefundRequest.setDeviceInfo().
 //        WxPayRefundResult
 //        wxPayService.refund()
         return null ;
+    }
+
+    //退款
+    @ResponseBody
+    @PostMapping(value = "cancel")
+    @AccessTokenIdempotency
+    public ResultVO cancel(HttpServletRequest request, String orderNumber, String hashNumber){
+        String openid = (String)request.getAttribute("openid") ;
+        log.info("openid={}",openid);
+
+        if (!HashUtil.verify(orderNumber,salt,hashNumber)){
+            return ResultVOUtil.error(121,"数据不一致");
+        }
+
+        Integer res = orderMasterService.cancelOrder(orderNumber,openid) ;
+
+        if (res > 0){
+            return ResultVOUtil.success();
+        }
+
+        return ResultVOUtil.error(121,"取消订单失败");
     }
 }

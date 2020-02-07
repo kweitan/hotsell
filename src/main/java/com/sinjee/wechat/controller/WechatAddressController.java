@@ -1,12 +1,10 @@
 package com.sinjee.wechat.controller;
 
 import com.sinjee.annotation.AccessTokenIdempotency;
-import com.sinjee.common.BeanConversionUtils;
-import com.sinjee.common.CacheBeanCopier;
-import com.sinjee.common.HashUtil;
-import com.sinjee.common.ResultVOUtil;
+import com.sinjee.common.*;
 import com.sinjee.vo.ResultVO;
 import com.sinjee.wechat.dto.AddressInfoDTO;
+import com.sinjee.wechat.dto.BuyerInfoDTO;
 import com.sinjee.wechat.form.WechatAddressForm;
 import com.sinjee.wechat.service.AddressInfoService;
 import com.sinjee.wechat.vo.WechatAddressVO;
@@ -34,6 +32,10 @@ public class WechatAddressController {
 
     @Autowired
     private AddressInfoService addressInfoService ;
+
+
+    @Autowired
+    private RedisUtil redisUtil ;
 
     @Value("${myWechat.salt}")
     private String salt ;
@@ -100,15 +102,25 @@ public class WechatAddressController {
             return ResultVOUtil.error(263,"数据不一致") ;
         }
 
+        Object object = redisUtil.getString(openid) ;
+        if (null == object){
+            return ResultVOUtil.error(263,"缓存已经过期") ;
+        }
+        BuyerInfoDTO buyerInfoDTO = (BuyerInfoDTO)object ;
+
         AddressInfoDTO addressInfoDTO = new AddressInfoDTO() ;
         addressInfoDTO.setOpenid(openid);
         addressInfoDTO.setAddressLabels(wechatAddressForm.getLabel());
         addressInfoDTO.setBuyerAddress(wechatAddressForm.getAddressInfo());
         addressInfoDTO.setBuyerName(wechatAddressForm.getName());
         addressInfoDTO.setBuyerPhone(wechatAddressForm.getPhone());
+        addressInfoDTO.setUpdater(buyerInfoDTO.getUpdater());
+        addressInfoDTO.setUpdateTime(DateUtils.getTimestamp());
 
         Integer res = 0 ;
         if ("add".equals(type)){
+            addressInfoDTO.setCreator(buyerInfoDTO.getUpdater());
+            addressInfoDTO.setUpdateTime(DateUtils.getTimestamp());
             res = addressInfoService.save(addressInfoDTO);
         }else if ("edit".equals(type)){
             res = addressInfoService.update(addressInfoDTO);

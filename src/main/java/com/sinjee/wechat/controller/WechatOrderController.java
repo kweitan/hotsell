@@ -2,7 +2,6 @@ package com.sinjee.wechat.controller;
 
 import com.sinjee.admin.dto.OrderMasterDTO;
 import com.sinjee.admin.service.OrderMasterService;
-import com.sinjee.admin.service.ProductInfoService;
 import com.sinjee.annotation.AccessTokenIdempotency;
 import com.sinjee.annotation.ApiIdempotency;
 import com.sinjee.common.*;
@@ -10,13 +9,14 @@ import com.sinjee.vo.ResultVO;
 import com.sinjee.wechat.dto.BuyerInfoDTO;
 import com.sinjee.wechat.form.ShopCartForm;
 import com.sinjee.wechat.form.ShopCartModel;
+import com.sinjee.wechat.vo.WechatOrderDetailVO;
+import com.sinjee.wechat.vo.WechatOrderVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,9 +44,6 @@ public class WechatOrderController {
     private RedisUtil redisUtil ;
 
     @Autowired
-    private ProductInfoService productInfoService ;
-
-    @Autowired
     private OrderMasterService orderMasterService ;
 
     /***
@@ -65,7 +62,6 @@ public class WechatOrderController {
             return ResultVOUtil.error(122,bindingResult.getFieldError().getDefaultMessage());
         }
 
-        //校验hashNumber productNumber
         log.info("openid={}",openid);
         if (StringUtils.isBlank(openid)){
             return ResultVOUtil.error(121,"用户尚未授权");
@@ -90,13 +86,19 @@ public class WechatOrderController {
             }
 
             //取出用户信息
-            BuyerInfoDTO buyerInfoDTO = (BuyerInfoDTO)redisUtil.getString(openid);
-            if (null == buyerInfoDTO || StringUtils.isBlank(buyerInfoDTO.getOpenId())){
-                return ResultVOUtil.error(121,"用户尚未授权");
+            Object object = redisUtil.getString(openid) ;
+            if (null == object){
+                return ResultVOUtil.error(121,"缓存已经过期") ;
             }
+            BuyerInfoDTO buyerInfoDTO = (BuyerInfoDTO)object ;
 
             OrderMasterDTO orderMasterDTO = new OrderMasterDTO();
             CacheBeanCopier.copy(shopCartForm,orderMasterDTO);
+
+            orderMasterDTO.setCreator(buyerInfoDTO.getCreator());
+            orderMasterDTO.setCreateTime(DateUtils.getTimestamp());
+            orderMasterDTO.setUpdater(buyerInfoDTO.getUpdater());
+            orderMasterDTO.setUpdateTime(DateUtils.getTimestamp());
 
             orderMasterDTO.setBuyerOpenid(openid);
             orderMasterDTO.setShopCartModelList(shopCartModelList);
@@ -111,5 +113,28 @@ public class WechatOrderController {
             return ResultVOUtil.error(121,"购物车无数据");
         }
 
+    }
+
+    @GetMapping("/getOrderByNumber")
+    @AccessTokenIdempotency
+    @ApiIdempotency
+    public ResultVO getOrderByNumber(HttpServletRequest request, String orderNumber, String hashNumber){
+        String openid = (String)request.getAttribute("openid") ;
+        log.info("openid={}",openid);
+
+        if (!HashUtil.verify(orderNumber,salt,hashNumber)){
+            return ResultVOUtil.error(121,"数据不一致");
+        }
+
+        OrderMasterDTO orderMasterDTO = orderMasterService.findByOrderNumberAndOpenid(orderNumber,openid) ;
+        WechatOrderVO wechatOrderVO = new WechatOrderVO() ;
+        CacheBeanCopier.copy(orderMasterDTO,wechatOrderVO);
+
+        List<WechatOrderDetailVO> wechatOrderDetailVOList = BeanConversionUtils.
+                copyToAnotherList(WechatOrderDetailVO.class,orderMasterDTO.getOrderDetailList()) ;
+
+        wechatOrderVO.setOrderDetailList(wechatOrderDetailVOList);
+
+        return ResultVOUtil.success(wechatOrderVO) ;
     }
 }

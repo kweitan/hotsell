@@ -27,4 +27,6 @@ public interface OrderMasterService {
 
     OrderMasterDTO pay(OrderMasterDTO orderMasterDTO);
 
+    Integer cancelOrder(String orderNumber,String openid);
+
 }

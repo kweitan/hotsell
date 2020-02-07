@@ -235,6 +235,7 @@ public class OrderMasterServiceImpl implements OrderMasterService {
         OrderMaster orderMaster = new OrderMaster();
         orderMaster.setPayStatus(PayStatusEnum.CLOSED.getCode());
         orderMaster.setOrderStatus(OrderStatusEnum.CANCEL.getCode());
+        orderMaster.setUpdateTime(DateUtils.getTimestamp());
 
         return orderMasterMapper.update(orderMaster,wrapper);
     }

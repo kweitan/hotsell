@@ -104,6 +104,7 @@ public class WechatOrderController {
 
             Map<String,Object> map = new HashMap<>() ;
             map.put("orderNumber",orderMasterDTO1.getOrderNumber());
+            map.put("hashNumber",HashUtil.sign(orderMasterDTO1.getOrderNumber(),salt)) ;
             return ResultVOUtil.success(map) ;
 
         }else {

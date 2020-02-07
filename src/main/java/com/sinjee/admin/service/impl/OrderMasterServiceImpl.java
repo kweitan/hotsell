@@ -105,6 +105,24 @@ public class OrderMasterServiceImpl implements OrderMasterService {
     }
 
     @Override
+    public OrderMasterDTO findByOrderNumberAndOpenid(String orderNumber,String openid) {
+        QueryWrapper<OrderMaster> wrapper = new QueryWrapper();
+        wrapper.eq("order_number",orderNumber).eq("enable_flag",1).eq("buyer_openid",openid);
+        OrderMaster orderMaster = orderMasterMapper.selectOne(wrapper) ;
+        if (null == orderMaster || StringUtils.isBlank(orderMaster.getOrderNumber())){
+            throw new MyException(257,"订单不存在");
+        }
+        OrderMasterDTO orderMasterDTO = new OrderMasterDTO() ;
+        CacheBeanCopier.copy(orderMaster,orderMasterDTO);
+
+        QueryWrapper<OrderDetail> detailWrapper = new QueryWrapper();
+        detailWrapper.eq("order_number",orderMaster.getOrderNumber()).eq("enable_flag",1);
+        List<OrderDetail> orderDetailList = orderDetailMapper.selectList(detailWrapper) ;
+        orderMasterDTO.setOrderDetailList(orderDetailList);
+        return orderMasterDTO;
+    }
+
+    @Override
     public OrderMasterDTO findByOrderNumber(String orderNumber) {
         QueryWrapper<OrderMaster> wrapper = new QueryWrapper();
         wrapper.eq("order_number",orderNumber).eq("enable_flag",1);
@@ -115,10 +133,6 @@ public class OrderMasterServiceImpl implements OrderMasterService {
         OrderMasterDTO orderMasterDTO = new OrderMasterDTO() ;
         CacheBeanCopier.copy(orderMaster,orderMasterDTO);
 
-        QueryWrapper<OrderDetail> detailWrapper = new QueryWrapper();
-        detailWrapper.eq("order_number",orderNumber).eq("enable_flag",1);
-        List<OrderDetail> orderDetailList = orderDetailMapper.selectList(detailWrapper) ;
-        orderMasterDTO.setOrderDetailList(orderDetailList);
         return orderMasterDTO;
     }
 

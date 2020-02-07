@@ -97,6 +97,7 @@ public class AddressInfoServiceImpl implements AddressInfoService {
     }
 
     @Override
+    @Transactional
     public Integer delete(Integer id) {
         QueryWrapper<AddressInfo> wrapper = new QueryWrapper();
         wrapper.eq("enable_flag",1).eq("address_id",id);

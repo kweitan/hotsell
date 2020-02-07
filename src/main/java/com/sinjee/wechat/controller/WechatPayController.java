@@ -3,16 +3,15 @@ package com.sinjee.wechat.controller;
 import com.github.binarywang.wxpay.bean.notify.WxPayNotifyResponse;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
 import com.github.binarywang.wxpay.bean.request.BaseWxPayRequest;
-import com.github.binarywang.wxpay.bean.request.WxPayRedpackQueryRequest;
 import com.github.binarywang.wxpay.bean.request.WxPayRefundRequest;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.bean.result.BaseWxPayResult;
-import com.github.binarywang.wxpay.bean.result.WxPayRefundResult;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.sinjee.admin.dto.OrderMasterDTO;
 import com.sinjee.admin.service.OrderMasterService;
 import com.sinjee.annotation.AccessTokenIdempotency;
 import com.sinjee.common.DateUtils;
+import com.sinjee.common.HashUtil;
 import com.sinjee.common.MathUtil;
 import com.sinjee.common.ResultVOUtil;
 import com.sinjee.vo.ResultVO;
@@ -20,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -45,6 +45,9 @@ public class WechatPayController {
     @Autowired
     private OrderMasterService orderMasterService ;
 
+    @Value("${myWechat.salt}")
+    private String salt ;
+
     /**
      * 微信统一下单接口使用方式如下 预支付
      * @param request
@@ -55,10 +58,14 @@ public class WechatPayController {
     @ResponseBody
     @RequestMapping(value = "wxpay")
     @AccessTokenIdempotency
-    public ResultVO pay(HttpServletRequest request, String orderNumber, String subject){
+    public ResultVO pay(HttpServletRequest request, String orderNumber, String subject,String hashNumber){
         String openid = (String)request.getAttribute("openid") ;
+        if (!HashUtil.verify(orderNumber,salt,hashNumber)){
+            return ResultVOUtil.error(230,"数据不一致");
+        }
+
         try {
-            OrderMasterDTO orderMasterDTO = orderMasterService.findByOrderNumber(orderNumber) ;
+            OrderMasterDTO orderMasterDTO = orderMasterService.findByOrderNumberAndOpenid(orderNumber,openid) ;
             if(null == orderMasterDTO || StringUtils.isBlank(orderMasterDTO.getOrderNumber())){
                 return ResultVOUtil.error(230,"订单不存在");
             }
@@ -69,7 +76,7 @@ public class WechatPayController {
             orderRequest.setBody(subject);
 
             /**要求32个字符内，只能是数字、大小写字母**/
-            orderRequest.setOutTradeNo("订单号");
+            orderRequest.setOutTradeNo(orderNumber);
 
             /**标价金额 订单总金额，单位为分**/
             orderRequest.setTotalFee(BaseWxPayRequest.yuanToFen(orderMasterDTO.getOrderAmount().toString()));//元转成分
@@ -112,7 +119,6 @@ public class WechatPayController {
     @ResponseBody
     @RequestMapping(value = "payNotify")
     public String payNotify(HttpServletRequest request, HttpServletResponse response){
-        String openid = (String)request.getAttribute("openid") ;
         try {
             String xmlResult = IOUtils.toString(request.getInputStream(), request.getCharacterEncoding());
             WxPayOrderNotifyResult result = wxPayService.parseOrderNotifyResult(xmlResult);

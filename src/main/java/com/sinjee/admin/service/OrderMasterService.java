@@ -9,6 +9,8 @@ public interface OrderMasterService {
 
     OrderMasterDTO save(OrderMasterDTO orderMasterDTO);
 
+    OrderMasterDTO findByOrderNumberAndOpenid(String orderNumber,String openid);
+
     OrderMasterDTO findByOrderNumber(String orderNumber);
 
     Integer update(OrderMasterDTO orderMasterDTO) ;

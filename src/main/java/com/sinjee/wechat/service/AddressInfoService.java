@@ -20,4 +20,6 @@ public interface AddressInfoService {
     Integer delete(Integer id);
 
     List<AddressInfoDTO> getAllAddressByOpenid(String openid);
+
+    Integer updateSelectStatus(String openid,Integer addressId) ;
 }

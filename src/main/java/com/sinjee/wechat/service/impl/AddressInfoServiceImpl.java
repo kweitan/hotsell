@@ -113,4 +113,21 @@ public class AddressInfoServiceImpl implements AddressInfoService {
         List<AddressInfo> addressInfoList = addressInfoMapper.selectList(wrapper) ;
         return BeanConversionUtils.copyToAnotherList(AddressInfoDTO.class,addressInfoList);
     }
+
+    @Override
+    @Transactional
+    public Integer updateSelectStatus(String openid, Integer addressId) {
+        AddressInfo addressInfo = new AddressInfo() ;
+        QueryWrapper<AddressInfo> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1).eq("openid",openid).eq("select_status",1);
+        addressInfo.setSelectStatus(0);
+        addressInfoMapper.update(addressInfo,wrapper);
+
+        addressInfo.setSelectStatus(1);
+        QueryWrapper<AddressInfo> wrapper1 = new QueryWrapper();
+        wrapper1.eq("enable_flag",1).eq("openid",openid).eq("select_status",0)
+        .eq("address_id",addressId);
+
+        return addressInfoMapper.update(addressInfo,wrapper1);
+    }
 }

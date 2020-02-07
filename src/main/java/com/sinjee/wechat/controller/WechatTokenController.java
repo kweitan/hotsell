@@ -20,13 +20,13 @@ import java.util.Map;
  * 描述 TokenController
  **/
 @RestController
-@RequestMapping("wechat")
+@RequestMapping("wechat/token")
 public class WechatTokenController {
 
     @Autowired
     private TokenService tokenService;
 
-    @GetMapping("/genOrder/token")
+    @GetMapping("/genToken")
     @AccessTokenIdempotency
     public ResultVO token() {
         Map<String,Object> map = new HashMap<>() ;

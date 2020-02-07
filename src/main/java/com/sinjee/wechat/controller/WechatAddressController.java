@@ -120,4 +120,28 @@ public class WechatAddressController {
 
         return ResultVOUtil.error(263,"地址保存失败") ;
     }
+
+    /**
+     * 更新默认状态
+     * @param request
+     * @param addressNumber
+     * @param hashNumber
+     * @return
+     */
+    @CrossOrigin(origins = "*")
+    @PostMapping("/updateSelectStatus")
+    @AccessTokenIdempotency
+    public ResultVO updatSelectStatus(HttpServletRequest request, String addressNumber,String hashNumber){
+        String openid = (String)request.getAttribute("openid") ;
+        log.info("openid={}",openid);
+        if (!HashUtil.verify(addressNumber,salt,hashNumber)){
+            return ResultVOUtil.error(263,"数据不一致") ;
+        }
+
+        Integer res = addressInfoService.updateSelectStatus(openid,Integer.valueOf(addressNumber)) ;
+        if (res > 0){
+            return ResultVOUtil.success() ;
+        }
+        return ResultVOUtil.error(263,"地址状态更新失败") ;
+    }
 }

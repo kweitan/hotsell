@@ -3,8 +3,11 @@ package com.sinjee.wechat.controller;
 import com.github.binarywang.wxpay.bean.notify.WxPayNotifyResponse;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
 import com.github.binarywang.wxpay.bean.request.BaseWxPayRequest;
+import com.github.binarywang.wxpay.bean.request.WxPayRedpackQueryRequest;
+import com.github.binarywang.wxpay.bean.request.WxPayRefundRequest;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.bean.result.BaseWxPayResult;
+import com.github.binarywang.wxpay.bean.result.WxPayRefundResult;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.sinjee.admin.dto.OrderMasterDTO;
 import com.sinjee.admin.service.OrderMasterService;
@@ -152,5 +155,17 @@ public class WechatPayController {
         }
 
         return WxPayNotifyResponse.success("处理成功!") ;
+    }
+
+    //退款
+    @ResponseBody
+    @RequestMapping(value = "repay")
+    @AccessTokenIdempotency
+    public ResultVO rePay(HttpServletRequest request, String orderNumber, String subject){
+        WxPayRefundRequest wxPayRefundRequest = new WxPayRefundRequest() ;
+//        wxPayRefundRequest.setDeviceInfo().
+//        WxPayRefundResult
+//        wxPayService.refund()
+        return null ;
     }
 }

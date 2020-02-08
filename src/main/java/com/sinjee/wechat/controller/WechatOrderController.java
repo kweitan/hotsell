@@ -50,7 +50,7 @@ public class WechatOrderController {
      * @param shopCartForm
      * @return
      */
-    @GetMapping("/createOrder")
+    @PostMapping("/createOrder")
     @AccessTokenIdempotency
     @ApiIdempotency
     public ResultVO create(HttpServletRequest request, @Valid ShopCartForm shopCartForm, BindingResult bindingResult){

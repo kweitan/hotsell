@@ -29,7 +29,7 @@ public interface ProductInfoMapper extends BaseMapper<ProductInfo> {
     ProductInfo selectProductInfoEntityById(Integer productId);
 
     //根据商品编号查找商品
-    ProductInfo selecttProductInfoEntityByProductNumber(String productNumber) ;
+    ProductInfo selectProductByNumber(String productNumber) ;
 
     //删除商品
     Integer deleteProductInfo(Integer productId) ;

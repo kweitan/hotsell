@@ -20,6 +20,6 @@ public class ShopCartModel implements Serializable {
     private String hashNumber ;
 
     /** 商品数量 **/
-    private Integer productCount ;
+    private String productCount ;
 
 }

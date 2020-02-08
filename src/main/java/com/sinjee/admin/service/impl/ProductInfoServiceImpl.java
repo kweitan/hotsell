@@ -252,11 +252,11 @@ public class ProductInfoServiceImpl implements ProductInfoService {
     @Transactional
     public void increaseStock(List<ShopCartModel> shopCartModelList) {
         for (ShopCartModel shopCartModel: shopCartModelList) {
-            ProductInfo productInfo = productInfoMapper.selecttProductInfoEntityByProductNumber(shopCartModel.getProductNumber());
+            ProductInfo productInfo = productInfoMapper.selectProductByNumber(shopCartModel.getProductNumber());
             if (productInfo == null || StringUtils.isBlank(productInfo.getProductNumber())) {
                 throw new MyException(255,"商品不存在");
             }
-            Integer result = productInfo.getProductStock() + shopCartModel.getProductCount();
+            Integer result = productInfo.getProductStock() + Integer.valueOf(shopCartModel.getProductCount());
             productInfo.setProductStock(result);
             productInfoMapper.updateProductInfo(productInfo);
         }
@@ -267,19 +267,22 @@ public class ProductInfoServiceImpl implements ProductInfoService {
     @Transactional
     public void decreaseStock(List<ShopCartModel> shopCartModelList) {
         for (ShopCartModel shopCartModel: shopCartModelList) {
-            ProductInfo productInfo = productInfoMapper.selecttProductInfoEntityByProductNumber(shopCartModel.getProductNumber());
+            ProductInfo productInfo = productInfoMapper.selectProductByNumber(shopCartModel.getProductNumber());
             if (productInfo == null || StringUtils.isBlank(productInfo.getProductNumber())) {
                 throw new MyException(255,"商品不存在");
             }
 
-            Integer result = productInfo.getProductStock() - shopCartModel.getProductCount();
+            Integer result = productInfo.getProductStock() - Integer.valueOf(shopCartModel.getProductCount());
             if (result < 0) {
                 throw new MyException(256,"商品库存不对");
             }
 
             productInfo.setProductStock(result);
 
-            productInfoMapper.updateProductInfo(productInfo);
+            QueryWrapper<ProductInfo> wrapper = new QueryWrapper();
+            wrapper.eq("enable_flag",1).eq("product_number",productInfo.getProductNumber());
+
+            productInfoMapper.update(productInfo,wrapper);
         }
     }
 }

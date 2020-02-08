@@ -109,7 +109,7 @@
         select * from product_info where product_id=#{productId} and enable_flag=1
     </select>
 
-    <select id="selectProductInfoEntityByProductNumber" parameterType="java.lang.String">
+    <select id="selectProductByNumber" resultType="com.sinjee.admin.entity.ProductInfo" parameterType="java.lang.String">
         select * from product_info where product_number=#{productNumber} and enable_flag=1
     </select>
 

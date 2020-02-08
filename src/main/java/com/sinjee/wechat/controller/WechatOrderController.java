@@ -93,9 +93,9 @@ public class WechatOrderController {
             OrderMasterDTO orderMasterDTO = new OrderMasterDTO();
             CacheBeanCopier.copy(shopCartForm,orderMasterDTO);
 
-            orderMasterDTO.setCreator(buyerInfoDTO.getCreator());
+            orderMasterDTO.setCreator(buyerInfoDTO.getBuyerName());
             orderMasterDTO.setCreateTime(DateUtils.getTimestamp());
-            orderMasterDTO.setUpdater(buyerInfoDTO.getUpdater());
+            orderMasterDTO.setUpdater(buyerInfoDTO.getBuyerName());
             orderMasterDTO.setUpdateTime(DateUtils.getTimestamp());
 
             orderMasterDTO.setBuyerOpenid(openid);
@@ -115,7 +115,6 @@ public class WechatOrderController {
 
     @GetMapping("/getOrderByNumber")
     @AccessTokenIdempotency
-    @ApiIdempotency
     public ResultVO getOrderByNumber(HttpServletRequest request, String orderNumber, String hashNumber){
         String openid = (String)request.getAttribute("openid") ;
         log.info("openid={}",openid);

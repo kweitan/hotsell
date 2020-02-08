@@ -71,10 +71,11 @@ public class OrderMasterServiceImpl implements OrderMasterService {
             orderDetailDTO.setProductLabels(productInfoDTO.getProductLabels());
             orderDetailDTO.setProductName(productInfoDTO.getProductName());
             orderDetailDTO.setProductPrice(productInfoDTO.getProductPrice());
-            orderDetailDTO.setProductQuantity(shopCartModel.getProductCount());
+            orderDetailDTO.setProductQuantity(Integer.valueOf(shopCartModel.getProductCount()));
             orderDetailDTO.setProductUnit(productInfoDTO.getProductUnit());
-            orderDetailDTO.setCreator(orderMasterDTO.getBuyerOpenid());
-            orderDetailDTO.setUpdater(orderMasterDTO.getBuyerOpenid());
+            orderDetailDTO.setProductNumber(productInfoDTO.getProductNumber());
+            orderDetailDTO.setCreator(orderMasterDTO.getBuyerName());
+            orderDetailDTO.setUpdater(orderMasterDTO.getBuyerName());
             orderDetailDTO.setCreateTime(DateUtils.getTimestamp());
             orderDetailDTO.setUpdateTime(DateUtils.getTimestamp());
 

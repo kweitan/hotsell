@@ -16,9 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -139,7 +137,7 @@ public class WechatOrderController {
     }
 
     /**
-     * 根据操作类型 订单处理
+     * 根据操作类型 订单处理 类型
      * @param request
      * @param type
      * @return
@@ -153,4 +151,56 @@ public class WechatOrderController {
 
         return null ;
     }
+
+    /**
+     * 申请退款 中台审核
+     */
+    @ResponseBody
+    @PostMapping(value = "applyRefund")
+    @AccessTokenIdempotency
+    public ResultVO applyRefund(HttpServletRequest request, String orderNumber, String hashNumber){
+        String openid = (String)request.getAttribute("openid") ;
+        log.info("openid={}",openid);
+
+        if (!HashUtil.verify(orderNumber,salt,hashNumber)){
+            return ResultVOUtil.error(121,"数据不一致");
+        }
+
+        Integer res = orderMasterService.applyOrder(orderNumber,openid) ;
+
+        if (res > 0){
+            return ResultVOUtil.success();
+        }
+
+        return ResultVOUtil.error(121,"申请退款失败");
+    }
+
+
+    /**
+     * 取消订单
+     */
+    //取消
+    @ResponseBody
+    @PostMapping(value = "cancel")
+    @AccessTokenIdempotency
+    public ResultVO cancel(HttpServletRequest request, String orderNumber, String hashNumber){
+        String openid = (String)request.getAttribute("openid") ;
+        log.info("openid={}",openid);
+
+        if (!HashUtil.verify(orderNumber,salt,hashNumber)){
+            return ResultVOUtil.error(121,"数据不一致");
+        }
+
+        Integer res = orderMasterService.cancelOrder(orderNumber,openid) ;
+
+        if (res > 0){
+            return ResultVOUtil.success();
+        }
+
+        return ResultVOUtil.error(121,"取消订单失败");
+    }
+
+    /**
+     *
+     */
 }

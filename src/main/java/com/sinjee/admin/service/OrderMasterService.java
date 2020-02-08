@@ -29,6 +29,10 @@ public interface OrderMasterService {
 
     Integer cancelOrder(String orderNumber,String openid);
 
+    Integer applyOrder(String orderNumber,String openid);
+
+    Integer updataOrderStatus(String orderNumber,String payStatus);
+
     IPage<OrderMasterDTO> findByTpye(Integer currentPage, Integer pageSize,String openid,String type);
 
 }

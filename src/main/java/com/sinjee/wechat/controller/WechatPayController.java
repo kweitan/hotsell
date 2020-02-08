@@ -2,10 +2,9 @@ package com.sinjee.wechat.controller;
 
 import com.github.binarywang.wxpay.bean.notify.WxPayNotifyResponse;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
-import com.github.binarywang.wxpay.bean.request.BaseWxPayRequest;
-import com.github.binarywang.wxpay.bean.request.WxPayRefundRequest;
-import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
+import com.github.binarywang.wxpay.bean.request.*;
 import com.github.binarywang.wxpay.bean.result.BaseWxPayResult;
+import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryResult;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.sinjee.admin.dto.OrderMasterDTO;
 import com.sinjee.admin.service.OrderMasterService;
@@ -50,7 +49,7 @@ public class WechatPayController {
     private String salt ;
 
     /**
-     * 微信统一下单接口使用方式如下 预支付
+     * 微信统一下单接口使用方式如下 预支付 向微信发起
      * @param request
      * @param orderNumber
      * @param subject
@@ -164,36 +163,74 @@ public class WechatPayController {
         return WxPayNotifyResponse.success("处理成功!") ;
     }
 
-    //退款
+    /**
+     * 申请退款 https://api.mch.weixin.qq.com/secapi/pay/refund 请求需要双向证书 向微信发起
+     * @param request
+     * @param orderNumber
+     * @param subject
+     * @return
+     */
     @ResponseBody
     @PostMapping(value = "refund")
     @AccessTokenIdempotency
     public ResultVO refund(HttpServletRequest request, String orderNumber, String subject){
         WxPayRefundRequest wxPayRefundRequest = new WxPayRefundRequest() ;
+
+        //申请退款 待开发 需要双向证书
+        //todo
 //        wxPayRefundRequest.setDeviceInfo().
 //        WxPayRefundResult
 //        wxPayService.refund()
         return null ;
     }
 
-    //退款
+
+    /**
+     * 向微信发起 查询订单 状态 https://api.mch.weixin.qq.com/pay/orderquery 向微信发起
+     */
     @ResponseBody
-    @PostMapping(value = "cancel")
+    @PostMapping(value = "orderQuery")
     @AccessTokenIdempotency
-    public ResultVO cancel(HttpServletRequest request, String orderNumber, String hashNumber){
-        String openid = (String)request.getAttribute("openid") ;
-        log.info("openid={}",openid);
+    public ResultVO orderQuery(String orderNumber,String hashNumber){
+        // 订单状态查询 待开发
+        //todo
+        WxPayOrderQueryRequest wxPayOrderQueryRequest = new WxPayOrderQueryRequest() ;
 
         if (!HashUtil.verify(orderNumber,salt,hashNumber)){
             return ResultVOUtil.error(121,"数据不一致");
         }
 
-        Integer res = orderMasterService.cancelOrder(orderNumber,openid) ;
+        try {
+            wxPayOrderQueryRequest.setOutTradeNo(orderNumber);
+            WxPayOrderQueryResult result = wxPayService.queryOrder(wxPayOrderQueryRequest) ;
 
-        if (res > 0){
-            return ResultVOUtil.success();
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResultVOUtil.error(121,"订单查询失败");
         }
 
-        return ResultVOUtil.error(121,"取消订单失败");
+        return null ;
     }
+
+    /**
+     * 退款查询 向微信发起
+     */
+    @ResponseBody
+    @PostMapping(value = "refundOrderQuery")
+    @AccessTokenIdempotency
+    public ResultVO refundOrderQuery(HttpServletRequest request, String orderNumber, String subject){
+        // 退款查询 待开发
+        //todo
+        WxPayRefundQueryRequest wxPayRefundQueryRequest = new WxPayRefundQueryRequest() ;
+
+//        wxPayRefundRequest.setDeviceInfo().
+//        WxPayRefundResult
+//        wxPayService.refund()
+        return null ;
+    }
+
+    /**
+     * 关闭订单 向微信发起
+     */
+
 }

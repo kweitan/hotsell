@@ -241,6 +241,31 @@ public class OrderMasterServiceImpl implements OrderMasterService {
     }
 
     @Override
+    public Integer applyOrder(String orderNumber, String openid) {
+        QueryWrapper<OrderMaster> uWrapper = new QueryWrapper();
+        uWrapper.eq("order_number",orderNumber).
+                eq("buyer_openid",openid).eq("enable_flag",1)
+                .eq("order_status","NEW").eq("pay_status","SUCCESS");
+
+        OrderMaster orderMaster = new OrderMaster();
+        orderMaster.setPayStatus(PayStatusEnum.REFUND.getCode());
+        orderMaster.setOrderStatus(OrderStatusEnum.CANCEL.getCode());
+        orderMaster.setUpdateTime(DateUtils.getTimestamp());
+
+        return orderMasterMapper.update(orderMaster,uWrapper);
+    }
+
+    @Override
+    public Integer updataOrderStatus(String orderNumber, String payStatus) {
+    // 订单状态查询 待开发
+        //todo
+        if (payStatus.equals("SUCCESS")){
+
+        }
+        return null;
+    }
+
+    @Override
     public IPage<OrderMasterDTO> findByTpye(Integer currentPage, Integer pageSize, String openid, String type) {
         QueryWrapper<OrderMaster> wrapper = new QueryWrapper();
 
@@ -263,7 +288,7 @@ public class OrderMasterServiceImpl implements OrderMasterService {
                     .eq("order_status","SHIPMENT")
                     .eq("pay_status","SUCCESS");
         }else if ("FINISHED".equals(type)){
-            //已经完成(申请退款 继续评价 也就是待评价)【申请退款】 【继续评价】 (orderStatus:NEW AND payStatus:SUCCESS || orderStatus:NEW AND payStatus:WAIT) 都可以取消订单
+            //已经完成(申请退款 继续评价 也就是待评价)【继续评价】 (orderStatus:NEW AND payStatus:SUCCESS || orderStatus:NEW AND payStatus:WAIT) 都可以取消订单
             wrapper.eq("buyer_openid",openid)
                     .eq("enable_flag",1)
                     .eq("order_status","FINISHED")

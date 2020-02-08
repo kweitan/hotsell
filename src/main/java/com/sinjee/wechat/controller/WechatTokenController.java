@@ -2,7 +2,6 @@ package com.sinjee.wechat.controller;
 
 import com.sinjee.annotation.AccessTokenIdempotency;
 import com.sinjee.common.ResultVOUtil;
-import com.sinjee.interceptor.AccessTokenInterceptor;
 import com.sinjee.service.TokenService;
 import com.sinjee.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;

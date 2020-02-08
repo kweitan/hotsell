@@ -15,4 +15,6 @@ public interface MyForwardService {
 
     IPage<MyForwardDTO> selectMyForwardByPages(Integer currentPage, Integer pageSize);
 
+    MyForwardDTO selectOneMyForward(String productNumber ,String openid);
+
 }

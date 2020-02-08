@@ -1,27 +1,25 @@
 package com.sinjee.wechat.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sinjee.annotation.AccessTokenIdempotency;
 import com.sinjee.common.*;
 import com.sinjee.vo.ResultVO;
 import com.sinjee.wechat.dto.BuyerInfoDTO;
 import com.sinjee.wechat.dto.ProductReviewDTO;
-import com.sinjee.wechat.form.ShopCartModel;
 import com.sinjee.wechat.form.WechatOrderMasterForm;
 import com.sinjee.wechat.form.WechatProductReviewForm;
 import com.sinjee.wechat.service.ProductReviewService;
+import com.sinjee.wechat.vo.WechatProductReviewVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author 小小极客
@@ -43,7 +41,7 @@ public class WechatProductReviewController {
     @Autowired
     private ProductReviewService productReviewService ;
 
-    @GetMapping("/saveProductReview")
+    @PostMapping("/saveProductReview")
     @AccessTokenIdempotency
     public ResultVO save(HttpServletRequest request, @Valid WechatOrderMasterForm wechatOrderMasterForm,
                          BindingResult bindingResult) {
@@ -92,5 +90,56 @@ public class WechatProductReviewController {
         productReviewService.save(productReviewDTO) ;
 
         return ResultVOUtil.success();
+    }
+
+    /**
+     * 获取我的评论
+     * @param request
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/selectProductReviewByOpenid")
+    @AccessTokenIdempotency
+    public ResultVO selectProductReviewByOpenid(HttpServletRequest request,
+                                                @RequestParam(value = "currentPage", defaultValue = "1")
+                                                            Integer currentPage,
+                                                @RequestParam(value = "pageSize", defaultValue = "8")
+                                                            Integer pageSize) {
+
+        //页大小
+        if (currentPage > 20){
+            currentPage = 20 ;
+        }
+
+        if(pageSize > 10){
+            pageSize = 10 ;
+        }
+
+        String openid = (String)request.getAttribute("openid") ;
+        log.info("openid={}",openid);
+
+        IPage<ProductReviewDTO> productReviewDTOIPage = productReviewService
+                .selectProductReviewByPage(currentPage,pageSize,openid) ;
+
+        List<ProductReviewDTO> productReviewDTOList = productReviewDTOIPage.getRecords() ;
+        List<WechatProductReviewVO> wechatProductReviewVOList = new ArrayList<>() ;
+        if(null != productReviewDTOList && productReviewDTOList.size()>0){
+            productReviewDTOList.stream().forEach(productReviewDTO-> {
+                WechatProductReviewVO wechatProductReviewVO = new WechatProductReviewVO() ;
+                CacheBeanCopier.copy(productReviewDTO, wechatProductReviewVO);
+                wechatProductReviewVOList.add(wechatProductReviewVO);
+            });
+        }
+
+        //返回前端
+        ResultVO resultVO = new ResultVO();
+        resultVO.setData(wechatProductReviewVOList);
+        resultVO.setCurrentPage(currentPage);
+        resultVO.setTotalSize(productReviewDTOIPage.getTotal());
+        resultVO.setPageTotal(productReviewDTOIPage.getPages());
+        resultVO.setCode(0);
+        resultVO.setMessage("成功");
+        return resultVO ;
     }
 }

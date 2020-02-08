@@ -69,6 +69,17 @@ public class MyForwardServiceImpl implements MyForwardService {
         return returnPageByWrapper(currentPage,pageSize,wrapper);
     }
 
+    @Override
+    public MyForwardDTO selectOneMyForward(String productNumber, String openid) {
+        QueryWrapper<MyForward> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1).eq("product_number",productNumber)
+        .eq("openid",openid);
+        MyForward myForward = myForwardMapper.selectOne(wrapper) ;
+        MyForwardDTO myForwardDTO = new MyForwardDTO() ;
+        CacheBeanCopier.copy(myForward,myForwardDTO);
+        return myForwardDTO;
+    }
+
     private IPage<MyForwardDTO> returnPageByWrapper(Integer currentPage, Integer pageSize,QueryWrapper<MyForward> wrapper){
         Page<MyForward> page = new Page<>(currentPage,pageSize) ;
         //从数据库分页获取数据

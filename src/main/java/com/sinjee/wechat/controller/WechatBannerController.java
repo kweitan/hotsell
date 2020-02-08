@@ -1,6 +1,5 @@
 package com.sinjee.wechat.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sinjee.common.CacheBeanCopier;
 import com.sinjee.common.HashUtil;
 import com.sinjee.vo.ResultVO;

@@ -3,7 +3,6 @@ package com.sinjee.wechat.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sinjee.admin.dto.ProductDetailInfoDTO;
 import com.sinjee.admin.dto.ProductInfoDTO;
-import com.sinjee.admin.service.ProductCategoryMidService;
 import com.sinjee.admin.service.ProductDetailInfoService;
 import com.sinjee.admin.service.ProductInfoService;
 import com.sinjee.common.CacheBeanCopier;
@@ -14,7 +13,7 @@ import com.sinjee.wechat.dto.ProductReviewDTO;
 import com.sinjee.wechat.service.ProductReviewService;
 import com.sinjee.wechat.vo.ProductDetailInfoVO;
 import com.sinjee.wechat.vo.ProductInfoVO;
-import com.sinjee.wechat.vo.ProductReviewVO;
+import com.sinjee.wechat.vo.WechatProductReviewVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,18 +60,18 @@ public class WechatProductController {
 
         IPage<ProductReviewDTO> productReviewDTOIPage = productReviewService.selectProductReviewByPageProductNumber(currentPage,pageSize,productNumber);
         List<ProductReviewDTO> productReviewDTOList = productReviewDTOIPage.getRecords() ;
-        List<ProductReviewVO> productReviewVOList = new ArrayList<>() ;
+        List<WechatProductReviewVO> wechatProductReviewVOList = new ArrayList<>() ;
         if(null != productReviewDTOList && productReviewDTOList.size()>0){
             productReviewDTOList.stream().forEach(productReviewDTO-> {
-                ProductReviewVO productReviewVO = new ProductReviewVO() ;
-                CacheBeanCopier.copy(productReviewDTO,productReviewVO);
-                productReviewVOList.add(productReviewVO);
+                WechatProductReviewVO wechatProductReviewVO = new WechatProductReviewVO() ;
+                CacheBeanCopier.copy(productReviewDTO, wechatProductReviewVO);
+                wechatProductReviewVOList.add(wechatProductReviewVO);
             });
         }
 
         //返回前端
         ResultVO resultVO = new ResultVO();
-        resultVO.setData(productReviewVOList);
+        resultVO.setData(wechatProductReviewVOList);
         resultVO.setCurrentPage(currentPage);
         resultVO.setTotalSize(productReviewDTOIPage.getTotal());
         resultVO.setPageTotal(productReviewDTOIPage.getPages());

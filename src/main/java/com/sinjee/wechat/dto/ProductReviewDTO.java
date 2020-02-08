@@ -1,6 +1,9 @@
 package com.sinjee.wechat.dto;
 
+import com.sinjee.wechat.form.WechatProductReviewForm;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * 创建时间 2020 - 01 -29
@@ -25,4 +28,8 @@ public class ProductReviewDTO extends WechatBaseDTO {
 
     /**昵称**/
     private String personName ;
+
+    private List<WechatProductReviewForm> wechatProductReviewFormList ;
+
+    private String openid ;
 }

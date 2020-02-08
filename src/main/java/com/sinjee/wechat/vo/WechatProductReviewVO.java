@@ -13,7 +13,7 @@ import java.sql.Timestamp;
  */
 @Data
 @JsonInclude(value= JsonInclude.Include.NON_NULL)
-public class ProductReviewVO {
+public class WechatProductReviewVO {
 
     private Integer productReviewId ;
 

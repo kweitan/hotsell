@@ -166,8 +166,9 @@ create table `buyer_review` (
 create table `product_review` (
   `product_review_id` int unsigned not null auto_increment,
   `product_review_level` tinyint(3) DEFAULT '1' COMMENT '评论级别,1-好评 0-差评',
-  `product_review_content` varchar(256) comment '评论商品 商品编码-好评差评',
-  `buyer_review_id` int unsigned not null,
+  `product_review_content` varchar(256) DEFAULT '好吃,喜欢' comment '评论商品 商品编码-好评差评',
+  `openid` varchar(64) not null comment '微信openid',
+  `buyer_review_id` int unsigned,
   `product_number` varchar(32) not null comment '商品编码 前三位代表品类 0000 中间日期20191215132700',
   `person_name` varchar(32) comment '评论者昵称',
   `person_icon` varchar(128) comment '评论者图像',

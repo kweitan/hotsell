@@ -2,6 +2,8 @@ package com.sinjee.wechat.form;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author 小小极客
  * 时间 2020/2/4 11:38
@@ -9,7 +11,7 @@ import lombok.Data;
  * 描述 ShopCartModel
  **/
 @Data
-public class ShopCartModel {
+public class ShopCartModel implements Serializable {
 
     /** 商品编码 **/
     private String productNumber ;

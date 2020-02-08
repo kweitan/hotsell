@@ -5,11 +5,11 @@ import com.sinjee.wechat.dto.ProductReviewDTO;
 
 public interface ProductReviewService {
 
-    Integer save(ProductReviewDTO productReviewDTO) ;
+    void save(ProductReviewDTO productReviewDTO) ;
 
     Integer update(ProductReviewDTO productReviewDTO) ;
 
-    IPage<ProductReviewDTO> selectProductReviewByPage(Integer currentPage, Integer pageSize, Integer buyerReviewId);
+    IPage<ProductReviewDTO> selectProductReviewByPage(Integer currentPage, Integer pageSize, String openid);
 
     Integer delete(Integer productReviewId) ;
 

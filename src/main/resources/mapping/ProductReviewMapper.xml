@@ -5,6 +5,7 @@
         <result column="product_review_id" jdbcType="INTEGER" property="productReviewId" />
         <result column="product_review_level" jdbcType="TINYINT" property="productReviewLevel" />
         <result column="product_review_content" jdbcType="VARCHAR" property="productReviewContent" />
+        <result column="openid" jdbcType="VARCHAR" property="openid" />
         <result column="buyer_review_id" jdbcType="INTEGER" property="buyerReviewId" />
         <result column="product_number" jdbcType="VARCHAR" property="productNumber" />
         <result column="person_name" jdbcType="VARCHAR" property="personName" />

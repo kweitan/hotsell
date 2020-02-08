@@ -5,13 +5,16 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sinjee.common.BeanConversionUtils;
 import com.sinjee.common.CacheBeanCopier;
+import com.sinjee.exceptions.MyException;
 import com.sinjee.wechat.dto.ProductReviewDTO;
 import com.sinjee.wechat.entity.ProductReview;
+import com.sinjee.wechat.form.WechatProductReviewForm;
 import com.sinjee.wechat.mapper.ProductReviewMapper;
 import com.sinjee.wechat.service.ProductReviewService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,13 +31,32 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     private ProductReviewMapper productReviewMapper ;
 
     @Override
-    public Integer save(ProductReviewDTO productReviewDTO) {
-        ProductReview productReview = new ProductReview() ;
-        CacheBeanCopier.copy(productReviewDTO,productReview);
-        return productReviewMapper.insert(productReview);
+    @Transactional
+    public void save(ProductReviewDTO productReviewDTO) {
+
+        List<WechatProductReviewForm> wechatProductReviewFormList = productReviewDTO.getWechatProductReviewFormList() ;
+        if (wechatProductReviewFormList == null || wechatProductReviewFormList.size() < 1){
+            throw new MyException(121,"无商品数据") ;
+        }
+
+        try {
+            wechatProductReviewFormList.stream().forEach(wechatProductReviewForm -> {
+                ProductReview productReview = new ProductReview() ;
+                CacheBeanCopier.copy(productReviewDTO,productReview);
+                productReview.setProductReviewContent(wechatProductReviewForm.getProductReviewContent());
+                productReview.setProductNumber(wechatProductReviewForm.getProductNumber());
+                productReview.setProductReviewLevel(wechatProductReviewForm.getProductReviewLevel());
+                productReviewMapper.insert(productReview);
+            });
+        }catch (Exception e){
+            log.error(e.getMessage());
+            throw new MyException(121,"无商品数据") ;
+        }
+
     }
 
     @Override
+    @Transactional
     public Integer update(ProductReviewDTO productReviewDTO) {
         ProductReview productReview = new ProductReview() ;
         CacheBeanCopier.copy(productReviewDTO,productReview);
@@ -45,11 +67,11 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     }
 
     @Override
-    public IPage<ProductReviewDTO> selectProductReviewByPage(Integer currentPage, Integer pageSize, Integer buyerReviewId) {
+    public IPage<ProductReviewDTO> selectProductReviewByPage(Integer currentPage, Integer pageSize, String openid) {
         Page<ProductReview> page = new Page<>(currentPage,pageSize) ;
 
         QueryWrapper<ProductReview> wrapper = new QueryWrapper();
-        wrapper.eq("product_review_id",buyerReviewId).eq("enable_flag",1);
+        wrapper.eq("openid",openid).eq("enable_flag",1);
         //从数据库分页获取数据
         IPage<ProductReview> mapPage = productReviewMapper.selectPage(page,wrapper);
 

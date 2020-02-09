@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -276,19 +277,19 @@ public class OrderMasterServiceImpl implements OrderMasterService {
                     .eq("enable_flag",1)
                     .eq("order_status","NEW")
             .eq("pay_status","WAIT");
-        }else if ("SUCCESS".equals(type)){
+        }else if ("WAITSEND".equals(type)){
             //待发货【申请退款】【取消订单】
             wrapper.eq("buyer_openid",openid)
                     .eq("enable_flag",1)
                     .eq("order_status","NEW")
                     .eq("pay_status","SUCCESS");
-        }else if ("SUCCESS".equals(type)){
+        }else if ("SHIPMENT".equals(type)){
             //待收货(不能退款)【查看物流】 【催单】
             wrapper.eq("buyer_openid",openid)
                     .eq("enable_flag",1)
                     .eq("order_status","SHIPMENT")
                     .eq("pay_status","SUCCESS");
-        }else if ("FINISHED".equals(type)){
+        }else if ("REVIEW".equals(type)){
             //已经完成(申请退款 继续评价 也就是待评价)【继续评价】 (orderStatus:NEW AND payStatus:SUCCESS || orderStatus:NEW AND payStatus:WAIT) 都可以取消订单
             wrapper.eq("buyer_openid",openid)
                     .eq("enable_flag",1)
@@ -300,9 +301,41 @@ public class OrderMasterServiceImpl implements OrderMasterService {
                     .eq("enable_flag",1)
                     .eq("order_status","CANCEL")
                     .eq("pay_status","CLOSED");
+        }else{
+            wrapper.eq("buyer_openid",openid)
+                    .eq("enable_flag",1) ;
         }
 
-        return returnPageByMaster(currentPage,pageSize,wrapper);
+        wrapper.orderByDesc("create_time") ; //降序
+
+        Page<OrderMaster> page = new Page<>(currentPage,pageSize) ;
+        //从数据库分页获取数据
+        IPage<OrderMaster> mapPage = orderMasterMapper.selectPage(page,wrapper);
+        log.info("总页数"+mapPage.getPages());
+        log.info("总记录数"+mapPage.getTotal());
+        List<OrderMaster> orderMasterList = mapPage.getRecords() ;
+
+        List<OrderMasterDTO> orderMasterDTOList = new ArrayList<>() ;
+
+        if (orderMasterList != null){
+            orderMasterList.stream().forEach(orderMaster -> {
+                OrderMasterDTO orderMasterDTO = new OrderMasterDTO();
+                CacheBeanCopier.copy(orderMaster,orderMasterDTO);
+                QueryWrapper<OrderDetail> detailWrapper = new QueryWrapper();
+                detailWrapper.eq("enable_flag",1)
+                        .eq("order_number",orderMaster.getOrderNumber()) ;
+                List<OrderDetail> orderDetailList = orderDetailMapper.selectList(detailWrapper) ;
+                orderMasterDTO.setOrderDetailList(orderDetailList);
+                orderMasterDTOList.add(orderMasterDTO) ;
+            });
+        }
+
+        Page<OrderMasterDTO> orderMasterDTOPage = new Page<>(currentPage,pageSize) ;
+        orderMasterDTOPage.setPages(mapPage.getPages());
+        orderMasterDTOPage.setTotal(mapPage.getTotal());
+        orderMasterDTOPage.setRecords(orderMasterDTOList) ;
+
+        return orderMasterDTOPage;
     }
 
     private IPage<OrderMasterDTO> returnPageByMaster(Integer currentPage, Integer pageSize,QueryWrapper<OrderMaster> wrapper){
@@ -313,7 +346,6 @@ public class OrderMasterServiceImpl implements OrderMasterService {
         log.info("总记录数"+mapPage.getTotal());
         List<OrderMaster> orderMasterList = mapPage.getRecords() ;
         List<OrderMasterDTO> orderMasterDTOList = BeanConversionUtils.copyToAnotherList(OrderMasterDTO.class,orderMasterList);
-
         Page<OrderMasterDTO> orderMasterDTOPage = new Page<>(currentPage,pageSize) ;
         orderMasterDTOPage.setPages(mapPage.getPages());
         orderMasterDTOPage.setTotal(mapPage.getTotal());

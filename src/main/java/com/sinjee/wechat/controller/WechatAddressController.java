@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -71,14 +72,15 @@ public class WechatAddressController {
             return ResultVOUtil.error(262,"尚无地址");
         }
 
+        List<WechatAddressVO> wechatAddressVOList = new ArrayList<>() ;
         for (AddressInfoDTO dto: addressInfoDTOList){
             WechatAddressVO wechatAddressVO = new WechatAddressVO() ;
             CacheBeanCopier.copy(dto,wechatAddressVO);
             wechatAddressVO.setHashNumber(HashUtil.sign(String.valueOf(dto.getAddressId()),salt));
+            wechatAddressVOList.add(wechatAddressVO) ;
         }
 
-
-        return ResultVOUtil.success(BeanConversionUtils.copyToAnotherList(WechatAddressVO.class,addressInfoDTOList)) ;
+        return ResultVOUtil.success(wechatAddressVOList) ;
     }
 
 
@@ -86,6 +88,8 @@ public class WechatAddressController {
     @PostMapping("/addOrEdit")
     @AccessTokenIdempotency
     public ResultVO addOrEdit(HttpServletRequest request, @Valid WechatAddressForm wechatAddressForm, BindingResult bindingResult){
+
+        log.info("addressInfo={}",GsonUtil.getInstance().toStr(wechatAddressForm));
 
         String openid = (String)request.getAttribute("openid") ;
         if (bindingResult.hasErrors()){
@@ -98,7 +102,7 @@ public class WechatAddressController {
         }
 
         //检验一致性
-        if ("edit".equals(type) && !HashUtil.verify(wechatAddressForm.getNumber(),salt,wechatAddressForm.getHashNumber())){
+        if ("editor".equals(type) && !HashUtil.verify(wechatAddressForm.getNumber(),salt,wechatAddressForm.getHashNumber())){
             return ResultVOUtil.error(263,"数据不一致") ;
         }
 
@@ -109,20 +113,21 @@ public class WechatAddressController {
         BuyerInfoDTO buyerInfoDTO = (BuyerInfoDTO)object ;
 
         AddressInfoDTO addressInfoDTO = new AddressInfoDTO() ;
+        addressInfoDTO.setAddressId(Integer.valueOf(wechatAddressForm.getNumber()));
         addressInfoDTO.setOpenid(openid);
         addressInfoDTO.setAddressLabels(wechatAddressForm.getLabel());
         addressInfoDTO.setBuyerAddress(wechatAddressForm.getAddressInfo());
         addressInfoDTO.setBuyerName(wechatAddressForm.getName());
         addressInfoDTO.setBuyerPhone(wechatAddressForm.getPhone());
-        addressInfoDTO.setUpdater(buyerInfoDTO.getUpdater());
+        addressInfoDTO.setUpdater(buyerInfoDTO.getBuyerName());
         addressInfoDTO.setUpdateTime(DateUtils.getTimestamp());
 
         Integer res = 0 ;
         if ("add".equals(type)){
-            addressInfoDTO.setCreator(buyerInfoDTO.getUpdater());
+            addressInfoDTO.setCreator(buyerInfoDTO.getBuyerName());
             addressInfoDTO.setUpdateTime(DateUtils.getTimestamp());
             res = addressInfoService.save(addressInfoDTO);
-        }else if ("edit".equals(type)){
+        }else if ("editor".equals(type)){
             res = addressInfoService.update(addressInfoDTO);
         }
 

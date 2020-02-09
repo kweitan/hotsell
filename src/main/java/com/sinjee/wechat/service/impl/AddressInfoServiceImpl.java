@@ -79,9 +79,13 @@ public class AddressInfoServiceImpl implements AddressInfoService {
         QueryWrapper<AddressInfo> wrapper = new QueryWrapper();
         wrapper.eq("enable_flag",1).eq("openid",addressInfoDTO.getOpenid());
         List<AddressInfo> addressInfoList = addressInfoMapper.selectList(wrapper);
-        if (addressInfoList != null && addressInfoList.size() < 2){
+
+        if (addressInfoList != null && addressInfoList.size() > 0){
+            addressInfo.setSelectStatus(0);
+        }else{
             addressInfo.setSelectStatus(1);
         }
+
 
         return addressInfoMapper.insert(addressInfo);
     }

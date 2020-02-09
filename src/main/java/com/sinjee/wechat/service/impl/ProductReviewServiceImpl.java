@@ -126,7 +126,9 @@ public class ProductReviewServiceImpl implements ProductReviewService {
                 .eq("product_review_level",1);
 
         List<ProductReview> productReviewList = productReviewMapper.selectList(wrapper) ;
-
+        if(null == productReviewList || productReviewList.size() < 1){
+            return new ProductReviewDTO();
+        }
         ProductReviewDTO productReviewDTO = new ProductReviewDTO() ;
         CacheBeanCopier.copy(productReviewList.get(1),productReviewDTO);
 

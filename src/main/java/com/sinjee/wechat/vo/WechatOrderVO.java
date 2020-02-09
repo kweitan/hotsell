@@ -33,8 +33,6 @@ public class WechatOrderVO implements Serializable {
     /** 买家地址**/
     private String buyerAddress ;
 
-    private String buyerOpenid ;
-
     /*** 订单总金额 **/
     private BigDecimal orderAmount ;
 
@@ -56,4 +54,8 @@ public class WechatOrderVO implements Serializable {
     List<WechatOrderDetailVO> orderDetailList ;
 
     private String buyerMessage ;
+
+    private String hashNumber ;
+
+    private boolean haveOne;
 }

@@ -2,7 +2,10 @@ package com.sinjee.wechat.form;
 
 import lombok.Data;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
 /**
@@ -18,21 +21,21 @@ public class WechatAddressForm implements Serializable {
     private String name ;
 
     @NotEmpty(message="电话必填")
+    @Pattern(regexp ="^[1][3,4,5,6,7,8,9][0-9]{9}$", message = "手机号格式有误")
+    @Max(value = 11,message = "手机号只能为11位")
+    @Min(value = 11,message = "手机号只能为11位")
     private String phone ;
 
     @NotEmpty(message="地址必填")
     private String addressInfo ;
 
-    @NotEmpty(message="标签必选")
     private String label ;
 
     @NotEmpty(message="类型必填")
     private String type ;
 
-    @NotEmpty(message="编码不能为空")
     private String number ;
 
-    @NotEmpty(message="哈希不能为空")
     private String hashNumber ;
 
 }

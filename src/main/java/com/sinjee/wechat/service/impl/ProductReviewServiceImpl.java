@@ -35,9 +35,6 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     public void save(ProductReviewDTO productReviewDTO) {
 
         List<WechatProductReviewForm> wechatProductReviewFormList = productReviewDTO.getWechatProductReviewFormList() ;
-        if (wechatProductReviewFormList == null || wechatProductReviewFormList.size() < 1){
-            throw new MyException(121,"无商品数据") ;
-        }
 
         try {
             wechatProductReviewFormList.stream().forEach(wechatProductReviewForm -> {

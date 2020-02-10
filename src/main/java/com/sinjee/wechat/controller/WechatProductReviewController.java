@@ -7,6 +7,7 @@ import com.sinjee.vo.ResultVO;
 import com.sinjee.wechat.dto.BuyerInfoDTO;
 import com.sinjee.wechat.dto.ProductReviewDTO;
 import com.sinjee.wechat.form.WechatOrderMasterForm;
+import com.sinjee.wechat.form.WechatOrderReviewForm;
 import com.sinjee.wechat.form.WechatProductReviewForm;
 import com.sinjee.wechat.service.ProductReviewService;
 import com.sinjee.wechat.vo.WechatProductReviewVO;
@@ -43,30 +44,33 @@ public class WechatProductReviewController {
 
     @PostMapping("/saveProductReview")
     @AccessTokenIdempotency
-    public ResultVO save(HttpServletRequest request, @Valid WechatOrderMasterForm wechatOrderMasterForm,
+    public ResultVO save(HttpServletRequest request, @Valid WechatOrderReviewForm wechatOrderReviewForm,
                          BindingResult bindingResult) {
         if (bindingResult.hasErrors()){
             log.info("show="+bindingResult.getFieldError().getDefaultMessage());
             return ResultVOUtil.error(122,bindingResult.getFieldError().getDefaultMessage());
         }
 
-        if (HashUtil.verify(wechatOrderMasterForm.getOrderNumber(),salt,wechatOrderMasterForm.getHashNumber())){
+        if (HashUtil.verify(wechatOrderReviewForm.getOrderNumber(),salt,wechatOrderReviewForm.getHashNumber())){
             return ResultVOUtil.error(122,"数据不一致");
         }
 
         String openid = (String)request.getAttribute("openid") ;
         log.info("openid={}",openid);
 
-        log.info("WechatOrderMasterForm={}", GsonUtil.getInstance().toStr(wechatOrderMasterForm));
+        log.info("WechatOrderMasterForm={}", GsonUtil.getInstance().toStr(wechatOrderReviewForm));
 
-        List<WechatProductReviewForm> wechatProductReviewFormList = null ;
-        try {
-            wechatProductReviewFormList = GsonUtil.getInstance().
-                    parseString2List(wechatOrderMasterForm.getProductReviewLists(),WechatProductReviewForm.class);
-        }catch (Exception e){
-            log.error(e.getMessage());
-            return ResultVOUtil.error(123,"商品数据转换出错");
+        List<WechatProductReviewForm> wechatProductReviewFormList = wechatOrderReviewForm.getProductReviewLists() ;
+        if (null != wechatProductReviewFormList || wechatProductReviewFormList.size() < 1){
+            return ResultVOUtil.error(123,"无商品数据");
         }
+//        try {
+//            wechatProductReviewFormList = GsonUtil.getInstance().
+//                    parseString2List(wechatOrderMasterForm.getProductReviewLists(),WechatProductReviewForm.class);
+//        }catch (Exception e){
+//            log.error(e.getMessage());
+//            return ResultVOUtil.error(123,"商品数据转换出错");
+//        }
 
         //取出用户信息
         Object object = redisUtil.getString(openid) ;

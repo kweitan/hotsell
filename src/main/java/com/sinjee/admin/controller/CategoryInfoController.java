@@ -13,6 +13,8 @@ import com.sinjee.common.ResultVOUtil;
 import com.sinjee.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -116,6 +118,7 @@ public class CategoryInfoController {
 
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/save")
+    @CacheEvict(cacheNames = "categoryList", key = "categoryList123")
     public ResultVO saveCategory(@RequestBody @Valid ProductCategoryForm productCategoryForm, BindingResult bindingResult){
         //1.校验参数
         if (bindingResult.hasErrors()){
@@ -143,6 +146,7 @@ public class CategoryInfoController {
 
     @CrossOrigin(origins = "*")
     @PostMapping("/update")
+    @CacheEvict(cacheNames = "categoryList", key = "categoryList123")
     public ResultVO updateCategory(@RequestBody @Valid ProductCategoryForm productCategoryForm, BindingResult bindingResult){
         //1.校验参数
         if (bindingResult.hasErrors()){
@@ -174,6 +178,7 @@ public class CategoryInfoController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/upCategory")
+    @CacheEvict(cacheNames = "categoryList", key = "categoryList123")
     public ResultVO upCategory(@RequestParam String categoryNumber,
                                    @RequestParam String hashNumber){
         //取得类目编码和哈希
@@ -191,6 +196,7 @@ public class CategoryInfoController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/downCategory")
+    @CacheEvict(cacheNames = "categoryList", key = "categoryList123")
     public ResultVO downCategory(@RequestParam String categoryNumber,
                                @RequestParam String hashNumber){
         //取得类目编码和哈希
@@ -208,6 +214,7 @@ public class CategoryInfoController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/delete")
+    @CacheEvict(cacheNames = "categoryList", key = "categoryList123")
     public ResultVO deleteCategory(@RequestParam String categoryNumber,
                                    @RequestParam String hashNumber){
         //取得类目编码和哈希
@@ -227,6 +234,7 @@ public class CategoryInfoController {
 
     @CrossOrigin(origins = "*")
     @PostMapping("/deleteAll")
+    @CacheEvict(cacheNames = "categoryList", key = "categoryList123")
     public ResultVO deleteAllCategory(@RequestBody DeleteAllProductForm deleteAllProductForm){
 
         boolean veritify = false;

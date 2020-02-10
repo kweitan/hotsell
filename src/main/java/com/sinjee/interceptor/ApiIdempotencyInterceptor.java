@@ -4,7 +4,7 @@ import com.sinjee.annotation.ApiIdempotency;
 import com.sinjee.service.TokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
  * 描述 幂等性接口拦截器
  **/
 @Slf4j
-@Configuration
+@Component
 public class ApiIdempotencyInterceptor implements HandlerInterceptor{
 
     @Autowired

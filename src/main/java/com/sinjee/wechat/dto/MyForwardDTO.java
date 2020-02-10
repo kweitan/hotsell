@@ -30,5 +30,5 @@ public class MyForwardDTO extends WechatBaseDTO implements Serializable {
     private String productIcon ;
 
     /**用户openid**/
-    private String openId ;
+    private String openid ;
 }

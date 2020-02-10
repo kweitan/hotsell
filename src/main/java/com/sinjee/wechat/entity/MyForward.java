@@ -31,5 +31,5 @@ public class MyForward extends WechatBaseEntity implements Serializable {
     private String productIcon ;
 
     /**用户openid**/
-    private String openId ;
+    private String openid ;
 }

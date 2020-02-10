@@ -113,7 +113,7 @@ public class WechatAddressController {
         BuyerInfoDTO buyerInfoDTO = (BuyerInfoDTO)object ;
 
         AddressInfoDTO addressInfoDTO = new AddressInfoDTO() ;
-        addressInfoDTO.setAddressId(Integer.valueOf(wechatAddressForm.getNumber()));
+
         addressInfoDTO.setOpenid(openid);
         addressInfoDTO.setAddressLabels(wechatAddressForm.getLabel());
         addressInfoDTO.setBuyerAddress(wechatAddressForm.getAddressInfo());
@@ -128,6 +128,7 @@ public class WechatAddressController {
             addressInfoDTO.setUpdateTime(DateUtils.getTimestamp());
             res = addressInfoService.save(addressInfoDTO);
         }else if ("editor".equals(type)){
+            addressInfoDTO.setAddressId(Integer.valueOf(wechatAddressForm.getNumber()));
             res = addressInfoService.update(addressInfoDTO);
         }
 

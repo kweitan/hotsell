@@ -5,11 +5,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sinjee.common.BeanConversionUtils;
 import com.sinjee.common.CacheBeanCopier;
+import com.sinjee.common.GsonUtil;
+import com.sinjee.exceptions.MyException;
 import com.sinjee.wechat.dto.MyForwardDTO;
 import com.sinjee.wechat.entity.MyForward;
 import com.sinjee.wechat.mapper.MyForwardMapper;
 import com.sinjee.wechat.service.MyForwardService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +44,7 @@ public class MyForwardServiceImpl implements MyForwardService {
         CacheBeanCopier.copy(myForwardDTO,myForward);
 
         QueryWrapper<MyForward> wrapper = new QueryWrapper();
-        wrapper.eq("open_id",myForwardDTO.getOpenId()).eq("enable_flag",1);
+        wrapper.eq("openid",myForwardDTO.getOpenid()).eq("enable_flag",1);
         return myForwardMapper.update(myForward,wrapper);
     }
 
@@ -58,7 +61,7 @@ public class MyForwardServiceImpl implements MyForwardService {
     @Override
     public IPage<MyForwardDTO> selectMyForwardByPage(Integer currentPage, Integer pageSize, String openId) {
         QueryWrapper<MyForward> wrapper = new QueryWrapper();
-        wrapper.eq("open_id",openId).eq("enable_flag",1);
+        wrapper.eq("openid",openId).eq("enable_flag",1);
         return returnPageByWrapper(currentPage,pageSize,wrapper);
     }
 
@@ -76,6 +79,7 @@ public class MyForwardServiceImpl implements MyForwardService {
         .eq("openid",openid);
         MyForward myForward = myForwardMapper.selectOne(wrapper) ;
         MyForwardDTO myForwardDTO = new MyForwardDTO() ;
+        log.info("myForwardDTO={}", GsonUtil.getInstance().toStr(myForward));
         CacheBeanCopier.copy(myForward,myForwardDTO);
         return myForwardDTO;
     }

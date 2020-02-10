@@ -8,7 +8,7 @@
         <result column="product_price" jdbcType="DECIMAL" property="productPrice" />
         <result column="product_description" jdbcType="VARCHAR" property="productDescription" />
         <result column="product_icon" jdbcType="VARCHAR" property="productIcon" />
-        <result column="open_id" jdbcType="VARCHAR" property="openId" />
+        <result column="openid" jdbcType="VARCHAR" property="openid" />
         <result column="enable_flag" jdbcType="TINYINT" property="enableFlag" />
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
         <result column="creator" jdbcType="VARCHAR" property="creator" />

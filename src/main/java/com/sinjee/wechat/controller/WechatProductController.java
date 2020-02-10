@@ -104,7 +104,9 @@ public class WechatProductController {
             if(null != productInfoDTOList && productInfoDTOList.size()>0){
                 productInfoDTOList.stream().forEach(productInfoDTO -> {
                     ProductInfoVO productInfoVO = new ProductInfoVO();
+                    String hashNumber = HashUtil.sign(productInfoDTO.getProductNumber(),salt) ;
                     CacheBeanCopier.copy(productInfoDTO,productInfoVO);
+                    productInfoVO.setHashNumber(hashNumber);
                     productInfoVOList.add(productInfoVO);
                 });
             }

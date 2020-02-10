@@ -1,5 +1,6 @@
 package com.sinjee.common;
 
+import com.sinjee.interceptor.AccessLimtInterceptor;
 import com.sinjee.interceptor.AccessTokenInterceptor;
 import com.sinjee.interceptor.ApiIdempotencyInterceptor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,20 +25,29 @@ public class BeanConfiguration implements WebMvcConfigurer {
     @Autowired
     private ApiIdempotencyInterceptor apiIdempotencyInterceptor ;
 
+    @Autowired
+    private AccessLimtInterceptor accessLimtInterceptor ;
+
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         log.info("添加拦截器={}","accessTokenInterceptor");
         registry.addInterceptor(accessTokenInterceptor)
                 // addPathPatterns 用于添加拦截规则 ， 先把所有路径都加入拦截， 再一个个排除
-                .addPathPatterns("/**");
+                .addPathPatterns("/wechat/order/**","/wechat/pay/**",
+                        "/wechat/address/**","/wechat/myforward/**"
+                        ,"/wechat/review/**","/wechat/token/**");
         // excludePathPatterns 表示改路径不用拦截
 //                .excludePathPatterns("/");
+        registry.addInterceptor(accessLimtInterceptor)
+                // addPathPatterns 用于添加拦截规则 ， 先把所有路径都加入拦截， 再一个个排除
+                .addPathPatterns("/wechat/order/**");
+        // excludePathPatterns 表示改路径不用拦截
+//                .excludePathPatterns("/");
+
         registry.addInterceptor(apiIdempotencyInterceptor)
                 // addPathPatterns 用于添加拦截规则 ， 先把所有路径都加入拦截， 再一个个排除
-                .addPathPatterns("/**");
-        // excludePathPatterns 表示改路径不用拦截
-//                .excludePathPatterns("/");
+                .addPathPatterns("/wechat/myforward/**");
 
         WebMvcConfigurer.super.addInterceptors(registry);
     }

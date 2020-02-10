@@ -3,6 +3,7 @@ package com.sinjee.wechat.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sinjee.admin.dto.ProductInfoDTO;
 import com.sinjee.admin.service.ProductInfoService;
+import com.sinjee.annotation.AccessLimit;
 import com.sinjee.annotation.AccessTokenIdempotency;
 import com.sinjee.common.CacheBeanCopier;
 import com.sinjee.common.DateUtils;
@@ -44,6 +45,7 @@ public class WechatMyForwardController {
 
     @PostMapping("/saveMyForward")
     @AccessTokenIdempotency
+    @AccessLimit
     public ResultVO save(HttpServletRequest request,String productNumber) {
         String openid = (String)request.getAttribute("openid") ;
         log.info("openid={}",openid);
@@ -56,7 +58,7 @@ public class WechatMyForwardController {
         BuyerInfoDTO buyerInfoDTO = (BuyerInfoDTO)object ;
 
         MyForwardDTO dto = myForwardService.selectOneMyForward(productNumber,openid) ;
-        if (null != dto || StringUtils.isNotBlank(dto.getProductNumber())){
+        if (null != dto && StringUtils.isNotBlank(dto.getProductNumber())){
             return ResultVOUtil.error(121,"产品已分享") ;
         }
 
@@ -66,11 +68,12 @@ public class WechatMyForwardController {
         }
 
         MyForwardDTO myForwardDTO = new MyForwardDTO() ;
-        myForwardDTO.setOpenId(openid);
-        myForwardDTO.setProductDescription(productInfoDTO.getProductName());
+        myForwardDTO.setOpenid(openid);
+        myForwardDTO.setProductDescription(productInfoDTO.getProductDescription());
         myForwardDTO.setProductIcon(productInfoDTO.getProductIcon());
-        myForwardDTO.setProductNumber(productNumber);
+        myForwardDTO.setProductNumber(productInfoDTO.getProductNumber());
         myForwardDTO.setProductPrice(productInfoDTO.getProductPrice());
+        myForwardDTO.setProductName(productInfoDTO.getProductName());
 
         myForwardDTO.setCreator(buyerInfoDTO.getBuyerName());
         myForwardDTO.setCreateTime(DateUtils.getTimestamp());

@@ -22,8 +22,6 @@ public class WechatAddressForm implements Serializable {
 
     @NotEmpty(message="电话必填")
     @Pattern(regexp ="^[1][3,4,5,6,7,8,9][0-9]{9}$", message = "手机号格式有误")
-    @Max(value = 11,message = "手机号只能为11位")
-    @Min(value = 11,message = "手机号只能为11位")
     private String phone ;
 
     @NotEmpty(message="地址必填")

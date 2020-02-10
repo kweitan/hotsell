@@ -1,6 +1,7 @@
 package com.sinjee.interceptor;
 
 import com.sinjee.annotation.AccessLimit;
+import com.sinjee.common.KeyUtil;
 import com.sinjee.common.RedisUtil;
 import com.sinjee.exceptions.MyException;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +37,7 @@ public class AccessLimtInterceptor implements HandlerInterceptor {
             int seconds = accessLimit.seconds();
             int maxCount = accessLimit.maxCount();
 
-            String ip = request.getRemoteAddr();
+            String ip = KeyUtil.getIpAddr(request);
 
             String key = request.getContextPath() + ":" + request.getServletPath() + ":" + ip ;
 

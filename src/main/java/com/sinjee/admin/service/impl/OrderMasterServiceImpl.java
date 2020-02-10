@@ -250,8 +250,7 @@ public class OrderMasterServiceImpl implements OrderMasterService {
                 .eq("order_status","NEW").eq("pay_status","SUCCESS");
 
         OrderMaster orderMaster = new OrderMaster();
-        orderMaster.setPayStatus(PayStatusEnum.REFUND.getCode());
-        orderMaster.setOrderStatus(OrderStatusEnum.CANCEL.getCode());
+        orderMaster.setOrderStatus(OrderStatusEnum.REFUND.getCode());
         orderMaster.setUpdateTime(DateUtils.getTimestamp());
 
         return orderMasterMapper.update(orderMaster,uWrapper);

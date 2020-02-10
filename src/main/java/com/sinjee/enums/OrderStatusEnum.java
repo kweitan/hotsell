@@ -9,6 +9,7 @@ public enum OrderStatusEnum implements CodeEnum{
     FINISHED("FINISHED", "完结"),
     CANCEL("CANCEL", "已取消"),
     PARTIAL("PARTIAL", "部分付款"),
+    REFUND("REFUND","申请退款"),
     ;
 
     private String code;

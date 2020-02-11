@@ -2,6 +2,7 @@ package com.sinjee.admin.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sinjee.admin.dto.OrderMasterDTO;
+import com.sinjee.admin.dto.ProductInfoDTO;
 
 import java.util.List;
 
@@ -34,5 +35,7 @@ public interface OrderMasterService {
     Integer updataOrderStatus(String orderNumber,String payStatus);
 
     IPage<OrderMasterDTO> findByTpye(Integer currentPage, Integer pageSize,String openid,String type);
+
+    IPage<OrderMasterDTO> selectOrderMasterInfo(Integer currentPage, Integer pageSize, String openid,String orderStatus,String payStatus);
 
 }

@@ -22,4 +22,16 @@
     </resultMap>
 
 
+    <select id="selectOrderMasterInfo" resultType="com.sinjee.admin.entity.OrderMaster">
+        SELECT
+        *
+        FROM order_master orders
+        where
+        (select count(1) from product_review review where orders.order_number = review.order_number) > 0
+        and orders.buyer_openid = #{map.openid}
+        and orders.enable_flag=1
+        and orders.order_status = #{map.orderStatus}
+         and orders.pay_status = #{map.payStatus}
+    </select>
+
 </mapper>

@@ -132,7 +132,7 @@ public class ProductReviewServiceImpl implements ProductReviewService {
             return new ProductReviewDTO();
         }
         ProductReviewDTO productReviewDTO = new ProductReviewDTO() ;
-        CacheBeanCopier.copy(productReviewList.get(1),productReviewDTO);
+        CacheBeanCopier.copy(productReviewList.get(0),productReviewDTO);
 
         return productReviewDTO;
     }

@@ -28,7 +28,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 创建时间 2020 - 01 -06
@@ -334,6 +336,27 @@ public class OrderMasterServiceImpl implements OrderMasterService {
         orderMasterDTOPage.setTotal(mapPage.getTotal());
         orderMasterDTOPage.setRecords(orderMasterDTOList) ;
 
+        return orderMasterDTOPage;
+    }
+
+    @Override
+    public IPage<OrderMasterDTO> selectOrderMasterInfo(Integer currentPage, Integer pageSize, String openid, String orderStatus, String payStatus) {
+        Page<OrderMaster> page = new Page<>(currentPage,pageSize) ;
+        Map<String,Object> map = new HashMap<>() ;
+        map.put("openid",openid);
+        map.put("orderStatus",orderStatus);
+        map.put("payStatus",payStatus);
+        //从数据库分页获取数据
+        IPage<OrderMaster> curPage = orderMasterMapper.selectOrderMasterInfo(page,map);
+        log.info("总页数"+curPage.getPages());
+        log.info("总记录数"+curPage.getTotal());
+        List<OrderMaster> orderMasterList = curPage.getRecords() ;
+        List<OrderMasterDTO> orderMasterDTOList = BeanConversionUtils.copyToAnotherList(OrderMasterDTO.class,orderMasterList);
+
+        Page<OrderMasterDTO> orderMasterDTOPage = new Page<>(currentPage,pageSize) ;
+        orderMasterDTOPage.setPages(curPage.getPages()); //设置总页数
+        orderMasterDTOPage.setTotal(curPage.getTotal()); //设置总数
+        orderMasterDTOPage.setRecords(orderMasterDTOList) ; //设置内容
         return orderMasterDTOPage;
     }
 

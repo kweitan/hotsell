@@ -7,6 +7,8 @@ import com.sinjee.admin.service.OrderMasterService;
 import com.sinjee.admin.service.ProductInfoService;
 import com.sinjee.annotation.AccessTokenIdempotency;
 import com.sinjee.common.*;
+import com.sinjee.enums.OrderStatusEnum;
+import com.sinjee.enums.PayStatusEnum;
 import com.sinjee.vo.ResultVO;
 import com.sinjee.wechat.dto.BuyerInfoDTO;
 import com.sinjee.wechat.dto.ProductReviewDTO;
@@ -145,7 +147,9 @@ public class WechatProductReviewController {
 
 
         //获取orderNumber
-        IPage<OrderMasterDTO> orderMasterDTOIPage = masterService.findByOpenId(currentPage,pageSize,openid);
+        //正常所在状态时 FINISH CLOSE
+        IPage<OrderMasterDTO> orderMasterDTOIPage = masterService.selectOrderMasterInfo(currentPage,pageSize,openid,
+                OrderStatusEnum.NEW.getCode(), PayStatusEnum.WAIT.getCode());
 
         List<OrderMasterDTO> orderMasterDTOList = orderMasterDTOIPage.getRecords();
 

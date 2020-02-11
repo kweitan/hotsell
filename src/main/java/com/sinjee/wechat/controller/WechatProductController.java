@@ -92,7 +92,7 @@ public class WechatProductController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/number/list")
-    @Cacheable(cacheNames = "categoryList", key = "categoryList123", unless = "#result.getCode() != 0")
+    @Cacheable(cacheNames = "categoryList", key = "#categoryNumber", unless = "#result.getCode() != 0")
     public ResultVO listByProductNumber(@RequestParam(value = "currentPage", defaultValue = "1")
                                  Integer currentPage,
                          @RequestParam(value = "pageSize", defaultValue = "8")
@@ -152,7 +152,7 @@ public class WechatProductController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/list")
-    @Cacheable(cacheNames = "productList", key = "productList123", unless = "#result.getCode() != 0")
+    @Cacheable(cacheNames = "productList", key = "#currentPage+'-'+#pageSize",unless = "#result.getCode() != 0" )
     public ResultVO list(@RequestParam(value = "currentPage", defaultValue = "1")
                                      Integer currentPage,
                          @RequestParam(value = "pageSize", defaultValue = "6")

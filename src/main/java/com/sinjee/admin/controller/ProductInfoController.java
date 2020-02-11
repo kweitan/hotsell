@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -82,7 +83,9 @@ public class ProductInfoController {
 
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/save")
-    @CacheEvict(cacheNames = "productList", key = "productList123")
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "productList",allEntries=true),
+            @CacheEvict(cacheNames = "categoryList",allEntries=true)})
     public ResultVO saveProductInfo(@RequestBody @Valid ProductInfoForm productInfoForm, BindingResult bindingResult) {
         //1.校验参数
         if (bindingResult.hasErrors()){
@@ -139,7 +142,9 @@ public class ProductInfoController {
 
     @CrossOrigin(origins = "*")
     @PostMapping("/update")
-    @CacheEvict(cacheNames = "productList", key = "productList123")
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "productList",allEntries=true),
+            @CacheEvict(cacheNames = "categoryList",allEntries=true)})
     public ResultVO updateProductInfo(@RequestBody @Valid ProductInfoForm productInfoForm, BindingResult bindingResult){
         //1.校验参数
         if (bindingResult.hasErrors()){
@@ -184,7 +189,9 @@ public class ProductInfoController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/upProductInfo")
-    @CacheEvict(cacheNames = "productList", key = "productList123")
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "productList",allEntries=true),
+            @CacheEvict(cacheNames = "categoryList",allEntries=true)})
     public ResultVO upProductInfo(@RequestParam String productNumber,
                                @RequestParam String hashNumber){
         //取得类目编码和哈希
@@ -202,7 +209,9 @@ public class ProductInfoController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/downProductInfo")
-    @CacheEvict(cacheNames = "productList", key = "productList123")
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "productList",allEntries=true),
+            @CacheEvict(cacheNames = "categoryList",allEntries=true)})
     public ResultVO downProductInfo(@RequestParam String productNumber,
                                  @RequestParam String hashNumber){
         //取得类目编码和哈希
@@ -220,7 +229,9 @@ public class ProductInfoController {
 
     @CrossOrigin(origins = "*")
     @PostMapping("/delete")
-    @CacheEvict(cacheNames = "productList", key = "productList123")
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "productList",allEntries=true),
+            @CacheEvict(cacheNames = "categoryList",allEntries=true)})
     public ResultVO deleteProductInfo(@RequestParam String productNumber,
                                    @RequestParam String hashNumber){
         //取得类目编码和哈希

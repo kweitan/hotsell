@@ -1,15 +1,17 @@
 package com.sinjee.wechat.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.sinjee.admin.dto.OrderMasterDTO;
+import com.sinjee.admin.service.OrderMasterService;
 import com.sinjee.annotation.AccessTokenIdempotency;
 import com.sinjee.common.*;
 import com.sinjee.vo.ResultVO;
 import com.sinjee.wechat.dto.BuyerInfoDTO;
 import com.sinjee.wechat.dto.ProductReviewDTO;
-import com.sinjee.wechat.form.WechatOrderMasterForm;
 import com.sinjee.wechat.form.WechatOrderReviewForm;
 import com.sinjee.wechat.form.WechatProductReviewForm;
 import com.sinjee.wechat.service.ProductReviewService;
+import com.sinjee.wechat.vo.WechatOrderVO;
 import com.sinjee.wechat.vo.WechatProductReviewVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,9 @@ public class WechatProductReviewController {
 
     @Autowired
     private ProductReviewService productReviewService ;
+
+    @Autowired
+    private OrderMasterService masterService ;
 
     @PostMapping("/saveProductReview")
     @AccessTokenIdempotency
@@ -89,10 +94,14 @@ public class WechatProductReviewController {
         productReviewDTO.setPersonName(buyerInfoDTO.getBuyerName());
 
         productReviewDTO.setOpenid(openid);
+        productReviewDTO.setOrderNumber(wechatOrderReviewForm.getOrderNumber());
+
         productReviewDTO.setCreator(buyerInfoDTO.getBuyerName());
         productReviewDTO.setCreateTime(DateUtils.getTimestamp());
         productReviewDTO.setUpdater(buyerInfoDTO.getBuyerName());
         productReviewDTO.setUpdateTime(DateUtils.getTimestamp());
+
+
 
         productReviewDTO.setWechatProductReviewFormList(wechatProductReviewFormList);
 
@@ -128,25 +137,26 @@ public class WechatProductReviewController {
         String openid = (String)request.getAttribute("openid") ;
         log.info("openid={}",openid);
 
-        IPage<ProductReviewDTO> productReviewDTOIPage = productReviewService
-                .selectProductReviewByPage(currentPage,pageSize,openid) ;
 
-        List<ProductReviewDTO> productReviewDTOList = productReviewDTOIPage.getRecords() ;
-        List<WechatProductReviewVO> wechatProductReviewVOList = new ArrayList<>() ;
-        if(null != productReviewDTOList && productReviewDTOList.size()>0){
-            productReviewDTOList.stream().forEach(productReviewDTO-> {
-                WechatProductReviewVO wechatProductReviewVO = new WechatProductReviewVO() ;
-                CacheBeanCopier.copy(productReviewDTO, wechatProductReviewVO);
-                wechatProductReviewVOList.add(wechatProductReviewVO);
-            });
-        }
+        //获取orderNumber
+        IPage<OrderMasterDTO> orderMasterDTOIPage = masterService.findByOpenId(currentPage,pageSize,openid);
+
+        List<OrderMasterDTO> orderMasterDTOList = orderMasterDTOIPage.getRecords();
+
+        List<WechatOrderVO> wechatOrderVOList = BeanConversionUtils.copyToAnotherList(WechatOrderVO.class,orderMasterDTOList);
+
+        wechatOrderVOList.stream().forEach(wechatOrderVO -> {
+            List<ProductReviewDTO> productReviewDTOList =productReviewService.productReviewDTOListByOrderNumber(wechatOrderVO.getOrderNumber());
+            List<WechatProductReviewVO> wechatProductReviewVOList = BeanConversionUtils.copyToAnotherList(WechatProductReviewVO.class,productReviewDTOList);
+            wechatOrderVO.setProductReviewLists(wechatProductReviewVOList);
+        });
 
         //返回前端
         ResultVO resultVO = new ResultVO();
-        resultVO.setData(wechatProductReviewVOList);
+        resultVO.setData(wechatOrderVOList);
         resultVO.setCurrentPage(currentPage);
-        resultVO.setTotalSize(productReviewDTOIPage.getTotal());
-        resultVO.setPageTotal(productReviewDTOIPage.getPages());
+        resultVO.setTotalSize(orderMasterDTOIPage.getTotal());
+        resultVO.setPageTotal(orderMasterDTOIPage.getPages());
         resultVO.setCode(0);
         resultVO.setMessage("成功");
         return resultVO ;

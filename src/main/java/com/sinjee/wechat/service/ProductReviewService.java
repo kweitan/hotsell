@@ -3,6 +3,8 @@ package com.sinjee.wechat.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sinjee.wechat.dto.ProductReviewDTO;
 
+import java.util.List;
+
 public interface ProductReviewService {
 
     void save(ProductReviewDTO productReviewDTO) ;
@@ -18,4 +20,6 @@ public interface ProductReviewService {
     ProductReviewDTO selecOne(String productNumber) ;
 
     Integer productReviewCount(String productNumber) ;
+
+    List<ProductReviewDTO> productReviewDTOListByOrderNumber(String orderNumber);
 }

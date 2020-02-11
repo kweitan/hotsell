@@ -144,4 +144,18 @@ public class ProductReviewServiceImpl implements ProductReviewService {
                 .eq("enable_flag",1);
         return productReviewMapper.selectCount(wrapper);
     }
+
+    @Override
+    public List<ProductReviewDTO> productReviewDTOListByOrderNumber(String orderNumber) {
+        QueryWrapper<ProductReview> wrapper = new QueryWrapper();
+        wrapper.eq("order_number",orderNumber)
+                .eq("enable_flag",1);
+
+        List<ProductReview> productReviewList = productReviewMapper.selectList(wrapper) ;
+        if(null == productReviewList || productReviewList.size() < 1){
+            return null;
+        }
+
+        return BeanConversionUtils.copyToAnotherList(ProductReviewDTO.class,productReviewList);
+    }
 }

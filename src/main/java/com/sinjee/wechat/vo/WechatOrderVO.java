@@ -53,6 +53,8 @@ public class WechatOrderVO implements Serializable {
 
     List<WechatOrderDetailVO> orderDetailList ;
 
+    List<WechatProductReviewVO> productReviewLists ;
+
     private String buyerMessage ;
 
     private String hashNumber ;

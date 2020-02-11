@@ -32,4 +32,6 @@ public class ProductReviewDTO extends WechatBaseDTO {
     private List<WechatProductReviewForm> wechatProductReviewFormList ;
 
     private String openid ;
+
+    private String orderNumber ;
 }

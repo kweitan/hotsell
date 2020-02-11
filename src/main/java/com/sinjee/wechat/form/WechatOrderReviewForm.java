@@ -21,5 +21,5 @@ public class WechatOrderReviewForm implements Serializable {
     private String hashNumber ;
 
     @NotEmpty(message="内容必填")
-    private List<WechatProductReviewForm> productReviewLists ;
+    private String productReviewLists ;
 }

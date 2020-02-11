@@ -42,7 +42,12 @@ public class ProductReviewServiceImpl implements ProductReviewService {
                 CacheBeanCopier.copy(productReviewDTO,productReview);
                 productReview.setProductReviewContent(wechatProductReviewForm.getProductReviewContent());
                 productReview.setProductNumber(wechatProductReviewForm.getProductNumber());
-                productReview.setProductReviewLevel(wechatProductReviewForm.getProductReviewLevel());
+                if (wechatProductReviewForm.getProductReviewLevel() == 999){
+                    productReview.setProductReviewLevel(1);
+                }else {
+                    productReview.setProductReviewLevel(wechatProductReviewForm.getProductReviewLevel());
+                }
+
                 productReviewMapper.insert(productReview);
             });
         }catch (Exception e){

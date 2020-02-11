@@ -2,7 +2,9 @@ package com.sinjee.wechat.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sinjee.admin.dto.OrderMasterDTO;
+import com.sinjee.admin.dto.ProductInfoDTO;
 import com.sinjee.admin.service.OrderMasterService;
+import com.sinjee.admin.service.ProductInfoService;
 import com.sinjee.annotation.AccessTokenIdempotency;
 import com.sinjee.common.*;
 import com.sinjee.vo.ResultVO;
@@ -46,6 +48,10 @@ public class WechatProductReviewController {
 
     @Autowired
     private OrderMasterService masterService ;
+
+    @Autowired
+    private ProductInfoService productInfoService ;
+
 
     @PostMapping("/saveProductReview")
     @AccessTokenIdempotency
@@ -147,7 +153,17 @@ public class WechatProductReviewController {
 
         wechatOrderVOList.stream().forEach(wechatOrderVO -> {
             List<ProductReviewDTO> productReviewDTOList =productReviewService.productReviewDTOListByOrderNumber(wechatOrderVO.getOrderNumber());
-            List<WechatProductReviewVO> wechatProductReviewVOList = BeanConversionUtils.copyToAnotherList(WechatProductReviewVO.class,productReviewDTOList);
+            List<WechatProductReviewVO> wechatProductReviewVOList = new ArrayList<>() ;
+            for (int i=0; i < productReviewDTOList.size(); i++){
+                ProductReviewDTO productReviewDTO = productReviewDTOList.get(i);
+                ProductInfoDTO productInfoDTO = productInfoService.findByNumber(productReviewDTO.getProductNumber()) ;
+                WechatProductReviewVO wechatProductReviewVO = new WechatProductReviewVO() ;
+                CacheBeanCopier.copy(productReviewDTO,wechatProductReviewVO);
+
+                wechatProductReviewVO.setProductIcon(productInfoDTO.getProductIcon());
+                wechatProductReviewVO.setProductName(productInfoDTO.getProductName());
+                wechatProductReviewVOList.add(wechatProductReviewVO) ;
+            }
             wechatOrderVO.setProductReviewLists(wechatProductReviewVOList);
         });
 

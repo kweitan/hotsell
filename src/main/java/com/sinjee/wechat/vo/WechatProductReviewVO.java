@@ -31,6 +31,10 @@ public class WechatProductReviewVO {
     /**昵称**/
     private String personName ;
 
+    private String productIcon;
+
+    private String productName;
+
     //更新时间
     @JsonFormat(pattern="yyyy-MM-dd")
     private Timestamp updateTime ;

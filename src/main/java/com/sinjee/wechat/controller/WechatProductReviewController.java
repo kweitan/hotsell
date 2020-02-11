@@ -149,23 +149,36 @@ public class WechatProductReviewController {
 
         List<OrderMasterDTO> orderMasterDTOList = orderMasterDTOIPage.getRecords();
 
-        List<WechatOrderVO> wechatOrderVOList = BeanConversionUtils.copyToAnotherList(WechatOrderVO.class,orderMasterDTOList);
+        List<WechatOrderVO> wechatOrderVOList = new ArrayList<>() ;
 
-        wechatOrderVOList.stream().forEach(wechatOrderVO -> {
-            List<ProductReviewDTO> productReviewDTOList =productReviewService.productReviewDTOListByOrderNumber(wechatOrderVO.getOrderNumber());
-            List<WechatProductReviewVO> wechatProductReviewVOList = new ArrayList<>() ;
-            for (int i=0; i < productReviewDTOList.size(); i++){
-                ProductReviewDTO productReviewDTO = productReviewDTOList.get(i);
-                ProductInfoDTO productInfoDTO = productInfoService.findByNumber(productReviewDTO.getProductNumber()) ;
-                WechatProductReviewVO wechatProductReviewVO = new WechatProductReviewVO() ;
-                CacheBeanCopier.copy(productReviewDTO,wechatProductReviewVO);
 
-                wechatProductReviewVO.setProductIcon(productInfoDTO.getProductIcon());
-                wechatProductReviewVO.setProductName(productInfoDTO.getProductName());
-                wechatProductReviewVOList.add(wechatProductReviewVO) ;
+        if (null != orderMasterDTOList && orderMasterDTOList.size() > 0){
+            for (int j= 0; j < orderMasterDTOList.size(); j++){
+                OrderMasterDTO orderMasterDTO = orderMasterDTOList.get(j) ;
+                WechatOrderVO wechatOrderVO = new WechatOrderVO() ;
+                CacheBeanCopier.copy(orderMasterDTO,wechatOrderVO);
+                List<ProductReviewDTO> productReviewDTOList =productReviewService.productReviewDTOListByOrderNumber(orderMasterDTO.getOrderNumber());
+                if(null != productReviewDTOList){
+                    List<WechatProductReviewVO> wechatProductReviewVOList = new ArrayList<>() ;
+                    for (int i=0; i < productReviewDTOList.size(); i++){
+                        ProductReviewDTO productReviewDTO = productReviewDTOList.get(i);
+                        ProductInfoDTO productInfoDTO = productInfoService.findByNumber(productReviewDTO.getProductNumber()) ;
+                        WechatProductReviewVO wechatProductReviewVO = new WechatProductReviewVO() ;
+                        CacheBeanCopier.copy(productReviewDTO,wechatProductReviewVO);
+
+                        wechatProductReviewVO.setProductIcon(productInfoDTO.getProductIcon());
+                        wechatProductReviewVO.setProductName(productInfoDTO.getProductName());
+                        wechatProductReviewVOList.add(wechatProductReviewVO) ;
+                    }
+                    wechatOrderVO.setProductReviewLists(wechatProductReviewVOList);
+                }
+
+                wechatOrderVOList.add(wechatOrderVO) ;
             }
-            wechatOrderVO.setProductReviewLists(wechatProductReviewVOList);
-        });
+
+        }
+
+
 
         //返回前端
         ResultVO resultVO = new ResultVO();

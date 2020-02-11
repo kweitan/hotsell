@@ -91,6 +91,7 @@ public class WechatBuyerInfoController {
         }
 
         String sessionKey = buyerInfoService.login(code);
+        log.info("未加密前的sessionKey={}",sessionKey);
         Map<String,Object> map = new HashMap<>() ;
         try {
             if (!sessionKey.equals("")){

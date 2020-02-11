@@ -85,7 +85,8 @@ public class ProductInfoController {
     @PostMapping(value = "/save")
     @Caching(evict = {
             @CacheEvict(cacheNames = "productList",allEntries=true),
-            @CacheEvict(cacheNames = "categoryList",allEntries=true)})
+            @CacheEvict(cacheNames = "categoryList",allEntries=true),
+            @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
     public ResultVO saveProductInfo(@RequestBody @Valid ProductInfoForm productInfoForm, BindingResult bindingResult) {
         //1.校验参数
         if (bindingResult.hasErrors()){
@@ -144,7 +145,8 @@ public class ProductInfoController {
     @PostMapping("/update")
     @Caching(evict = {
             @CacheEvict(cacheNames = "productList",allEntries=true),
-            @CacheEvict(cacheNames = "categoryList",allEntries=true)})
+            @CacheEvict(cacheNames = "categoryList",allEntries=true),
+            @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
     public ResultVO updateProductInfo(@RequestBody @Valid ProductInfoForm productInfoForm, BindingResult bindingResult){
         //1.校验参数
         if (bindingResult.hasErrors()){
@@ -191,7 +193,8 @@ public class ProductInfoController {
     @GetMapping("/upProductInfo")
     @Caching(evict = {
             @CacheEvict(cacheNames = "productList",allEntries=true),
-            @CacheEvict(cacheNames = "categoryList",allEntries=true)})
+            @CacheEvict(cacheNames = "categoryList",allEntries=true),
+            @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
     public ResultVO upProductInfo(@RequestParam String productNumber,
                                @RequestParam String hashNumber){
         //取得类目编码和哈希
@@ -211,7 +214,8 @@ public class ProductInfoController {
     @GetMapping("/downProductInfo")
     @Caching(evict = {
             @CacheEvict(cacheNames = "productList",allEntries=true),
-            @CacheEvict(cacheNames = "categoryList",allEntries=true)})
+            @CacheEvict(cacheNames = "categoryList",allEntries=true),
+            @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
     public ResultVO downProductInfo(@RequestParam String productNumber,
                                  @RequestParam String hashNumber){
         //取得类目编码和哈希
@@ -231,7 +235,8 @@ public class ProductInfoController {
     @PostMapping("/delete")
     @Caching(evict = {
             @CacheEvict(cacheNames = "productList",allEntries=true),
-            @CacheEvict(cacheNames = "categoryList",allEntries=true)})
+            @CacheEvict(cacheNames = "categoryList",allEntries=true),
+            @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
     public ResultVO deleteProductInfo(@RequestParam String productNumber,
                                    @RequestParam String hashNumber){
         //取得类目编码和哈希

@@ -125,6 +125,7 @@ public class WechatProductController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/detailByProductNumber")
+    @Cacheable(cacheNames = "productInfoDetail", key = "#productNumber", unless = "#result.getCode() != 0")
     public ResultVO detailByProductNumber(@RequestParam String productNumber){
         ProductDetailInfoVO productDetailInfoVO = new ProductDetailInfoVO() ;
         ProductInfoDTO productInfoDTO = productInfoService.findByNumber(productNumber) ;

@@ -223,6 +223,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
     @Override
     public IPage<ProductInfoDTO> selectProductInfosByCategoryNumber(Integer currentPage, Integer pageSize, String categoryNumber) {
+        log.info("currentPage={},pageSize={}",currentPage,pageSize);
         Page<ProductInfo> page = new Page<ProductInfo>(currentPage,pageSize) ;
         Map<String,Object> map = new HashMap<>() ;
         map.put("categoryNumber",categoryNumber);

@@ -92,14 +92,14 @@ public class WechatProductController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/number/list")
-    @Cacheable(cacheNames = "categoryList", key = "#categoryNumber", unless = "#result.getCode() != 0")
+    @Cacheable(cacheNames = "categoryList", key = "#currentPage+'-'+#pageSize+'-'+#categoryNumber", unless = "#result.getCode() != 0")
     public ResultVO listByProductNumber(@RequestParam(value = "currentPage", defaultValue = "1")
                                  Integer currentPage,
                          @RequestParam(value = "pageSize", defaultValue = "8")
                                  Integer pageSize,@RequestParam String categoryNumber){
 
         IPage<ProductInfoDTO> productInfoDTOIPage = productInfoService.
-                selectProductInfosByCategoryNumber(1,30,categoryNumber);
+                selectProductInfosByCategoryNumber(currentPage,pageSize,categoryNumber);
         List<ProductInfoVO> productInfoVOList = new ArrayList<>() ;
         if (null != productInfoDTOIPage){
             List<ProductInfoDTO> productInfoDTOList = productInfoDTOIPage.getRecords();
@@ -120,6 +120,8 @@ public class WechatProductController {
         resultVO.setCurrentPage(currentPage);
         resultVO.setCode(0);
         resultVO.setMessage("成功");
+        resultVO.setTotalSize(productInfoDTOIPage.getTotal());
+        resultVO.setPageTotal(productInfoDTOIPage.getPages());
         return resultVO;
     }
 

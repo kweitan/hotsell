@@ -8,7 +8,7 @@ public enum OrderStatusEnum implements CodeEnum{
     SHIPMENT("SHIPMENT","已发货"),
     FINISHED("FINISHED", "完结"),
     CANCEL("CANCEL", "已取消"),
-    PARTIAL("PARTIAL", "部分付款"),
+    REVIEW("REVIEW", "待评价"),
     REFUND("REFUND","申请退款"),
     ;
 

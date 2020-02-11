@@ -3,8 +3,12 @@ package com.sinjee.wechat.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.sinjee.admin.entity.OrderMaster;
+import com.sinjee.admin.mapper.OrderMasterMapper;
 import com.sinjee.common.BeanConversionUtils;
 import com.sinjee.common.CacheBeanCopier;
+import com.sinjee.enums.OrderStatusEnum;
+import com.sinjee.enums.PayStatusEnum;
 import com.sinjee.exceptions.MyException;
 import com.sinjee.wechat.dto.ProductReviewDTO;
 import com.sinjee.wechat.entity.ProductReview;
@@ -30,9 +34,26 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     @Autowired
     private ProductReviewMapper productReviewMapper ;
 
+    @Autowired
+    private OrderMasterMapper orderMasterMapper ;
+
     @Override
     @Transactional
     public void save(ProductReviewDTO productReviewDTO) {
+
+        /**
+         * 填写运单的时候 设置订单状态为SHIPMENT 待收货
+         * 客户签收的时候 设置订单状态为REVIEW 待评价
+         * 客户评价后 设置订单状态为FINISHED
+         */
+        QueryWrapper<OrderMaster> wrapper = new QueryWrapper();
+        wrapper.eq("order_number",productReviewDTO.getOrderNumber()).eq("enable_flag",1)
+        .eq("order_status", OrderStatusEnum.REVIEW.getCode())
+        .eq("pay_status", PayStatusEnum.SUCCESS.getCode());
+        OrderMaster orderMaster = new OrderMaster() ;
+        orderMaster.setOrderStatus(OrderStatusEnum.FINISHED.getCode());
+        orderMaster.setPayStatus(PayStatusEnum.CLOSED.getCode());
+        orderMasterMapper.update(orderMaster,wrapper) ;
 
         List<WechatProductReviewForm> wechatProductReviewFormList = productReviewDTO.getWechatProductReviewFormList() ;
 

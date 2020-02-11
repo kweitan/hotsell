@@ -6,13 +6,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sinjee.common.BeanConversionUtils;
 import com.sinjee.common.CacheBeanCopier;
 import com.sinjee.common.GsonUtil;
-import com.sinjee.exceptions.MyException;
 import com.sinjee.wechat.dto.MyForwardDTO;
 import com.sinjee.wechat.entity.MyForward;
 import com.sinjee.wechat.mapper.MyForwardMapper;
 import com.sinjee.wechat.service.MyForwardService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

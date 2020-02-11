@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sinjee.common.BeanConversionUtils;
 import com.sinjee.common.CacheBeanCopier;
 import com.sinjee.wechat.dto.WechatSearchKeywordDTO;
-import com.sinjee.wechat.entity.WechatBanner;
 import com.sinjee.wechat.entity.WechatSearchKeyword;
 import com.sinjee.wechat.mapper.WechatSearchKeywordMapper;
 import com.sinjee.wechat.service.WechatSearchKeywordService;

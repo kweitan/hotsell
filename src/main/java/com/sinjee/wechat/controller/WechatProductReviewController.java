@@ -147,9 +147,9 @@ public class WechatProductReviewController {
 
 
         //获取orderNumber
-        //正常所在状态时 FINISH CLOSE
+        //正常所在状态时 REVIEW CLOSE
         IPage<OrderMasterDTO> orderMasterDTOIPage = masterService.selectOrderMasterInfo(currentPage,pageSize,openid,
-                OrderStatusEnum.NEW.getCode(), PayStatusEnum.WAIT.getCode());
+                OrderStatusEnum.REVIEW.getCode(), PayStatusEnum.CLOSED.getCode());
 
         List<OrderMasterDTO> orderMasterDTOList = orderMasterDTOIPage.getRecords();
 

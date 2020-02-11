@@ -3,7 +3,6 @@ package com.sinjee.admin.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sinjee.admin.dto.ProductDetailInfoDTO;
 import com.sinjee.admin.entity.ProductDetailInfo;
-import com.sinjee.admin.entity.ProductInfo;
 import com.sinjee.admin.mapper.ProductDetailInfoMapper;
 import com.sinjee.admin.service.ProductDetailInfoService;
 import com.sinjee.common.CacheBeanCopier;

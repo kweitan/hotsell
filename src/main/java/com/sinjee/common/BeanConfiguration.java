@@ -32,6 +32,10 @@ public class BeanConfiguration implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         log.info("添加拦截器={}","accessTokenInterceptor");
+
+        /***
+         * 拦截微信小程序请求列表
+         */
         registry.addInterceptor(accessTokenInterceptor)
                 // addPathPatterns 用于添加拦截规则 ， 先把所有路径都加入拦截， 再一个个排除
                 .addPathPatterns("/wechat/order/**","/wechat/pay/**",
@@ -41,13 +45,17 @@ public class BeanConfiguration implements WebMvcConfigurer {
 //                .excludePathPatterns("/");
         registry.addInterceptor(accessLimtInterceptor)
                 // addPathPatterns 用于添加拦截规则 ， 先把所有路径都加入拦截， 再一个个排除
-                .addPathPatterns("/wechat/order/**");
+                .addPathPatterns("/wechat/myforward/saveMyForward","/wechat/buyer/service");
         // excludePathPatterns 表示改路径不用拦截
 //                .excludePathPatterns("/");
 
         registry.addInterceptor(apiIdempotencyInterceptor)
                 // addPathPatterns 用于添加拦截规则 ， 先把所有路径都加入拦截， 再一个个排除
-                .addPathPatterns("/wechat/myforward/**");
+                .addPathPatterns("/wechat/order/createOrder");
+
+        /***
+         * 拦截中台的过滤器
+         */
 
         WebMvcConfigurer.super.addInterceptors(registry);
     }

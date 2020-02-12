@@ -20,7 +20,7 @@ import java.util.List;
  * @ClassName OrderDetailServiceImpl
  * 描述 订单明细类
  **/
-@Transactional
+
 @Service
 @Slf4j
 public class OrderDetailServiceImpl implements OrderDetailService {
@@ -29,6 +29,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     private OrderDetailMapper orderDetailMapper ;
 
     @Override
+    @Transactional
     public Integer save(OrderDetailDTO orderDetailDTO) {
         OrderDetail orderDetail = new OrderDetail();
         CacheBeanCopier.copy(orderDetailDTO,orderDetail);
@@ -36,6 +37,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     }
 
     @Override
+    @Transactional
     public Integer update(OrderDetailDTO orderDetailDTO) {
         OrderDetail orderDetail = new OrderDetail();
         CacheBeanCopier.copy(orderDetailDTO,orderDetail);
@@ -45,6 +47,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     }
 
     @Override
+    @Transactional
     public Integer delete(OrderDetailDTO orderDetailDTO) {
         QueryWrapper<OrderDetail> wrapper = new QueryWrapper();
         wrapper.eq("detail_id",orderDetailDTO.getDetailId()).eq("enable_flag",1);

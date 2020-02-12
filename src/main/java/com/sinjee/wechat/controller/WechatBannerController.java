@@ -8,6 +8,7 @@ import com.sinjee.wechat.service.WechatBannerService;
 import com.sinjee.wechat.vo.WechatBannerVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,8 +32,13 @@ public class WechatBannerController {
     @Value("${myWechat.salt}")
     private String salt ;
 
+    /**
+     * banner 缓存 更新的时候 注意更新缓存
+     * @return
+     */
     @CrossOrigin(origins = "*")
     @GetMapping("/indexList")
+    @Cacheable(cacheNames = "bannerIndexList", key = "'bannerIndexList'", unless = "#result.getCode() != 0")
     public ResultVO index(){
 
         List<WechatBannerDTO> wechatBannerDTOList = wechatBannerService.getBannerIndexList();

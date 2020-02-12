@@ -13,6 +13,7 @@ import com.sinjee.wechat.vo.CategoryInfoVO;
 import com.sinjee.wechat.vo.WechatSearchKeywordVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ public class WechatCategoryController {
     public ResultVO list(){
 
         //2.查询数据
-        Integer productStatus = 0 ; //1-表示已上架 0-表示下架
+        Integer productStatus = 1 ; //1-表示已上架 0-表示下架
 
         IPage<ProductCategoryDTO> page = productCategoryService.selectProductCategoryBySearchName(1,5,"");
 
@@ -88,8 +89,13 @@ public class WechatCategoryController {
         return resultVO;
     }
 
+    /**
+     * 首页类别 更新的时候要删除缓存
+     * @return
+     */
     @CrossOrigin(origins = "*")
     @GetMapping("/indexList")
+    @Cacheable(cacheNames = "indexList", key = "'indexList'", unless = "#result.getCode() != 0")
     public ResultVO index(){
 
         //2.查询数据

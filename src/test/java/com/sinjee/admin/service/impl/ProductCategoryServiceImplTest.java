@@ -70,7 +70,7 @@ class ProductCategoryServiceImplTest {
         ///pages/images/top/xiaochi.png
         ///pages/images/top/wumiguo.png
         productCategoryDTO.setBelongIndex(1);
-        productCategoryDTO.setCategoryIcon("/pages/images/top/wumiguo.png");
+        productCategoryDTO.setCategoryIcon("/pages/images/top/shuichan.png");
         productCategoryDTO.setCategoryUrl("/pages/images");
         productCategoryService.save(productCategoryDTO);
     }

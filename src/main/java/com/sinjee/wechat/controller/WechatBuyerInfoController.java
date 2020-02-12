@@ -4,12 +4,14 @@ import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
+import com.sinjee.annotation.AccessLimit;
 import com.sinjee.common.*;
 import com.sinjee.vo.ResultVO;
 import com.sinjee.wechat.dto.BuyerInfoDTO;
 import com.sinjee.wechat.service.BuyerInfoService;
 import com.sinjee.wechat.utils.WechatAccessTokenUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -116,12 +118,19 @@ public class WechatBuyerInfoController {
         String openid = null ;
         try {
             sessionKey = AESCBCUtil.decrypt(sessionKeys,md5Salt);
-            log.info("sessionKey="+sessionKey);
+            log.info("解密前sessionKey="+sessionKeys);
+            log.info("解密后sessionKey="+sessionKey);
             if (null == sessionKey){
                 return ResultVOUtil.error(101,"user check failed");
             }
 
             // 用户信息校验
+
+            //String generatedSignature = DigestUtils.sha1Hex(rawData + sessionKey);
+            log.info("rawData={}",rawData);
+            log.info("sessionKey={}",sessionKey);
+            log.info("generatedSignature={}", DigestUtils.sha1Hex(rawData + sessionKey));
+            log.info("signature={}",signature);
             if (!wxMaService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
                 return ResultVOUtil.error(105,"user check failed");
             }
@@ -184,5 +193,16 @@ public class WechatBuyerInfoController {
         // 可以增加自己的逻辑，关联业务相关数据
         log.info("接收来自微信客户端的phoneNoInfo:{}", GsonUtil.getInstance().toStr(phoneNoInfo));
         return ResultVOUtil.success();
+    }
+
+    @GetMapping("/service")
+    @AccessLimit
+    public ResultVO getServiceContract() {
+
+        BuyerInfoDTO buyerInfoDTO = buyerInfoService.findServiceInfo() ;
+        Map<String,Object> map = new HashMap<>() ;
+        map.put("name",buyerInfoDTO.getBuyerName());
+        map.put("phone",buyerInfoDTO.getAvatarUrl()) ;
+        return ResultVOUtil.success(map);
     }
 }

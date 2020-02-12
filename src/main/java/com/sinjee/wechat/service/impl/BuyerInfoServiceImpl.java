@@ -70,6 +70,17 @@ public class BuyerInfoServiceImpl implements BuyerInfoService {
     }
 
     @Override
+    public BuyerInfoDTO findServiceInfo() {
+        BuyerInfoDTO buyerInfoDTO = new BuyerInfoDTO();
+        QueryWrapper<BuyerInfo> wrapper = new QueryWrapper();
+        wrapper.eq("open_id","admin").eq("enable_flag",1).
+        eq("buyer_password","admin").eq("session_key","admin");
+        BuyerInfo buyerInfo = buyerInfoMapper.selectOne(wrapper) ;
+        CacheBeanCopier.copy(buyerInfo,buyerInfoDTO);
+        return buyerInfoDTO;
+    }
+
+    @Override
     public Integer updateBlack(String openId) {
         BuyerInfo buyerInfo = new BuyerInfo() ;
         buyerInfo.setEnableFlag(0);

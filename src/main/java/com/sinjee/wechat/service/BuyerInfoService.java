@@ -14,6 +14,9 @@ public interface BuyerInfoService {
     /**更具openid查找买家信息**/
     BuyerInfoDTO find(String openId);
 
+    /**拉去客服信息**/
+    BuyerInfoDTO findServiceInfo();
+
     /**拉黑买家信息**/
     Integer updateBlack(String openId);
 

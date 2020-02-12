@@ -132,6 +132,9 @@ public class WechatBuyerInfoController {
             log.info("generatedSignature={}", DigestUtils.sha1Hex(rawData + sessionKey));
             log.info("signature={}",signature);
             if (!wxMaService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
+
+                //校验用户数据是否存在数据库 没有则显示不正确
+
                 return ResultVOUtil.error(105,"user check failed");
             }
             log.info("用户信息校验通过");

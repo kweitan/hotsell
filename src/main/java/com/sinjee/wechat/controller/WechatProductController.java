@@ -98,6 +98,10 @@ public class WechatProductController {
                          @RequestParam(value = "pageSize", defaultValue = "8")
                                  Integer pageSize,@RequestParam String categoryNumber){
 
+        if(null == categoryNumber || "undefined".equals(categoryNumber)){
+            return ResultVOUtil.error(123,"类别编码无效");
+        }
+
         IPage<ProductInfoDTO> productInfoDTOIPage = productInfoService.
                 selectProductInfosByCategoryNumber(currentPage,pageSize,categoryNumber);
         List<ProductInfoVO> productInfoVOList = new ArrayList<>() ;

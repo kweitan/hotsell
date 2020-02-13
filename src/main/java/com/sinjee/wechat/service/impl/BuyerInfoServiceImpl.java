@@ -151,7 +151,7 @@ public class BuyerInfoServiceImpl implements BuyerInfoService {
 
 
             // 可以增加自己的逻辑，关联业务相关数据
-            return sessionKey ;
+            return sessionKey+"&&"+openid ;
 
         } catch (Exception e) {
             log.error(e.getMessage(), e);

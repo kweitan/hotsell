@@ -2,6 +2,7 @@ package com.sinjee.admin.controller;
 
 import com.sinjee.common.KeyUtil;
 import com.sinjee.common.ResultVOUtil;
+import com.sinjee.common.UUIDUtil;
 import com.sinjee.vo.ResultVO;
 import io.jsonwebtoken.lang.Assert;
 import lombok.extern.slf4j.Slf4j;
@@ -41,14 +42,14 @@ public class FileUploadController {
     /**
      * /resources/common
      * **/
-    @Value("${server.uploadfiles.dir}")
+    @Value("${admin.server.uploadfiles.dir}")
     private String uploadFiles ;
 
     @CrossOrigin(origins = "*")
     @PostMapping("/uploadIcon")
     public ResultVO uploadIcon(HttpServletRequest request){
         log.info("上传图片开始");
-        String imgName = KeyUtil.genUniqueKey();
+        String imgName = UUIDUtil.genUUIDStr()+KeyUtil.genUniqueKey();
         String imgType = null ;
         List<String> resList = new ArrayList<>() ;
         //
@@ -130,7 +131,7 @@ public class FileUploadController {
                     String realWebImgPath = imgPath + imgName ;
 
                     //拼装返回图片的URL地址
-                    resList.add(uploadFiles+realWebImgPath);
+                    resList.add(realWebImgPath);
                 }
             }
 
@@ -141,4 +142,6 @@ public class FileUploadController {
 
         return ResultVOUtil.success(resList) ;
     }
+
+
 }

@@ -117,9 +117,11 @@ public class WechatBuyerInfoController {
         String sessionKey = null;
         String openid = null ;
         try {
-            sessionKey = AESCBCUtil.decrypt(sessionKeys,md5Salt);
+            String tempStr = AESCBCUtil.decrypt(sessionKeys,md5Salt);
             log.info("解密前sessionKey="+sessionKeys);
             log.info("解密后sessionKey="+sessionKey);
+            sessionKey = tempStr.split("&&")[0] ;
+            openid = tempStr.split("&&")[1] ;
             if (null == sessionKey){
                 return ResultVOUtil.error(101,"user check failed");
             }
@@ -134,8 +136,14 @@ public class WechatBuyerInfoController {
             if (!wxMaService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
 
                 //校验用户数据是否存在数据库 没有则显示不正确
+                BuyerInfoDTO buyerInfoDTO = buyerInfoService.find(openid) ;
+                if (null != buyerInfoDTO && StringUtils.isNotBlank(buyerInfoDTO.getOpenId()) && StringUtils.isNotBlank(buyerInfoDTO.getBuyerName()))
+                {
+                    log.info("解决多次授权问题");
+                }else {
+                    return ResultVOUtil.error(105,"user check failed");
+                }
 
-                return ResultVOUtil.error(105,"user check failed");
             }
             log.info("用户信息校验通过");
             // 解密用户信息

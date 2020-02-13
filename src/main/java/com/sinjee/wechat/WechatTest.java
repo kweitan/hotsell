@@ -60,17 +60,17 @@ public class WechatTest {
                 //StringSelection stsel  = new StringSelection(msg.toString());
                 //app.getSystem().setContents(stsel, stsel);
                 //间隔5s
-                app.getRobot().delay(10000);
+                app.getRobot().delay(20000);
                 //移动鼠标到聊天窗口的输入框
                 app.moveMouse(72, 453);
                 //鼠标右击
-                app.rightClick();
+                //app.rightClick();
                 //移动鼠标到"粘贴"菜单
-                app.moveMouse(173,511);
+                //app.moveMouse(173,511);
                 //选择"粘贴"
-                app.leftClick();
+                //app.leftClick();
                 //移动鼠标到"发送"按钮
-                app.moveMouse(357,526);
+                //app.moveMouse(357,526);
                 //发送
                 app.leftClick();
             }

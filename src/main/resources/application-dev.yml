@@ -1,5 +1,9 @@
 ### 开发环境
 spring:
+  ### 禁止使用springboot 默认的上传组件
+  servlet:
+    multipart:
+      enabled: false
   mvc:
     static-path-pattern: /**
   resources:
@@ -141,5 +145,12 @@ wechat:
   accessToekenScret: 3787idlkdkhjfoi4trqlafhslhUWOTAUWW323
   #AES 密钥
   md5Salt: ywqhdgeAFWE34375
+
+admin:
+  imgPath: /images/products/
+  server:
+    uploadfiles:
+      ###文件上传目录(window是d/e/f盘， linux是/)（注意Linux和Windows上的目录结构不同） g:/-window /->linux
+      dir: g:/resources/common
 
 

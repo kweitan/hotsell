@@ -14,6 +14,7 @@ import com.sinjee.admin.service.ProductInfoService;
 import com.sinjee.common.BeanConversionUtils;
 import com.sinjee.common.CacheBeanCopier;
 
+import com.sinjee.common.DateUtils;
 import com.sinjee.common.IdUtil;
 import com.sinjee.exceptions.MyException;
 import com.sinjee.wechat.form.ShopCartModel;
@@ -99,6 +100,9 @@ public class ProductInfoServiceImpl implements ProductInfoService {
         CacheBeanCopier.copy(productInfoDTO,productInfo);
         productInfo.setProductNumber(productNumber);
 
+        //设置未上架
+        productInfo.setProductStatus(0);
+
         //保存商品中间表
         List<String> numberLists = productInfoDTO.getAllCategoryLists() ;
         for (String number: numberLists){
@@ -107,6 +111,9 @@ public class ProductInfoServiceImpl implements ProductInfoService {
             productCategoryMidDTO.setProductNumber(productNumber);
             productCategoryMidDTO.setCreator(productInfoDTO.getCreator());
             productCategoryMidDTO.setUpdater(productInfoDTO.getUpdater());
+
+            productCategoryMidDTO.setCreateTime(DateUtils.getTimestamp());
+            productCategoryMidDTO.setUpdateTime(DateUtils.getTimestamp());
             productCategoryMidService.saveProductCategoryMidInfo(productCategoryMidDTO) ;
         }
 

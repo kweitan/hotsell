@@ -3,14 +3,16 @@ package com.sinjee.admin.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sinjee.admin.dto.ProductDetailInfoDTO;
 import com.sinjee.admin.dto.ProductInfoDTO;
+import com.sinjee.admin.form.ProductCategoryInfoForm;
 import com.sinjee.admin.form.ProductInfoForm;
 import com.sinjee.admin.service.ProductDetailInfoService;
 import com.sinjee.admin.service.ProductInfoService;
 import com.sinjee.admin.vo.ProductInfoVO;
-import com.sinjee.common.CacheBeanCopier;
-import com.sinjee.common.HashUtil;
-import com.sinjee.common.ResultVOUtil;
+import com.sinjee.common.*;
+import com.sinjee.exceptions.MyException;
 import com.sinjee.vo.ResultVO;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
@@ -20,7 +22,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -30,6 +34,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/admin/product")
+@Slf4j
 public class ProductInfoController {
 
     @Autowired
@@ -87,47 +92,84 @@ public class ProductInfoController {
             @CacheEvict(cacheNames = "productList",allEntries=true),
             @CacheEvict(cacheNames = "categoryList",allEntries=true),
             @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
-    public ResultVO saveProductInfo(@RequestBody @Valid ProductInfoForm productInfoForm, BindingResult bindingResult) {
+    public ResultVO saveProductInfo( @Valid @RequestBody ProductInfoForm productInfoForm, BindingResult bindingResult) {
+        log.info("ProductInfoForm2={}", GsonUtil.getInstance().toStr(productInfoForm));
+
         //1.校验参数
         if (bindingResult.hasErrors()){
             return ResultVOUtil.error(101,bindingResult.getFieldError().getDefaultMessage()) ;
         }
 
         //校验
-        if(!HashUtil.verify(productInfoForm.getProductNumber(),salt,productInfoForm.getHashNumber())){
-            return ResultVOUtil.error(101,"商品编码不一致!") ;
-        }
+//        if(!HashUtil.verify(productInfoForm.getProductNumber(),salt,productInfoForm.getHashNumber())){
+//            return ResultVOUtil.error(101,"商品编码不一致!") ;
+//        }
 
         ProductInfoDTO productInfoDTO = new ProductInfoDTO() ;
         ProductDetailInfoDTO productDetailInfoDTO = new ProductDetailInfoDTO() ;
 
         //3.校验商品类目信息 "8493753985938948&hahhhfahghahgh"
         List<String> numberLists = new ArrayList<>() ;
-        List<String> categoryList = productInfoForm.getAllCategoryLists() ;
+        List<ProductCategoryInfoForm> categoryList = productInfoForm.getCategoryNewArrs() ;
         if (null != categoryList && categoryList.size() > 0){
-            for (String content : categoryList){
-                String[] arr = content.split("&") ;
-                String categoryNumber = arr[0] ;
-                String categoryHashNumber = arr[1] ;
+            for (ProductCategoryInfoForm productCategoryInfoForm : categoryList){
+                String categoryNumber = productCategoryInfoForm.getCategoryNumber() ;
+                String categoryHashNumber =productCategoryInfoForm.getGoodHashNumber() ;
                 numberLists.add(categoryNumber) ;
-                if(!HashUtil.verify(categoryNumber,salt,categoryHashNumber)){
-                    return ResultVOUtil.error(101,"类目编码不一致!") ;
-                }
+//                if(!HashUtil.verify(categoryNumber,salt,categoryHashNumber)){
+//                    return ResultVOUtil.error(101,"类目编码不一致!") ;
+//                }
             }
         }
+//        List<String> numberLists = new ArrayList<>() ;
+//        List<String> categoryList = Arrays.asList(productInfoForm.getCategoryArrs()) ;
+//        if (null != categoryList && categoryList.size() > 0){
+//            for (String content : categoryList){
+//                String[] arr = content.split("&") ;
+//                String categoryNumber = arr[0] ;
+//                String categoryHashNumber = arr[1] ;
+//                numberLists.add(categoryNumber) ;
+//                if(!HashUtil.verify(categoryNumber,salt,categoryHashNumber)){
+//                    return ResultVOUtil.error(101,"类目编码不一致!") ;
+//                }
+//            }
+//        }
 
+        //校验参数
+        checkParams(productInfoForm);
+
+        //生成商品编码
+//        String productNumber = IdUtil.genId() ;
 
         //3.保存商品信息
-        CacheBeanCopier.copy(productInfoForm,productInfoDTO);
-        CacheBeanCopier.copy(productInfoForm,productDetailInfoDTO);
+        productInfoDTO.setProductIcon(productInfoForm.getProductIcon());
+        productInfoDTO.setProductLabels(productInfoForm.getProductLabels());
+        productInfoDTO.setProductName(productInfoForm.getProductName());
+        productInfoDTO.setProductPrice(new BigDecimal(productInfoForm.getProductPrice()));
+        productInfoDTO.setProductDescription(productInfoForm.getProductDesc());
+        productInfoDTO.setProductStock(Integer.valueOf(productInfoForm.getProductStock()));
+        productInfoDTO.setProductTips(productInfoForm.getProductTips());
+        productInfoDTO.setProductUnit(productInfoForm.getProductUnit());
+        productInfoDTO.setProductStandard(productInfoForm.getProductStandard());
+//        productInfoDTO.setProductNumber(productNumber);
 
 
+        //4.保存商品明细信息
+        productDetailInfoDTO.setProductDetailDescription(productInfoForm.getProductDetailDesc());
+        productDetailInfoDTO.setProductDetailIcon(productInfoForm.getProductDetailIcon());
+        productDetailInfoDTO.setProductDetailField(productInfoForm.getProductDetailField());
+//        productDetailInfoDTO.setProductNumber(productNumber);
+
+        //保存登录用户信息
         productInfoDTO.setCreator("kweitan");
         productInfoDTO.setUpdater("kweitan");
         productDetailInfoDTO.setCreator("kweitan");
         productDetailInfoDTO.setUpdater("kweitan");
-        productDetailInfoDTO.setCreateTime(new java.sql.Timestamp(new java.util.Date().getTime()));
-        productDetailInfoDTO.setUpdateTime(new java.sql.Timestamp(new java.util.Date().getTime()));
+
+        productInfoDTO.setCreateTime(DateUtils.getTimestamp());
+        productInfoDTO.setUpdateTime(DateUtils.getTimestamp());
+        productDetailInfoDTO.setCreateTime(DateUtils.getTimestamp());
+        productDetailInfoDTO.setUpdateTime(DateUtils.getTimestamp());
 
         productInfoDTO.setAllCategoryLists(numberLists);
 
@@ -141,13 +183,21 @@ public class ProductInfoController {
     }
 
 
+    private void checkParams(ProductInfoForm productInfoForm){
+
+        if (!MathUtil.isInteger(productInfoForm.getProductStock())){
+            throw new MyException(101,"库存非数字");
+        }
+
+    }
+
     @CrossOrigin(origins = "*")
     @PostMapping("/update")
     @Caching(evict = {
             @CacheEvict(cacheNames = "productList",allEntries=true),
             @CacheEvict(cacheNames = "categoryList",allEntries=true),
             @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
-    public ResultVO updateProductInfo(@RequestBody @Valid ProductInfoForm productInfoForm, BindingResult bindingResult){
+    public ResultVO updateProductInfo( @Valid ProductInfoForm productInfoForm, BindingResult bindingResult){
         //1.校验参数
         if (bindingResult.hasErrors()){
             return ResultVOUtil.error(101,bindingResult.getFieldError().getDefaultMessage()) ;
@@ -155,12 +205,11 @@ public class ProductInfoController {
 
         //2.校验商品类目信息 "8493753985938948&hahhhfahghahgh"
         List<String> numberLists = new ArrayList<>() ;
-        List<String> categoryList = productInfoForm.getAllCategoryLists() ;
+        List<ProductCategoryInfoForm> categoryList = productInfoForm.getCategoryNewArrs() ;
         if (null != categoryList && categoryList.size() > 0){
-            for (String content : categoryList){
-                String[] arr = content.split("&") ;
-                String categoryNumber = arr[0] ;
-                String categoryHashNumber = arr[1] ;
+            for (ProductCategoryInfoForm productCategoryInfoForm : categoryList){
+                String categoryNumber = productCategoryInfoForm.getCategoryNumber() ;
+                String categoryHashNumber =productCategoryInfoForm.getGoodHashNumber() ;
                 numberLists.add(categoryNumber) ;
                 if(!HashUtil.verify(categoryNumber,salt,categoryHashNumber)){
                     return ResultVOUtil.error(101,"类目编码不一致!") ;

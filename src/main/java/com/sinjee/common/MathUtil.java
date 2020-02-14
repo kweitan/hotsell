@@ -1,5 +1,7 @@
 package com.sinjee.common;
 
+import java.util.regex.Pattern;
+
 /**
  * @author 小小极客
  * 时间 2020/2/5 1:40
@@ -22,5 +24,10 @@ public class MathUtil {
         }else {
             return false;
         }
+    }
+
+    public static boolean isInteger(String str) {
+        Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
+        return pattern.matcher(str).matches();
     }
 }

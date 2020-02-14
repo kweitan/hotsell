@@ -64,7 +64,6 @@ public class BeanConfiguration implements WebMvcConfigurer {
         /***
          * 拦截中台的过滤器
          */
-
         WebMvcConfigurer.super.addInterceptors(registry);
     }
 

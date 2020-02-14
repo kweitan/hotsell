@@ -2,8 +2,10 @@ package com.sinjee.admin.form;
 
 import lombok.Data;
 
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
@@ -17,20 +19,20 @@ import java.util.List;
 public class ProductInfoForm implements Serializable {
     //商品名称
     @NotBlank(message = "商品名称不能为空")
-    @Max(value = 50,message = "太大了")
+    @Size(min = 6, max = 50, message = "商品名称长度应当在 6 ~ 50 个字符之间")
     private String productName ;
 
     //商品价格
     @NotBlank(message = "商品价格不能为空")
-    private BigDecimal productPrice ;
+    private String productPrice ;
 
     //商品库存
     @NotBlank(message = "商品库存不能为空")
-    private Integer productStock ;
+    private String productStock ;
 
     //商品描述
     @NotBlank(message = "商品描述不能为空")
-    private String productDescription;
+    private String productDesc;
 
     //商品图标
     @NotBlank(message = "商品图标不能为空")
@@ -55,9 +57,19 @@ public class ProductInfoForm implements Serializable {
     private String productNumber ;
 
     //商品类目
-    @NotBlank(message = "商品类目不能为空")
-    private List<String> allCategoryLists ;
+    private List<ProductCategoryInfoForm> categoryNewArrs ;
 
     /** 哈希编码 **/
     private String hashNumber ;
+
+    //商品明细图
+    @NotBlank(message = "商品明细图不能为空")
+    private String productDetailIcon ;
+
+    //商品详细描述内容
+    private String productDetailDesc ;
+
+    //商品属性
+    @NotBlank(message = "商品属性不能为空")
+    private String productDetailField;
 }

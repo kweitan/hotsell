@@ -116,9 +116,9 @@ public class ProductInfoController {
                 String categoryNumber = productCategoryInfoForm.getCategoryNumber() ;
                 String categoryHashNumber =productCategoryInfoForm.getGoodHashNumber() ;
                 numberLists.add(categoryNumber) ;
-//                if(!HashUtil.verify(categoryNumber,salt,categoryHashNumber)){
-//                    return ResultVOUtil.error(101,"类目编码不一致!") ;
-//                }
+                if(!HashUtil.verify(categoryNumber,salt,categoryHashNumber)){
+                    return ResultVOUtil.error(101,"类目编码不一致!") ;
+                }
             }
         }
 //        List<String> numberLists = new ArrayList<>() ;

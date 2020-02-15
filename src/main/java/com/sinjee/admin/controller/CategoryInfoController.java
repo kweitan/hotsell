@@ -131,11 +131,15 @@ public class CategoryInfoController {
         if (StringUtils.isNotBlank(productCategoryForm.getBelongIndex()) &&
                 MathUtil.isInteger(productCategoryForm.getBelongIndex())){
             productCategoryDTO.setBelongIndex(Integer.valueOf(productCategoryForm.getBelongIndex()));
+        }else {
+            return ResultVOUtil.error(101,"首页所属没有选择") ;
         }
 
-        Integer res = productCategoryService.countIndexNumber() ;
-        if (res >= 5){
-            return ResultVOUtil.error(101,"首页数据只能5条") ;
+        if (productCategoryDTO.getBelongIndex() == 1){
+            Integer res = productCategoryService.countIndexNumber() ;
+            if (res >= 5){
+                return ResultVOUtil.error(101,"首页数据只能5条") ;
+            }
         }
 
         productCategoryDTO.setCategoryName(productCategoryForm.getCategoryName());
@@ -310,5 +314,29 @@ public class CategoryInfoController {
         }else {
             return ResultVOUtil.success() ;
         }
+    }
+
+    /**
+     * 根据商品编码 返回类目信息
+     * @return
+     */
+    @CrossOrigin(origins = "*")
+    @GetMapping("/selectCategoryInfo")
+    public ResultVO selectCategoryInfo(@RequestParam String categoryNumber,
+                            @RequestParam String hashNumber){
+
+        //取得类目编码和哈希
+        if(!HashUtil.verify(categoryNumber,salt,hashNumber)){
+            return ResultVOUtil.error(101,"数据不一致!") ;
+        }
+
+        ProductCategoryDTO productCategoryDTO = productCategoryService.getProductCategoryDTOByNumber(categoryNumber) ;
+        if (productCategoryDTO == null || StringUtils.isBlank(productCategoryDTO.getCategoryNumber())){
+            return ResultVOUtil.error(101,"无明细") ;
+        }
+        ProductCategoryVO productCategoryVO = new ProductCategoryVO() ;
+        CacheBeanCopier.copy(productCategoryDTO,productCategoryVO);
+        productCategoryVO.setHashNumber(hashNumber);
+        return ResultVOUtil.success(productCategoryVO) ;
     }
 }

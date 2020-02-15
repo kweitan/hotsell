@@ -80,7 +80,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     public List<ProductCategoryDTO> getAllProductCategoryDTOList(){
         QueryWrapper<ProductCategory> wrapper = new QueryWrapper();
         //1-表示类目上架 0-表示类目下架
-        wrapper.eq("enable_flag",1).eq("category_status",0);
+        wrapper.eq("enable_flag",1).eq("category_status",1);
 
         List<ProductCategory> productCategoryList = productCategoryMapper.selectList(wrapper) ;
 

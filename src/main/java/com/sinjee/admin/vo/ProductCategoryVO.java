@@ -31,4 +31,14 @@ public class ProductCategoryVO extends BaseVO implements Serializable {
     @JsonProperty("goodHashNumber")
     private String hashNumber ;
 
+    /**类目链接**/
+    private String categoryUrl ;
+
+    /**类目小图**/
+    private String categoryIcon ;
+
+
+    /*** 是否属于首页*/
+    private Integer belongIndex ;
+
 }

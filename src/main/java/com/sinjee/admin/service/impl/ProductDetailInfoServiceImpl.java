@@ -12,7 +12,9 @@ import com.sinjee.admin.mapper.ProductDetailInfoMapper;
 import com.sinjee.admin.service.ProductDetailInfoService;
 import com.sinjee.common.CacheBeanCopier;
 import com.sinjee.common.HashUtil;
+import com.sinjee.exceptions.MyException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -87,6 +89,9 @@ public class ProductDetailInfoServiceImpl implements ProductDetailInfoService {
              QueryWrapper<ProductCategory> categoryQueryWrapper = new QueryWrapper();
              categoryQueryWrapper.eq("enable_flag",1).eq("category_number",mid.getCategoryNumber());
              ProductCategory productCategory = productCategoryMapper.selectOne(categoryQueryWrapper);
+             if (productCategory == null || StringUtils.isBlank(productCategory.getCategoryNumber())){
+                 throw new MyException(101,"该类目已经不存在");
+             }
              ProductCategoryDTO productCategoryDTO = new ProductCategoryDTO();
              CacheBeanCopier.copy(productCategory,productCategoryDTO);
              productCategoryDTO.setHashNumber(HashUtil.sign(productCategory.getCategoryNumber(),salt));

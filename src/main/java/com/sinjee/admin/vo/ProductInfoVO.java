@@ -14,7 +14,6 @@ import java.math.BigDecimal;
  * 描述 商品信息
  **/
 @Data
-@JsonInclude(value= JsonInclude.Include.NON_NULL)
 public class ProductInfoVO extends BaseVO implements Serializable {
 
     //商品名称
@@ -67,4 +66,14 @@ public class ProductInfoVO extends BaseVO implements Serializable {
 
     @JsonProperty("selectName")
     private String selectName ;
+
+    //商品状态
+    @JsonProperty("goodStatus")
+    private Integer productStatus ;
+
+    private String productDetailIcon;
+
+    private String productDetailField ;
+
+    private String productDetailDescription ;
 }

@@ -48,7 +48,7 @@ public class ProductInfoDTO extends BaseDTO{
     private String productNumber ;
 
     //商品状态
-    private String productStatus ;
+    private Integer productStatus ;
 
 
     private Integer hashNumber ;

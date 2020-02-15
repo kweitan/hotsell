@@ -54,11 +54,16 @@ public class ProductInfoServiceImpl implements ProductInfoService {
         Page<ProductInfo> page = new Page<ProductInfo>(currentPage,pageSize) ;
         //从数据库分页获取数据
         IPage<ProductInfo> mapPage = productInfoMapper.selectProductInfosByPage(page,wrapper);
+
+
+
         log.info("总页数"+mapPage.getPages());
         log.info("总记录数"+mapPage.getTotal());
         List<ProductInfo> productInfoEntityList = mapPage.getRecords() ;
         List<ProductInfoDTO> productInfoDTOList = BeanConversionUtils.copyToAnotherList(ProductInfoDTO.class,productInfoEntityList);
 
+//        log.info("ProductInfo={}",productInfoEntityList);
+//        log.info("ProductInfoDTO={}",productInfoDTOList);
         Page<ProductInfoDTO> productInfoDTOPage = new Page<>(currentPage,pageSize) ;
         productInfoDTOPage.setPages(mapPage.getPages()); //设置总页数
         productInfoDTOPage.setTotal(mapPage.getTotal()); //设置总数
@@ -188,18 +193,20 @@ public class ProductInfoServiceImpl implements ProductInfoService {
     }
 
     @Override
+    @Transactional
     public Integer upProductInfo(String productNumber) {
         QueryWrapper<ProductInfo> wrapper = new QueryWrapper();
-        wrapper.eq("enable_flag",1).eq("product_number",productNumber);
+        wrapper.eq("enable_flag",1).eq("product_number",productNumber).eq("product_status",0);
         ProductInfo productInfo = new ProductInfo() ;
         productInfo.setProductStatus(1);
         return productInfoMapper.update(productInfo,wrapper);
     }
 
     @Override
+    @Transactional
     public Integer downProductInfo(String productNumber) {
         QueryWrapper<ProductInfo> wrapper = new QueryWrapper();
-        wrapper.eq("enable_flag",1).eq("product_number",productNumber);
+        wrapper.eq("enable_flag",1).eq("product_number",productNumber).eq("product_status",1);
         ProductInfo productInfo = new ProductInfo() ;
         productInfo.setProductStatus(0);
         return productInfoMapper.update(productInfo,wrapper);

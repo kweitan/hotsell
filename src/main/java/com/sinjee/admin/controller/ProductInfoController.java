@@ -1,12 +1,16 @@
 package com.sinjee.admin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.sinjee.admin.dto.ProductCategoryDTO;
 import com.sinjee.admin.dto.ProductDetailInfoDTO;
 import com.sinjee.admin.dto.ProductInfoDTO;
 import com.sinjee.admin.form.ProductCategoryInfoForm;
 import com.sinjee.admin.form.ProductInfoForm;
+import com.sinjee.admin.service.ProductCategoryMidService;
 import com.sinjee.admin.service.ProductDetailInfoService;
 import com.sinjee.admin.service.ProductInfoService;
+import com.sinjee.admin.vo.ProductCategoryVO;
+import com.sinjee.admin.vo.ProductDetailInfoVO;
 import com.sinjee.admin.vo.ProductInfoVO;
 import com.sinjee.common.*;
 import com.sinjee.exceptions.MyException;
@@ -68,6 +72,7 @@ public class ProductInfoController {
 
         //从分页中获取List
         List<ProductInfoDTO> productInfoDTOList = page.getRecords() ;
+//        log.info("ProductInfoDTO={}",GsonUtil.getInstance().toStr(productInfoDTOList));
         List<ProductInfoVO> productInfoVOList = new ArrayList<>() ;
         //遍历放到productInfoVOList中
         if(null != productInfoDTOList && productInfoDTOList.size()>0){
@@ -81,6 +86,8 @@ public class ProductInfoController {
                 productInfoVOList.add(productInfoVO);
             });
         }
+
+//        log.info("productInfoVO={}",GsonUtil.getInstance().toStr(productInfoVOList));
 
         return ResultVOUtil.success(currentPage,page.getTotal(),productInfoVOList);
     }
@@ -121,19 +128,6 @@ public class ProductInfoController {
                 }
             }
         }
-//        List<String> numberLists = new ArrayList<>() ;
-//        List<String> categoryList = Arrays.asList(productInfoForm.getCategoryArrs()) ;
-//        if (null != categoryList && categoryList.size() > 0){
-//            for (String content : categoryList){
-//                String[] arr = content.split("&") ;
-//                String categoryNumber = arr[0] ;
-//                String categoryHashNumber = arr[1] ;
-//                numberLists.add(categoryNumber) ;
-//                if(!HashUtil.verify(categoryNumber,salt,categoryHashNumber)){
-//                    return ResultVOUtil.error(101,"类目编码不一致!") ;
-//                }
-//            }
-//        }
 
         //校验参数
         checkParams(productInfoForm);
@@ -198,12 +192,23 @@ public class ProductInfoController {
             @CacheEvict(cacheNames = "categoryList",allEntries=true),
             @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
     public ResultVO updateProductInfo( @Valid ProductInfoForm productInfoForm, BindingResult bindingResult){
+
+        log.info("ProductInfoForm2={}", GsonUtil.getInstance().toStr(productInfoForm));
+
         //1.校验参数
         if (bindingResult.hasErrors()){
             return ResultVOUtil.error(101,bindingResult.getFieldError().getDefaultMessage()) ;
         }
 
-        //2.校验商品类目信息 "8493753985938948&hahhhfahghahgh"
+        //校验
+        if(!HashUtil.verify(productInfoForm.getProductNumber(),salt,productInfoForm.getHashNumber())){
+            return ResultVOUtil.error(101,"商品编码不一致!") ;
+        }
+
+        ProductInfoDTO productInfoDTO = new ProductInfoDTO() ;
+        ProductDetailInfoDTO productDetailInfoDTO = new ProductDetailInfoDTO() ;
+
+        //3.校验商品类目信息 "8493753985938948&hahhhfahghahgh"
         List<String> numberLists = new ArrayList<>() ;
         List<ProductCategoryInfoForm> categoryList = productInfoForm.getCategoryNewArrs() ;
         if (null != categoryList && categoryList.size() > 0){
@@ -217,27 +222,58 @@ public class ProductInfoController {
             }
         }
 
-        ProductInfoDTO productInfoDTO = new ProductInfoDTO() ;
-        ProductDetailInfoDTO productDetailInfoDTO = new ProductDetailInfoDTO() ;
+        //校验参数
+        checkParams(productInfoForm);
 
-        CacheBeanCopier.copy(productInfoForm,productInfoDTO);
-        CacheBeanCopier.copy(productInfoForm,productDetailInfoDTO);
+        //3.保存商品信息
+        productInfoDTO.setProductIcon(productInfoForm.getProductIcon());
+        productInfoDTO.setProductLabels(productInfoForm.getProductLabels());
+        productInfoDTO.setProductName(productInfoForm.getProductName());
+        productInfoDTO.setProductPrice(new BigDecimal(productInfoForm.getProductPrice()));
+        productInfoDTO.setProductDescription(productInfoForm.getProductDesc());
+        productInfoDTO.setProductStock(Integer.valueOf(productInfoForm.getProductStock()));
+        productInfoDTO.setProductTips(productInfoForm.getProductTips());
+        productInfoDTO.setProductUnit(productInfoForm.getProductUnit());
+        productInfoDTO.setProductStandard(productInfoForm.getProductStandard());
+//        productInfoDTO.setProductNumber(productNumber);
+
+
+        //4.保存商品明细信息
+        productDetailInfoDTO.setProductDetailDescription(productInfoForm.getProductDetailDesc());
+        productDetailInfoDTO.setProductDetailIcon(productInfoForm.getProductDetailIcon());
+        productDetailInfoDTO.setProductDetailField(productInfoForm.getProductDetailField());
+//        productDetailInfoDTO.setProductNumber(productNumber);
+
+        //保存登录用户信息
+        productInfoDTO.setCreator("kweitan");
+        productInfoDTO.setUpdater("kweitan");
+        productDetailInfoDTO.setCreator("kweitan");
+        productDetailInfoDTO.setUpdater("kweitan");
+
+        productInfoDTO.setCreateTime(DateUtils.getTimestamp());
+        productInfoDTO.setUpdateTime(DateUtils.getTimestamp());
+        productDetailInfoDTO.setCreateTime(DateUtils.getTimestamp());
+        productDetailInfoDTO.setUpdateTime(DateUtils.getTimestamp());
 
         productInfoDTO.setAllCategoryLists(numberLists);
-        productInfoDTO.setUpdater("kweitan");
-        productDetailInfoDTO.setUpdater("kweitan");
-        productDetailInfoDTO.setUpdateTime(new java.sql.Timestamp(new java.util.Date().getTime()));
 
-        //4.更新
+
         Integer result = productInfoService.update(productInfoDTO,productDetailInfoDTO) ;
         if (result > 0){
             return ResultVOUtil.success();
         }else {
-            return ResultVOUtil.error(101,"保存商品类目失败") ;
+            return ResultVOUtil.error(101,"保存商品信息失败") ;
         }
+
 
     }
 
+    /**
+     * 上架 /admin/product/upProductInfo
+     * @param productNumber
+     * @param hashNumber
+     * @return
+     */
     @CrossOrigin(origins = "*")
     @GetMapping("/upProductInfo")
     @Caching(evict = {
@@ -259,6 +295,12 @@ public class ProductInfoController {
         }
     }
 
+    /**
+     * 下架 /admin/product/downProductInfo
+     * @param productNumber
+     * @param hashNumber
+     * @return
+     */
     @CrossOrigin(origins = "*")
     @GetMapping("/downProductInfo")
     @Caching(evict = {
@@ -317,11 +359,73 @@ public class ProductInfoController {
         if (null != productInfoDTO && null != productDetailInfoDTO){
             ProductInfoVO productInfoVO = new ProductInfoVO() ;
             CacheBeanCopier.copy(productInfoDTO,productInfoVO);
-            CacheBeanCopier.copy(productInfoDTO,productDetailInfoDTO);
+            CacheBeanCopier.copy(productDetailInfoDTO,productInfoVO);
             return ResultVOUtil.success(productInfoVO);
         }else {
             return ResultVOUtil.error(101,"查找商品信息失败") ;
         }
+    }
+
+    //根据商品编码 查看商品明细
+    @CrossOrigin(origins = "*")
+    @GetMapping("/getProductDetailInfoByNumber")
+    public ResultVO getProductDetailInfoByNumber(@RequestParam String productNumber,
+                                       @RequestParam String hashNumber){
+        //取得类目编码和哈希
+        if(!HashUtil.verify(productNumber,salt,hashNumber)){
+            return ResultVOUtil.error(101,"类目编码不一致!") ;
+        }
+
+        ProductDetailInfoDTO productDetailInfoDTO = productDetailInfoService.findDetailByProductNumber(productNumber);
+        if (null != productDetailInfoDTO && StringUtils.isNotBlank(productDetailInfoDTO.getProductNumber())){
+            ProductDetailInfoVO productDetailInfoVO = new ProductDetailInfoVO() ;
+            CacheBeanCopier.copy(productDetailInfoDTO,productDetailInfoVO);
+            return ResultVOUtil.success(productDetailInfoVO);
+        }else {
+            return ResultVOUtil.error(101,"查找商品信息失败") ;
+        }
+    }
+
+    //根据产品编码 查找所属类目信息
+    @CrossOrigin(origins = "*")
+    @GetMapping("/getCategoryInfoByNumber")
+    public ResultVO getCategoryInfoByNumber(@RequestParam String productNumber,
+                                                 @RequestParam String hashNumber){
+        //取得类目编码和哈希
+        if(!HashUtil.verify(productNumber,salt,hashNumber)){
+            return ResultVOUtil.error(101,"商品编码不一致!") ;
+        }
+        List<ProductCategoryVO> productCategoryVOList = new ArrayList<>() ;
+        List<ProductCategoryDTO>  productCategoryDTOList = productDetailInfoService.findCategoryInfoByProductNumber(productNumber);
+        if (null != productCategoryDTOList && productCategoryDTOList.size()>0){
+            for (ProductCategoryDTO dto: productCategoryDTOList){
+                ProductCategoryVO productCategoryVO = new ProductCategoryVO() ;
+                CacheBeanCopier.copy(dto,productCategoryVO);
+                productCategoryVOList.add(productCategoryVO) ;
+            }
+            return ResultVOUtil.success(productCategoryVOList);
+        }else {
+            return ResultVOUtil.error(101,"查找类目信息失败") ;
+        }
+    }
+
+    //根据产品编码 删除产品
+    @CrossOrigin(origins = "*")
+    @GetMapping("/deleteProductInfoByNumber")
+    public ResultVO delete(@RequestParam String productNumber,
+                                            @RequestParam String hashNumber){
+        //取得类目编码和哈希
+        if(!HashUtil.verify(productNumber,salt,hashNumber)){
+            return ResultVOUtil.error(101,"商品编码不一致!") ;
+        }
+
+        Integer res = productInfoService.deleteProductInfo(productNumber) ;
+        if (res > 0){
+            return ResultVOUtil.success() ;
+        }else {
+            return ResultVOUtil.error(101,"删除失败!") ;
+        }
+
     }
 
 }

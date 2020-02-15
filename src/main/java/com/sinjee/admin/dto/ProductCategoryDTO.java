@@ -31,4 +31,6 @@ public class ProductCategoryDTO extends BaseDTO{
 
     /*** 是否属于首页*/
     private Integer belongIndex ;
+
+    private String hashNumber ;
 }

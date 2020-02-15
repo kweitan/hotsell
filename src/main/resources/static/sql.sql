@@ -42,7 +42,7 @@ create table `product_category` (
 	`category_id` int not null auto_increment,
 	`category_name` varchar(64) not null comment '类目名字',
 	`category_number` varchar(32) not null unique key comment '类目编码',
-	`category_status` tinyint(3) DEFAULT '0' COMMENT '类目状态,1-可用 0-不可用',
+	`category_status` tinyint(3) DEFAULT '1' COMMENT '类目状态,1-可用 0-不可用',
 	`category_icon` varchar(256) comment '小图',
 	`category_url` varchar(128) comment '跳转页面',
 	`belong_index` tinyint(3) DEFAULT '0' COMMENT '是否属于首页,1-是 0-否',

@@ -37,10 +37,11 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     private ProductCategoryMidService productCategoryMidService ;
 
     @Override
+    @Transactional
     public Integer saveProductCategoryInfo(ProductCategoryDTO productCategoryDTO) {
         ProductCategory productCategory = new ProductCategory();
         CacheBeanCopier.copy(productCategoryDTO,productCategory);
-        return productCategoryMapper.saveProductCategoryInfo(productCategory);
+        return productCategoryMapper.insert(productCategory);
     }
 
     @Override
@@ -62,7 +63,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         wrapper.eq("enable_flag",1).like("category_name",selectName);
         Page<ProductCategory> page = new Page<ProductCategory>(currentPage,pageSize) ;
         //从数据库分页获取数据
-        IPage<ProductCategory> mapPage = productCategoryMapper.selectProductCategoryInfoByPage(page,wrapper);
+        IPage<ProductCategory> mapPage = productCategoryMapper.selectPage(page,wrapper);
         log.info("总页数"+mapPage.getPages());
         log.info("总记录数"+mapPage.getTotal());
         List<ProductCategory> productCategoryList = mapPage.getRecords() ;
@@ -153,5 +154,13 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         productCategoryDTOPage.setRecords(productCategoryDTOList) ; //设置内容
 
         return productCategoryDTOPage;
+    }
+
+    @Override
+    public Integer countIndexNumber() {
+        QueryWrapper<ProductCategory> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1).eq("category_status",1)
+        .eq("belong_index",1);
+        return productCategoryMapper.selectCount(wrapper) ;
     }
 }

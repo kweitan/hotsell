@@ -6,11 +6,9 @@ import com.sinjee.admin.form.DeleteAllProductForm;
 import com.sinjee.admin.form.ProductCategoryForm;
 import com.sinjee.admin.service.ProductCategoryService;
 import com.sinjee.admin.vo.ProductCategoryVO;
-import com.sinjee.common.CacheBeanCopier;
-import com.sinjee.common.HashUtil;
-import com.sinjee.common.IdUtil;
-import com.sinjee.common.ResultVOUtil;
+import com.sinjee.common.*;
 import com.sinjee.vo.ResultVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
@@ -20,7 +18,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 小小极客
@@ -73,7 +73,7 @@ public class CategoryInfoController {
         }
 
         //2.查询数据
-        Integer productStatus = 0 ; //1-表示已上架 0-表示下架
+        Integer productStatus = 1 ; //1-表示已上架 0-表示下架
 
         IPage<ProductCategoryDTO> page = productCategoryService.selectProductCategoryInfoByPage(currentPage,pageSize,selectName);
 
@@ -118,21 +118,40 @@ public class CategoryInfoController {
 
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/save")
-    @CacheEvict(cacheNames = "categoryList", key = "categoryList123")
+    @CacheEvict(cacheNames = "indexList",allEntries=true)
     public ResultVO saveCategory(@RequestBody @Valid ProductCategoryForm productCategoryForm, BindingResult bindingResult){
         //1.校验参数
         if (bindingResult.hasErrors()){
             return ResultVOUtil.error(101,bindingResult.getFieldError().getDefaultMessage()) ;
         }
 
-        //2.取出当前用户
         ProductCategoryDTO productCategoryDTO = new ProductCategoryDTO() ;
+
+        //校验参数
+        if (StringUtils.isNotBlank(productCategoryForm.getBelongIndex()) &&
+                MathUtil.isInteger(productCategoryForm.getBelongIndex())){
+            productCategoryDTO.setBelongIndex(Integer.valueOf(productCategoryForm.getBelongIndex()));
+        }
+
+        Integer res = productCategoryService.countIndexNumber() ;
+        if (res >= 5){
+            return ResultVOUtil.error(101,"首页数据只能5条") ;
+        }
+
+        productCategoryDTO.setCategoryName(productCategoryForm.getCategoryName());
+        productCategoryDTO.setCategoryIcon(productCategoryForm.getCategoryIcon());
+
+
+        //2.取出当前用户
         productCategoryDTO.setCreator("kweitan");
         productCategoryDTO.setUpdater("kweitan");
+        productCategoryDTO.setCreateTime(DateUtils.getTimestamp());
+        productCategoryDTO.setUpdateTime(DateUtils.getTimestamp());
 
         //3.生成商品类目编码
         productCategoryDTO.setCategoryNumber(IdUtil.nextId()+"");
-        productCategoryDTO.setCategoryStatus(productCategoryForm.getCategoryStatus());
+        //默认上架状态
+        productCategoryDTO.setCategoryStatus(1);
 
         //4.保存
         Integer result = productCategoryService.saveProductCategoryInfo(productCategoryDTO) ;
@@ -146,7 +165,7 @@ public class CategoryInfoController {
 
     @CrossOrigin(origins = "*")
     @PostMapping("/update")
-    @CacheEvict(cacheNames = "categoryList", key = "categoryList123")
+    @CacheEvict(cacheNames = "indexList",allEntries=true)
     public ResultVO updateCategory(@RequestBody @Valid ProductCategoryForm productCategoryForm, BindingResult bindingResult){
         //1.校验参数
         if (bindingResult.hasErrors()){
@@ -178,7 +197,6 @@ public class CategoryInfoController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/upCategory")
-    @CacheEvict(cacheNames = "categoryList", key = "categoryList123")
     public ResultVO upCategory(@RequestParam String categoryNumber,
                                    @RequestParam String hashNumber){
         //取得类目编码和哈希
@@ -196,7 +214,6 @@ public class CategoryInfoController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/downCategory")
-    @CacheEvict(cacheNames = "categoryList", key = "categoryList123")
     public ResultVO downCategory(@RequestParam String categoryNumber,
                                @RequestParam String hashNumber){
         //取得类目编码和哈希
@@ -214,7 +231,7 @@ public class CategoryInfoController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/delete")
-    @CacheEvict(cacheNames = "categoryList", key = "categoryList123")
+    @CacheEvict(cacheNames = "indexList",allEntries=true)
     public ResultVO deleteCategory(@RequestParam String categoryNumber,
                                    @RequestParam String hashNumber){
         //取得类目编码和哈希
@@ -234,7 +251,6 @@ public class CategoryInfoController {
 
     @CrossOrigin(origins = "*")
     @PostMapping("/deleteAll")
-    @CacheEvict(cacheNames = "categoryList", key = "categoryList123")
     public ResultVO deleteAllCategory(@RequestBody DeleteAllProductForm deleteAllProductForm){
 
         boolean veritify = false;
@@ -281,5 +297,18 @@ public class CategoryInfoController {
             return ResultVOUtil.error(101,"类目编码不一致!") ;
         }
 
+    }
+
+    //判断是否只有5条首页数据
+    @CrossOrigin(origins = "*")
+    @GetMapping("/countIndex")
+    public ResultVO countIndex(){
+        Integer res = productCategoryService.countIndexNumber() ;
+        Map<String,Object> map = new HashMap<>() ;
+        if (res >= 5){
+            return ResultVOUtil.error(101,"首页数据只能5条") ;
+        }else {
+            return ResultVOUtil.success() ;
+        }
     }
 }

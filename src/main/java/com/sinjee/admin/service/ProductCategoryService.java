@@ -39,4 +39,6 @@ public interface ProductCategoryService {
 
     IPage<ProductCategoryDTO> selectProductCategoryBySearchName(
             Integer currentPage, Integer pageSize,String searchName);
+
+    Integer countIndexNumber();
 }

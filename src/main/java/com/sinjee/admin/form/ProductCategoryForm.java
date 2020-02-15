@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
@@ -15,7 +16,7 @@ import java.io.Serializable;
 public class ProductCategoryForm implements Serializable {
 
     @NotBlank(message = "商品类名不能为空")
-    @Max(value = 50,message = "太大了")
+    @Size(min = 1, max = 50, message = "商品名称长度应当在 6 ~ 50 个字符之间")
     private String categoryName;
 
     private String categoryNumber ;
@@ -23,7 +24,16 @@ public class ProductCategoryForm implements Serializable {
     /** 哈希编码 **/
     private String hashNumber ;
 
-    @NotBlank(message = "商品状态不能为空")
-    @Max(value=1,message="商品状态不能超过1位")
+    /**类目链接**/
+    private String categoryUrl ;
+
+    /**类目小图**/
+    private String categoryIcon ;
+
+    /**0-未上架 1-上架*/
     private Integer categoryStatus ;
+
+
+    /*** 是否属于首页*/
+    private String belongIndex ;
 }

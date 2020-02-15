@@ -13,6 +13,7 @@ import com.sinjee.common.CacheBeanCopier;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -106,10 +107,14 @@ public class ProductCategoryMidServiceImpl implements ProductCategoryMidService 
     }
 
     @Override
+    @Transactional
     public Integer deleteByProductNumber(String productNumber) {
         QueryWrapper<ProductCategoryMid> wrapper = new QueryWrapper();
         wrapper.eq("enable_flag",1).eq("product_number",productNumber);
-        return productCategoryMidMapper.delete(wrapper);
+
+        ProductCategoryMid productCategoryMid = new ProductCategoryMid();
+        productCategoryMid.setEnableFlag(0);
+        return productCategoryMidMapper.update(productCategoryMid,wrapper) ;
     }
 
     @Override

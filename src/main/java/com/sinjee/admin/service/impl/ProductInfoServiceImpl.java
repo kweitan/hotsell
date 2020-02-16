@@ -142,6 +142,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
         //商品编码
         String productNumber = productInfoDTO.getProductNumber() ;
+        productDetailInfoDTO.setProductNumber(productNumber);
 
         //前端页面传过来的类目编码
         List<String> categoryNumberLists = productInfoDTO.getAllCategoryLists() ;
@@ -186,7 +187,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
         productDetailInfoService.update(productDetailInfoDTO) ;
 
         QueryWrapper<ProductInfo> wrapper = new QueryWrapper();
-        wrapper.eq("enable_flag",1).eq("product_number",productInfo.getProductNumber());
+        wrapper.eq("enable_flag",1).eq("product_number",productNumber);
 
         //更新商品
         return productInfoMapper.update(productInfo,wrapper);

@@ -38,4 +38,7 @@ public interface OrderMasterService {
 
     IPage<OrderMasterDTO> selectOrderMasterInfo(Integer currentPage, Integer pageSize, String openid,String orderStatus,String payStatus);
 
+    /** 中台搜索所有订单 **/
+    IPage<OrderMasterDTO> findOrderAllList(Integer currentPage, Integer pageSize,String searchType,String orderNumber);
+
 }

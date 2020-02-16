@@ -33,7 +33,7 @@ import java.util.List;
 
 /**
  * 创建时间 2019 - 12 -22
- * 商品信息控制层
+ * 中台商品信息控制层
  * @author kweitan
  */
 @RestController
@@ -54,18 +54,18 @@ public class ProductInfoController {
     @GetMapping("/list")
     public ResultVO list(@RequestParam(value = "currentPage", defaultValue = "1")
                                  Integer currentPage,
-                         @RequestParam(value = "pageSize", defaultValue = "8")
+                         @RequestParam(value = "pageSize", defaultValue = "10")
                                  Integer pageSize,
                          @RequestParam(value = "selectName", defaultValue = "")
                                      String selectName){
         //1.加载页数不超过20页
-        if (currentPage > 20){
-            currentPage = 20 ;
-        }
-
-        if(pageSize > 10){
-            pageSize = 10 ;
-        }
+//        if (currentPage > 20){
+//            currentPage = 20 ;
+//        }
+//
+//        if(pageSize > 10){
+//            pageSize = 10 ;
+//        }
 
         //2.查询数据
         IPage<ProductInfoDTO> page = productInfoService.selectProductInfosByPage(currentPage,pageSize,selectName);
@@ -191,7 +191,7 @@ public class ProductInfoController {
             @CacheEvict(cacheNames = "productList",allEntries=true),
             @CacheEvict(cacheNames = "categoryList",allEntries=true),
             @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
-    public ResultVO updateProductInfo( @Valid ProductInfoForm productInfoForm, BindingResult bindingResult){
+    public ResultVO updateProductInfo( @Valid @RequestBody ProductInfoForm productInfoForm, BindingResult bindingResult){
 
         log.info("ProductInfoForm2={}", GsonUtil.getInstance().toStr(productInfoForm));
 
@@ -235,7 +235,7 @@ public class ProductInfoController {
         productInfoDTO.setProductTips(productInfoForm.getProductTips());
         productInfoDTO.setProductUnit(productInfoForm.getProductUnit());
         productInfoDTO.setProductStandard(productInfoForm.getProductStandard());
-//        productInfoDTO.setProductNumber(productNumber);
+        productInfoDTO.setProductNumber(productInfoForm.getProductNumber());
 
 
         //4.保存商品明细信息
@@ -254,6 +254,13 @@ public class ProductInfoController {
         productInfoDTO.setUpdateTime(DateUtils.getTimestamp());
         productDetailInfoDTO.setCreateTime(DateUtils.getTimestamp());
         productDetailInfoDTO.setUpdateTime(DateUtils.getTimestamp());
+
+        //可以用
+        productDetailInfoDTO.setEnableFlag(1);
+        productInfoDTO.setEnableFlag(1);
+
+        //未上架
+        productInfoDTO.setProductStatus(0);
 
         productInfoDTO.setAllCategoryLists(numberLists);
 

@@ -22,7 +22,7 @@ import java.util.List;
 
 /**
  * 创建时间 2020 - 02 -13
- * 上传图片处理类
+ * 中台上传图片处理类
  * @author kweitan
  */
 

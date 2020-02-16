@@ -26,7 +26,7 @@ import java.util.Map;
  * @author 小小极客
  * 时间 2020/1/5 10:41
  * @ClassName CategoryInfoController
- * 描述 商品类目控制层
+ * 描述 中台商品类目控制层
  **/
 @RestController
 @RequestMapping("/admin/productCategory")
@@ -105,7 +105,7 @@ public class CategoryInfoController {
         if(null != productCategoryDTOList && productCategoryDTOList.size()>0){
             productCategoryDTOList.stream().forEach(productCategoryDTO -> {
                 //根据商品编码生成唯一HASH编码
-                String hashNumber = HashUtil.sign(productCategoryDTO.getCategoryId()+"",salt);
+                String hashNumber = HashUtil.sign(productCategoryDTO.getCategoryNumber(),salt);
                 ProductCategoryVO productCategoryVO = new ProductCategoryVO() ;
                 CacheBeanCopier.copy(productCategoryDTO,productCategoryVO);
                 productCategoryVO.setHashNumber(hashNumber);
@@ -178,16 +178,40 @@ public class CategoryInfoController {
 
         //2.取得类目编码和哈希
         if(!HashUtil.verify(productCategoryForm.getCategoryNumber(),salt,productCategoryForm.getHashNumber())){
-            return ResultVOUtil.error(101,"类目编码不一致!") ;
+            return ResultVOUtil.error(101,"数据不一致!") ;
         }
 
-        //3.取出当前用户
         ProductCategoryDTO productCategoryDTO = new ProductCategoryDTO() ;
-        productCategoryDTO.setUpdater("kweitan");
+
+        //校验参数
+        if (StringUtils.isNotBlank(productCategoryForm.getBelongIndex()) &&
+                MathUtil.isInteger(productCategoryForm.getBelongIndex())){
+            productCategoryDTO.setBelongIndex(Integer.valueOf(productCategoryForm.getBelongIndex()));
+        }else {
+            return ResultVOUtil.error(101,"首页所属没有选择") ;
+        }
+
+        if (productCategoryDTO.getBelongIndex() == 1){
+            Integer res = productCategoryService.countIndexNumber() ;
+            if (res >= 5){
+                if (!productCategoryService.existCategoryInfo(productCategoryForm.getCategoryNumber())){
+                    return ResultVOUtil.error(101,"首页数据只能5条") ;
+                }
+            }
+        }
+
+        productCategoryDTO.setCategoryNumber(productCategoryForm.getCategoryNumber());
 
         productCategoryDTO.setCategoryName(productCategoryForm.getCategoryName());
-        productCategoryDTO.setCategoryNumber(productCategoryForm.getCategoryNumber());
-        productCategoryDTO.setCategoryStatus(productCategoryForm.getCategoryStatus());
+        productCategoryDTO.setCategoryIcon(productCategoryForm.getCategoryIcon());
+
+//        productCategoryDTO.setEnableFlag(1);
+
+        //2.取出当前用户
+        productCategoryDTO.setCreator("kweitan");
+        productCategoryDTO.setUpdater("kweitan");
+        productCategoryDTO.setCreateTime(DateUtils.getTimestamp());
+        productCategoryDTO.setUpdateTime(DateUtils.getTimestamp());
 
         //4.更新
         Integer result = productCategoryService.updateProductCategoryInfo(productCategoryDTO) ;
@@ -234,7 +258,7 @@ public class CategoryInfoController {
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping("/delete")
+    @GetMapping("/deleteCategory")
     @CacheEvict(cacheNames = "indexList",allEntries=true)
     public ResultVO deleteCategory(@RequestParam String categoryNumber,
                                    @RequestParam String hashNumber){

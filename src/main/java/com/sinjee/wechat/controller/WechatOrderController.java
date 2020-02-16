@@ -2,7 +2,6 @@ package com.sinjee.wechat.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sinjee.admin.dto.OrderMasterDTO;
-import com.sinjee.admin.dto.ProductInfoDTO;
 import com.sinjee.admin.entity.OrderDetail;
 import com.sinjee.admin.service.OrderMasterService;
 import com.sinjee.annotation.AccessTokenIdempotency;
@@ -12,7 +11,6 @@ import com.sinjee.vo.ResultVO;
 import com.sinjee.wechat.dto.BuyerInfoDTO;
 import com.sinjee.wechat.form.ShopCartForm;
 import com.sinjee.wechat.form.ShopCartModel;
-import com.sinjee.wechat.vo.ProductInfoVO;
 import com.sinjee.wechat.vo.WechatOrderDetailVO;
 import com.sinjee.wechat.vo.WechatOrderVO;
 import lombok.extern.slf4j.Slf4j;

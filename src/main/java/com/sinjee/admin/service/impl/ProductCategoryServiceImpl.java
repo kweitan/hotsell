@@ -45,13 +45,20 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     }
 
     @Override
+    @Transactional
     public Integer updateProductCategoryInfo(ProductCategoryDTO productCategoryDTO) {
+        QueryWrapper<ProductCategory> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1).like("category_number",productCategoryDTO.getCategoryNumber());
+
         ProductCategory productCategory = new ProductCategory();
-        CacheBeanCopier.copy(productCategoryDTO,productCategory);
-        return productCategoryMapper.updateProductCategoryInfo(productCategory);
+        productCategory.setBelongIndex(productCategoryDTO.getBelongIndex());
+        productCategory.setCategoryIcon(productCategoryDTO.getCategoryIcon());
+        productCategory.setCategoryName(productCategoryDTO.getCategoryName());
+        return productCategoryMapper.update(productCategory,wrapper) ;
     }
 
     @Override
+    @Transactional
     public Integer invalidProductCategoryInfo(String categoryNumber) {
         productCategoryMidService.deleteByCategoryNumber(categoryNumber) ;
         return productCategoryMapper.invalidProductCategoryInfo(categoryNumber);
@@ -162,5 +169,17 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         wrapper.eq("enable_flag",1).eq("category_status",1)
         .eq("belong_index",1);
         return productCategoryMapper.selectCount(wrapper) ;
+    }
+
+    @Override
+    public boolean existCategoryInfo(String categoryNumber) {
+        QueryWrapper<ProductCategory> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1).eq("category_number",categoryNumber).eq("category_status",1)
+                .eq("belong_index",1);
+        Integer res = productCategoryMapper.selectCount(wrapper);
+        if (res > 0){
+            return true;
+        }
+        return false;
     }
 }

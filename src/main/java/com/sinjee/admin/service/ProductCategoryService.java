@@ -41,4 +41,6 @@ public interface ProductCategoryService {
             Integer currentPage, Integer pageSize,String searchName);
 
     Integer countIndexNumber();
+
+    boolean existCategoryInfo(String categoryNumber);
 }

@@ -357,6 +357,40 @@ public class OrderMasterServiceImpl implements OrderMasterService {
         return orderMasterDTOPage;
     }
 
+    @Override
+    /**
+     * 中台订单处理
+     */
+    public IPage<OrderMasterDTO> findOrderAllList(Integer currentPage, Integer pageSize, String searchType, String orderNumber) {
+        QueryWrapper<OrderMaster> wrapper = new QueryWrapper();
+        if ("ALL".equals(searchType)){
+
+        }else if ("WAIT".equals(searchType)){
+            //待支付订单
+            wrapper.eq("order_status","NEW").eq("pay_status","WAIT") ;
+        }else if ("SUCCESS".equals(searchType)){
+            //待发货订单
+            wrapper.eq("order_status","NEW").eq("pay_status","SUCCESS") ;
+        }else if ("SHIPMENT".equals(searchType)){
+            //待收货订单
+            wrapper.eq("order_status","SHIPMENT").eq("pay_status","SUCCESS") ;
+        }else if ("REFUND".equals(searchType)){
+            //退款订单申请
+            wrapper.eq("order_status","REFUND").eq("pay_status","SUCCESS") ;
+        }else if ("FINISHED".equals(searchType)){
+            //成功完成订单 可以评价
+            wrapper.eq("order_status","FINISHED").eq("pay_status","CLOSE") ;
+        }else if ("CANCEL".equals(searchType)){
+            //失败 和 作废订单
+            wrapper.eq("order_status","CANCEL").eq("pay_status","CLOSE") ;
+        }
+        wrapper.eq("enable_flag",1);
+        if (StringUtils.isNotBlank(orderNumber)){
+            wrapper.eq("order_number",orderNumber);
+        }
+        return returnPageByMaster(currentPage,pageSize,wrapper);
+    }
+
     private IPage<OrderMasterDTO> returnPageByMaster(Integer currentPage, Integer pageSize,QueryWrapper<OrderMaster> wrapper){
         Page<OrderMaster> page = new Page<>(currentPage,pageSize) ;
         //从数据库分页获取数据

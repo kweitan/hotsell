@@ -208,7 +208,7 @@ public class WechatOrderController {
     }
 
     /**
-     * 申请退款 [NEW SUCCESS] 尚未发货 直接向微信发起退款申请
+     * 申请退款
      *  已经发货的申请退款 需要中台审核
      */
     @ResponseBody

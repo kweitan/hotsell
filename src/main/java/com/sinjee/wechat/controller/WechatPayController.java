@@ -165,6 +165,7 @@ public class WechatPayController {
 
     /**
      * 申请退款 https://api.mch.weixin.qq.com/secapi/pay/refund 请求需要双向证书 向微信发起
+     * [NEW SUCCESS] 尚未发货 直接向微信发起退款申请
      * @param request
      * @param orderNumber
      * @param subject
@@ -173,13 +174,20 @@ public class WechatPayController {
     @ResponseBody
     @PostMapping(value = "refund")
     @AccessTokenIdempotency
-    public ResultVO refund(HttpServletRequest request, String orderNumber, String subject){
+    public ResultVO refund(HttpServletRequest request, String orderNumber,String hashNumber, String refundDesc){
+        String openid = (String)request.getAttribute("openid") ;
+        log.info("openid={}",openid);
+
+        if (!HashUtil.verify(orderNumber,salt,hashNumber)){
+            return ResultVOUtil.error(121,"数据不一致");
+        }
+
         WxPayRefundRequest wxPayRefundRequest = new WxPayRefundRequest() ;
+//        wxPayRefundRequest.setNotifyUrl(); //设置通知地址
 
         //申请退款 待开发 需要双向证书
         //todo
 //        wxPayRefundRequest.setDeviceInfo().
-//        WxPayRefundResult
 //        wxPayService.refund()
         return null ;
     }

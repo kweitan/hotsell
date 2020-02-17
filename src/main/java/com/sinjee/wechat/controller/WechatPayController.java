@@ -112,6 +112,7 @@ public class WechatPayController {
 
     /**
      * 异步回调接口代码内部会自动校验签名，您需要做的就是拿到结果之后直接根据业务逻辑进行处 结果返回给微信
+     * 支付结果异步通知
      * @param request
      * @param response
      * @return
@@ -168,7 +169,6 @@ public class WechatPayController {
      * [NEW SUCCESS] 尚未发货 直接向微信发起退款申请
      * @param request
      * @param orderNumber
-     * @param subject
      * @return
      */
     @ResponseBody
@@ -182,7 +182,7 @@ public class WechatPayController {
             return ResultVOUtil.error(121,"数据不一致");
         }
 
-        WxPayRefundRequest wxPayRefundRequest = new WxPayRefundRequest() ;
+//        WxPayRefundRequest wxPayRefundRequest = new WxPayRefundRequest() ;
 //        wxPayRefundRequest.setNotifyUrl(); //设置通知地址
 
         //申请退款 待开发 需要双向证书

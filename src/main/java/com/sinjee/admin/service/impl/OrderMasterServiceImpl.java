@@ -242,11 +242,15 @@ public class OrderMasterServiceImpl implements OrderMasterService {
     }
 
     @Override
+    @Transactional
     public Integer applyOrder(String orderNumber, String openid) {
         QueryWrapper<OrderMaster> uWrapper = new QueryWrapper();
         uWrapper.eq("order_number",orderNumber).
                 eq("buyer_openid",openid).eq("enable_flag",1)
                 .eq("order_status","NEW").eq("pay_status","SUCCESS");
+
+        //向微信发起退款申请 成功则修改订单状态
+        //todo
 
         OrderMaster orderMaster = new OrderMaster();
         orderMaster.setOrderStatus(OrderStatusEnum.REFUND.getCode());
@@ -256,13 +260,12 @@ public class OrderMasterServiceImpl implements OrderMasterService {
     }
 
     @Override
-    public Integer updataOrderStatus(String orderNumber, String payStatus) {
-    // 订单状态查询 待开发
-        //todo
-        if (payStatus.equals("SUCCESS")){
-
-        }
-        return null;
+    @Transactional
+    public Integer updataOrderStatus(QueryWrapper<OrderMaster> wrapper,String orderStatus,String payStatus) {
+        OrderMaster orderMaster = new OrderMaster() ;
+        orderMaster.setOrderStatus(orderStatus);
+        orderMaster.setPayStatus(payStatus);
+        return orderMasterMapper.update(orderMaster,wrapper);
     }
 
     @Override

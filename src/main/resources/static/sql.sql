@@ -245,4 +245,26 @@ create table `wechat_search_keyword` (
 	primary key (`search_keyword_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 comment '商品搜索关键词表';
 
+--- 商户信息表 ---
+create table `merchant_info` (
+  `merchant_id` int unsigned not null auto_increment,
+  `merchant_number` varchar(16) not null unique key comment '商户编码',
+  `merchant_name` varchar(64) not null comment '商户名称',
+  `merchant_phone` varchar(16) not null comment '商户电话',
+  `merchant_desc` varchar(128)  comment '商户描述',
+  `merchant_logo` varchar(256)  comment '商户logo',
+  `merchant_wechat_number` varchar(32)  comment '商户微信号',
+  `merchant_pay_number` varchar(32)  comment '商户支付宝',
+  `merchant_qq` varchar(32)  comment '商户qq',
+  `merchant_qualification_desc` varchar(128)  comment '商户资质描述',
+  `merchant_qualification_icon` varchar(128)  comment '商户资质证书',
+  `user_id` int comment '商户所属用户ID',
+	`enable_flag` tinyint(3) DEFAULT '1' COMMENT '状态,1-可用 0-不可用',
+	`create_time` timestamp not null comment '创建时间',
+  `creator` varchar(32) not null comment '创建者',
+  `update_time` timestamp not null comment '修改时间',
+  `updater` varchar(32) not null comment '更新者',
+	primary key (`merchant_id`),
+	key `idx_express_number` (`express_number`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 comment '商户信息表';
 

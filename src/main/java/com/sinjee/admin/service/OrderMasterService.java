@@ -1,10 +1,10 @@
 package com.sinjee.admin.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sinjee.admin.dto.OrderMasterDTO;
-import com.sinjee.admin.dto.ProductInfoDTO;
+import com.sinjee.admin.entity.OrderMaster;
 
-import java.util.List;
 
 public interface OrderMasterService {
 
@@ -32,7 +32,7 @@ public interface OrderMasterService {
 
     Integer applyOrder(String orderNumber,String openid);
 
-    Integer updataOrderStatus(String orderNumber,String payStatus);
+    Integer updataOrderStatus(QueryWrapper<OrderMaster> wrapper, String orderStatus,String payStatus);
 
     IPage<OrderMasterDTO> findByTpye(Integer currentPage, Integer pageSize,String openid,String type);
 

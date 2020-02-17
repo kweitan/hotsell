@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinjee.admin.mapper.MerchantInfoMapper">
+    <resultMap id="BaseResultMap" type="com.sinjee.admin.entity.MerchantInfo">
+        <result column="merchant_id" jdbcType="INTEGER" property="merchantId" />
+        <result column="merchant_number" jdbcType="VARCHAR" property="merchantNumber" />
+        <result column="merchant_name" jdbcType="VARCHAR" property="merchantName" />
+        <result column="merchant_phone" jdbcType="VARCHAR" property="merchantPhone" />
+        <result column="merchant_desc" jdbcType="VARCHAR" property="merchantDesc" />
+        <result column="merchant_logo" jdbcType="VARCHAR" property="merchantLogo" />
+        <result column="merchant_wechat_number" jdbcType="VARCHAR" property="merchantWechatNumber" />
+        <result column="merchant_pay_number" jdbcType="VARCHAR" property="merchantPayNumber" />
+        <result column="merchant_qq" jdbcType="VARCHAR" property="merchantQQ" />
+        <result column="merchant_qualification_desc" jdbcType="VARCHAR" property="merchantQualificationDesc" />
+        <result column="merchant_qualification_icon" jdbcType="VARCHAR" property="merchantQualificationIcon" />
+        <result column="user_id" jdbcType="INTEGER" property="userId" />
+        <result column="enable_flag" jdbcType="TINYINT" property="enableFlag" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="creator" jdbcType="VARCHAR" property="creator" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="updater" jdbcType="VARCHAR" property="updater" />
+    </resultMap>
+
+
+</mapper>

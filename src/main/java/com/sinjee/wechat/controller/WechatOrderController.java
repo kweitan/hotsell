@@ -1,12 +1,16 @@
 package com.sinjee.wechat.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sinjee.admin.dto.OrderMasterDTO;
 import com.sinjee.admin.entity.OrderDetail;
+import com.sinjee.admin.entity.OrderMaster;
 import com.sinjee.admin.service.OrderMasterService;
 import com.sinjee.annotation.AccessTokenIdempotency;
 import com.sinjee.annotation.ApiIdempotency;
 import com.sinjee.common.*;
+import com.sinjee.enums.OrderStatusEnum;
+import com.sinjee.enums.PayStatusEnum;
 import com.sinjee.vo.ResultVO;
 import com.sinjee.wechat.dto.BuyerInfoDTO;
 import com.sinjee.wechat.form.ShopCartForm;
@@ -204,7 +208,8 @@ public class WechatOrderController {
     }
 
     /**
-     * 申请退款 中台审核
+     * 申请退款 [NEW SUCCESS] 尚未发货 直接向微信发起退款申请
+     *  已经发货的申请退款 需要中台审核
      */
     @ResponseBody
     @PostMapping(value = "applyRefund")
@@ -252,6 +257,35 @@ public class WechatOrderController {
     }
 
     /**
-     *
+     * 用户点击确认收货
      */
+    @ResponseBody
+    @PostMapping(value = "confirmReceipt")
+    @AccessTokenIdempotency
+    public ResultVO confirmReceipt(HttpServletRequest request, String orderNumber, String hashNumber){
+        String openid = (String)request.getAttribute("openid") ;
+        log.info("openid={}",openid);
+
+        if (!HashUtil.verify(orderNumber,salt,hashNumber)){
+            return ResultVOUtil.error(121,"数据不一致");
+        }
+
+        QueryWrapper<OrderMaster> wrapper = new QueryWrapper<>() ;
+        wrapper.eq("buyer_openid",openid)
+                .eq("enable_flag",1)
+                .eq("order_status",OrderStatusEnum.SHIPMENT.getCode())
+                .eq("pay_status", PayStatusEnum.SUCCESS.getCode())
+        .eq("order_number",orderNumber);
+
+        String orderStatus = OrderStatusEnum.FINISHED.getCode();
+        String payStatus = PayStatusEnum.CLOSED.getCode() ;
+
+        Integer res = orderMasterService.updataOrderStatus(wrapper,orderStatus,payStatus) ;
+
+        if (res > 0){
+            return ResultVOUtil.success();
+        }
+
+        return ResultVOUtil.error(121,"确认收货失败");
+    }
 }

@@ -1,21 +1,28 @@
 package com.sinjee.admin.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sinjee.admin.dto.OrderMasterDTO;
+import com.sinjee.admin.entity.ExpressDelivery;
 import com.sinjee.admin.entity.OrderDetail;
+import com.sinjee.admin.entity.OrderMaster;
+import com.sinjee.admin.form.ExpressDeliveryForm;
 import com.sinjee.admin.service.OrderMasterService;
 import com.sinjee.annotation.AccessTokenIdempotency;
-import com.sinjee.common.BeanConversionUtils;
-import com.sinjee.common.CacheBeanCopier;
-import com.sinjee.common.HashUtil;
+import com.sinjee.common.*;
+import com.sinjee.enums.OrderStatusEnum;
+import com.sinjee.enums.PayStatusEnum;
 import com.sinjee.vo.ResultVO;
 import com.sinjee.wechat.vo.WechatOrderDetailVO;
 import com.sinjee.wechat.vo.WechatOrderVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +34,7 @@ import java.util.List;
  **/
 @RestController
 @RequestMapping("/admin/order")
+@Slf4j
 public class AdminOrderController {
 
     @Value("${myWechat.salt}")
@@ -40,7 +48,7 @@ public class AdminOrderController {
      */
     @CrossOrigin(origins = "*")
     @GetMapping("/listAll")
-    public ResultVO listAll(HttpServletRequest request, @RequestParam(value = "currentPage", defaultValue = "1")
+    public ResultVO listAll(@RequestParam(value = "currentPage", defaultValue = "1")
             Integer currentPage,
                                 @RequestParam(value = "pageSize", defaultValue = "10")
                                         Integer pageSize,
@@ -83,4 +91,33 @@ public class AdminOrderController {
     /**
      * 填写运单号
      */
+    @CrossOrigin(origins = "*")
+    @PostMapping(value = "enterTrackingNumber")
+    public ResultVO enterTrackingNumber(@RequestBody @Valid ExpressDeliveryForm expressDeliveryForm, BindingResult bindingResult){
+
+        if (bindingResult.hasErrors()){
+            return ResultVOUtil.error(101,bindingResult.getFieldError().getDefaultMessage()) ;
+        }
+
+        if (!HashUtil.verify(expressDeliveryForm.getOrderNumber(),salt,expressDeliveryForm.getHashNumber())){
+            return ResultVOUtil.error(121,"数据不一致");
+        }
+
+        //生成运单号
+//        String trackingNumber = KeyUtil.genUniqueKey() ;
+
+        ExpressDelivery expressDelivery = new ExpressDelivery() ;
+        expressDelivery.setExpressCorAbbreviation(expressDeliveryForm.getExpressCorAbbreviation());
+        expressDelivery.setExpressCorName(expressDeliveryForm.getExpressCorName());
+        expressDelivery.setTrackingNumber(expressDeliveryForm.getTrackingNumber());
+        expressDelivery.setExpressNumber(KeyUtil.genUniqueKey());
+        expressDelivery.setOrderNumber(expressDeliveryForm.getOrderNumber());
+
+        Integer res = orderMasterService.enterTrackingNumber(expressDeliveryForm.getOrderNumber(),expressDelivery) ;
+        if (res > 0){
+            ResultVOUtil.success() ;
+        }
+
+        return ResultVOUtil.error(101,"填写运单号失败") ;
+    }
 }

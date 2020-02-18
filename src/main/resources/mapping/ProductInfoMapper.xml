@@ -14,6 +14,7 @@
         <result column="product_unit" jdbcType="VARCHAR" property="productUnit" />
         <result column="product_number" jdbcType="VARCHAR" property="productNumber" />
         <result column="product_status" jdbcType="TINYINT" property="productStatus" />
+        <result column="sequence_id" jdbcType="INTEGER" property="sequenceId" />
         <result column="enable_flag" jdbcType="TINYINT" property="enableFlag" />
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
         <result column="creator" jdbcType="VARCHAR" property="creator" />
@@ -124,5 +125,20 @@
           product_status=0
         WHERE product_id=#{productId} and enable_flag=1 and product_status=1
     </update>
+
+    <!--0:上移 1:下移-->
+    <select id="selectProductBySequenceId" resultType="com.sinjee.admin.entity.ProductInfo" parameterType="java.lang.String">
+        select * from product_info where product_number=#{productNumber} and enable_flag=1
+        <choose>
+            <when test="type == 0">
+                and sequence_id <![CDATA[ > ]]> #{sequenceId}
+                order by sequence_id limit 1
+            </when>
+            <otherwise>
+                and sequence_id <![CDATA[ < ]]> #{sequenceId}
+                order by sequence_id desc limit 1
+            </otherwise>
+        </choose>
+    </select>
 
 </mapper>

@@ -43,4 +43,7 @@ public class OrderMaster extends BaseEntity{
     private String transactionId ;
 
     private String buyerMessage ;
+
+    /** 订单备注 **/
+    private String orderRemark ;
 }

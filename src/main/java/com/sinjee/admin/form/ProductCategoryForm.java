@@ -36,4 +36,7 @@ public class ProductCategoryForm implements Serializable {
 
     /*** 是否属于首页*/
     private String belongIndex ;
+
+    //排序ID
+    private Integer sequenceId ;
 }

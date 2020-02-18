@@ -31,4 +31,7 @@ public class ProductCategory extends BaseEntity{
     /*** 是否属于首页*/
     private Integer belongIndex ;
 
+    //排序ID
+    private Integer sequenceId ;
+
 }

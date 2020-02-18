@@ -3,6 +3,7 @@ package com.sinjee.admin.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sinjee.admin.dto.OrderMasterDTO;
+import com.sinjee.admin.entity.ExpressDelivery;
 import com.sinjee.admin.entity.OrderMaster;
 
 
@@ -40,5 +41,8 @@ public interface OrderMasterService {
 
     /** 中台搜索所有订单 **/
     IPage<OrderMasterDTO> findOrderAllList(Integer currentPage, Integer pageSize,String searchType,String orderNumber);
+
+    /** 中台 填写运单号**/
+    Integer enterTrackingNumber(String orderNumber, ExpressDelivery expressDelivery);
 
 }

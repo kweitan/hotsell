@@ -9,6 +9,7 @@
         <result column="category_icon" jdbcType="VARCHAR" property="categoryIcon" />
         <result column="category_status" jdbcType="TINYINT" property="categoryStatus" />
         <result column="belong_index" jdbcType="TINYINT" property="belongIndex" />
+        <result column="sequence_id" jdbcType="INTEGER" property="sequenceId" />
         <result column="enable_flag" jdbcType="TINYINT" property="enableFlag" />
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
         <result column="creator" jdbcType="VARCHAR" property="creator" />

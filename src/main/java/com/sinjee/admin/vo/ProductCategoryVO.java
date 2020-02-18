@@ -37,8 +37,10 @@ public class ProductCategoryVO extends BaseVO implements Serializable {
     /**类目小图**/
     private String categoryIcon ;
 
-
     /*** 是否属于首页*/
     private Integer belongIndex ;
+
+    //排序ID
+    private Integer sequenceId ;
 
 }

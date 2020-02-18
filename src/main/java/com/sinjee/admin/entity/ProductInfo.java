@@ -48,4 +48,7 @@ public class ProductInfo extends BaseEntity{
     //商品状态
     private Integer productStatus ;
 
+    //排序ID
+    private Integer sequenceId ;
+
 }

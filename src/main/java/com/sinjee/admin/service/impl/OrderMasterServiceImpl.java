@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sinjee.admin.dto.OrderMasterDTO;
 import com.sinjee.admin.dto.ProductInfoDTO;
+import com.sinjee.admin.entity.ExpressDelivery;
 import com.sinjee.admin.entity.OrderDetail;
 import com.sinjee.admin.entity.OrderMaster;
+import com.sinjee.admin.mapper.ExpressDeliveryMapper;
 import com.sinjee.admin.mapper.OrderDetailMapper;
 import com.sinjee.admin.mapper.OrderMasterMapper;
 import com.sinjee.admin.service.OrderMasterService;
@@ -15,7 +17,9 @@ import com.sinjee.common.*;
 import com.sinjee.enums.OrderStatusEnum;
 import com.sinjee.enums.PayStatusEnum;
 import com.sinjee.exceptions.MyException;
+import com.sinjee.wechat.entity.OrderFlow;
 import com.sinjee.wechat.form.ShopCartModel;
+import com.sinjee.wechat.mapper.OrderFlowMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,10 +52,17 @@ public class OrderMasterServiceImpl implements OrderMasterService {
     @Autowired
     private OrderDetailMapper orderDetailMapper;
 
+    @Autowired
+    private OrderFlowMapper orderFlowMapper ;
+
+    @Autowired
+    private ExpressDeliveryMapper expressDeliveryMapper ;
+
     @Override
     @Transactional
     public OrderMasterDTO save(OrderMasterDTO orderMasterDTO) {
 
+        //生成订单号
         String orderId = KeyUtil.genUniqueKey();
         BigDecimal orderAmount = new BigDecimal(BigInteger.ZERO);
         //查询商品（数量, 价格）
@@ -96,7 +107,12 @@ public class OrderMasterServiceImpl implements OrderMasterService {
 
         orderMasterMapper.insert(orderMaster) ;
 
-        //减库存
+        //保存订单流水
+        OrderFlow orderFlow = Common.getOrderFlow(orderId,orderMasterDTO.getBuyerName(),
+                Constant.OrderFlowStatus.EMPTY,Constant.OrderFlowStatus.EMPTY,Constant.OrderFlowStatus.EMPTY) ;
+        orderFlowMapper.insert(orderFlow) ;
+
+        //减库存[下单后减库存]
         productInfoService.decreaseStock(orderMasterDTO.getShopCartModelList());
 
         //发送websocket消息
@@ -205,6 +221,10 @@ public class OrderMasterServiceImpl implements OrderMasterService {
             throw new MyException(257,"订单支付状态不正确");
         }
 
+        //生成订单流水
+        OrderFlow orderFlow = Common.getOrderFlow(orderMasterDTO.getOrderNumber(),orderMasterDTO.getBuyerName(),
+                Constant.OrderFlowStatus.SUCCESS,Constant.OrderFlowStatus.SUCCESS,Constant.OrderFlowStatus.EMPTY) ;
+        orderFlowMapper.insert(orderFlow) ;
 
         //修改支付状态
         orderMasterDTO.setPayStatus(PayStatusEnum.SUCCESS.getCode());
@@ -392,6 +412,33 @@ public class OrderMasterServiceImpl implements OrderMasterService {
             wrapper.eq("order_number",orderNumber);
         }
         return returnPageByMaster(currentPage,pageSize,wrapper);
+    }
+
+    @Override
+    @Transactional
+    public Integer enterTrackingNumber(String orderNumber, ExpressDelivery expressDelivery) {
+
+        //保存订单流水
+        OrderFlow orderFlow = Common.getOrderFlow(orderNumber,"","已经发货",
+                Constant.OrderFlowStatus.SHIPMENT,Constant.OrderFlowStatus.SUCCESS) ;
+        orderFlowMapper.insert(orderFlow) ;
+
+        //更新物流信息表
+        expressDelivery.setCreator("");
+        expressDelivery.setUpdater("");
+        expressDelivery.setCreateTime(DateUtils.getTimestamp());
+        expressDelivery.setUpdateTime(DateUtils.getTimestamp());
+        expressDeliveryMapper.insert(expressDelivery) ;
+
+        //更新订单状态为 已发货
+        QueryWrapper<OrderMaster> wrapper = new QueryWrapper();
+        wrapper.eq("order_status","NEW").eq("pay_status","SUCCESS") ;
+        wrapper.eq("enable_flag",1);
+        wrapper.eq("order_number",orderNumber);
+        OrderMaster orderMaster = new OrderMaster() ;
+        orderMaster.setOrderStatus(OrderStatusEnum.SHIPMENT.getCode());
+
+        return orderMasterMapper.update(orderMaster,wrapper);
     }
 
     private IPage<OrderMasterDTO> returnPageByMaster(Integer currentPage, Integer pageSize,QueryWrapper<OrderMaster> wrapper){

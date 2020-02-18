@@ -72,4 +72,7 @@ public class ProductInfoForm implements Serializable {
     //商品属性
     @NotBlank(message = "商品属性不能为空")
     private String productDetailField;
+
+    //排序ID
+    private Integer sequenceId ;
 }

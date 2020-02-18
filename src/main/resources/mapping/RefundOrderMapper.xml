@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinjee.admin.mapper.RefundOrderMapper">
+    <resultMap id="BaseResultMap" type="com.sinjee.admin.entity.RefundOrder">
+        <result column="refund_order_id" jdbcType="INTEGER" property="refundOrderId" />
+        <result column="refund_number" jdbcType="VARCHAR" property="refundNumber" />
+        <result column="order_number" jdbcType="VARCHAR" property="orderNumber" />
+        <result column="total_fee" jdbcType="DECIMAL" property="totalFee" />
+        <result column="refund_fee" jdbcType="DECIMAL" property="refundFee" />
+        <result column="refund_status" jdbcType="VARCHAR" property="refundStatus" />
+        <result column="refund_desc" jdbcType="VARCHAR" property="refundDesc" />
+        <result column="refund_fee_type" jdbcType="VARCHAR" property="refundFeeType" />
+        <result column="enable_flag" jdbcType="TINYINT" property="enableFlag" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="creator" jdbcType="VARCHAR" property="creator" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="updater" jdbcType="VARCHAR" property="updater" />
+    </resultMap>
+
+
+</mapper>

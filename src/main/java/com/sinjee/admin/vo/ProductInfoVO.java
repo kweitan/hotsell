@@ -76,4 +76,7 @@ public class ProductInfoVO extends BaseVO implements Serializable {
     private String productDetailField ;
 
     private String productDetailDescription ;
+
+    //排序ID
+    private Integer sequenceId ;
 }

@@ -18,4 +18,20 @@ public interface Constant {
         Integer LOGIN = 1;// 登录
         Integer LOGOUT = 2;// 登出
     }
+
+    /**
+     * 订单流水常量
+     */
+    public interface OrderFlowStatus{
+        String EMPTY = "EMPTY" ;
+        String NEW = "NEW" ;
+        String SUCCESS = "SUCCESS" ;
+        String SHIPMENT = "SHIPMENT" ;
+        String REFUND = "REFUND" ;
+        String FINISHED = "FINISHED" ;
+        String CANCEL = "CANCEL" ;
+        String CLOSE = "CLOSE" ;
+
+    }
+
 }

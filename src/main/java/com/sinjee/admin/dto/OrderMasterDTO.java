@@ -51,4 +51,7 @@ public class OrderMasterDTO extends BaseDTO{
     List<OrderDetail> orderDetailList ;
 
     private String buyerMessage;
+
+    /** 订单备注 **/
+    private String orderRemark ;
 }

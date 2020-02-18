@@ -14,6 +14,7 @@ create table `product_info` (
   `product_unit` varchar(64) comment '商品单元',
   `product_number` varchar(32) not null unique key comment '商品编码 前三位代表品类 0000 中间日期20191215132700',
   `product_status` tinyint(3) DEFAULT '0' COMMENT '商品状态,1-上架 0-下架',
+  `sequence_id` int COMMENT '排序',
   `enable_flag` tinyint(3) DEFAULT '1' COMMENT '状态,1-可用 0-不可用',
   `create_time` timestamp not null comment '创建时间',
   `creator` varchar(32) not null comment '创建者',
@@ -46,6 +47,7 @@ create table `product_category` (
 	`category_icon` varchar(256) comment '小图',
 	`category_url` varchar(128) comment '跳转页面',
 	`belong_index` tinyint(3) DEFAULT '0' COMMENT '是否属于首页,1-是 0-否',
+	`sequence_id` int COMMENT '排序',
 	`enable_flag` tinyint(3) DEFAULT '1' COMMENT '状态,1-可用 0-不可用',
 	`create_time` timestamp not null comment '创建时间',
   `creator` varchar(32) not null comment '创建者',
@@ -81,6 +83,7 @@ create table `order_master` (
 	`transaction_id` varchar(32) comment '微信支付订单号',
 	`order_status` varchar(16) not null comment '订单状态，默认0-新下单（等待支付） 1-完结 2-取消 3-等待发货 4-等待收货 5-已收货 6-等待评价',
 	`pay_status` varchar(16) not null comment '支付状态，默认0-等待支付 1-支付成功',
+	`order_remark` varchar(64) comment '订单备注',
 	`enable_flag` tinyint(3) DEFAULT '1' COMMENT '状态,1-可用 0-不可用',
 	`create_time` timestamp not null comment '创建时间',
   `creator` varchar(32) not null comment '创建者',
@@ -187,7 +190,7 @@ create table `express_delivery` (
 	`express_number` varchar(64) not null comment '快递编码',
 	`express_cor_name` varchar(32)  comment '快递公司名称',
 	`express_cor_abbreviation` varchar(16)  comment '快递公司简称',
-	`tracking_number` varchar(64) comment '快递单号',
+	`tracking_number` varchar(64) not null comment '快递单号',
 	`order_number` varchar(64) not null comment '订单编码',
 	`enable_flag` tinyint(3) DEFAULT '1' COMMENT '状态,1-可用 0-不可用',
 	`create_time` timestamp not null comment '创建时间',
@@ -268,3 +271,41 @@ create table `merchant_info` (
 	key `idx_express_number` (`express_number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 comment '商户信息表';
 
+
+--- 退款单表 ---
+create table `refund_order` (
+  `refund_order_id` int unsigned not null auto_increment,
+  `refund_number` varchar(64) not null unique key comment '退款单号',
+  `order_number` varchar(64) not null comment '订单号',
+  `total_fee` decimal(8,2) not null comment '订单金额',
+  `refund_fee` decimal(8,2) not null comment '退款金额',
+  `refund_fee_type` varchar(8) DEFAULT 'CNY' comment '货币种类',
+  `refund_desc` varchar(128) comment '退款原因',
+  `refund_status` varchar(16) comment '退款状态',
+  `enable_flag` tinyint(3) DEFAULT '1' COMMENT '状态,1-可用 0-不可用',
+  `create_time` timestamp not null comment '创建时间',
+  `creator` varchar(32) not null comment '创建者',
+  `update_time` timestamp not null comment '修改时间',
+  `updater` varchar(32) not null comment '更新者',
+	primary key (`refund_order_id`),
+	key `idx_buyer_openid` (`buyer_openid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 comment '退款单表';
+
+--- 订单流水表 ---
+--- NEW -> SUCCESS -> SHIPMENT -> FINISHED ->   ---
+---                  REFUND -> CANCEL ---
+create table `order_flow` (
+  `order_flow_id` int unsigned not null auto_increment,
+  `order_flow_number` varchar(64) not null unique key comment '订单流水号',
+  `order_number` varchar(64) not null comment '订单号',
+  `pre_flow_status` varchar(16) not null comment '上一个流水状态',
+  `flow_status` varchar(16) not null comment '流水状态',
+  `flow_remark` varchar(64) comment '流水备注',
+  `enable_flag` tinyint(3) DEFAULT '1' COMMENT '状态,1-可用 0-不可用',
+  `create_time` timestamp not null comment '创建时间',
+  `creator` varchar(32) not null comment '创建者',
+	primary key (`order_flow_id`),
+	key `idx_order_number` (`order_number`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 comment ' 订单流水表';
+--- NEW -> SUCCESS -> SHIPMENT -> FINISHED -> ---
+--用户             -> REFUND -> CANCEL     -> REFUND -> CANCEL

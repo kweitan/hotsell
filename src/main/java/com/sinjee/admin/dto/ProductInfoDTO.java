@@ -54,4 +54,7 @@ public class ProductInfoDTO extends BaseDTO{
     private Integer hashNumber ;
 
     private List<String> allCategoryLists ;
+
+    //排序ID
+    private Integer sequenceId ;
 }

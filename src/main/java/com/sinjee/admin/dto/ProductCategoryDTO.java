@@ -33,4 +33,7 @@ public class ProductCategoryDTO extends BaseDTO{
     private Integer belongIndex ;
 
     private String hashNumber ;
+
+    //排序ID
+    private Integer sequenceId ;
 }

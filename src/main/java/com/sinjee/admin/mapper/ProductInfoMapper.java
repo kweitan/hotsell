@@ -58,4 +58,6 @@ public interface ProductInfoMapper extends BaseMapper<ProductInfo> {
     //根据status分页查找商品
     IPage<ProductInfo> selectProductInfosByCategoryNumber(
             IPage<ProductInfo> page, @Param("map") Map<String, Object> params);
+
+    ProductInfo moveProductInfo(@Param("map") Map<String, Object> params);
 }

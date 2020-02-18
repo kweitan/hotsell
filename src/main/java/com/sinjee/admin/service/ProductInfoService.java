@@ -44,4 +44,8 @@ public interface ProductInfoService {
 
     void decreaseStock(List<ShopCartModel> shopCartModelList) ;
 
+    Integer moveProductInfo(String productNumber,Integer type,Integer sequenceId);
+
+    Integer findSequenceId();
+
 }

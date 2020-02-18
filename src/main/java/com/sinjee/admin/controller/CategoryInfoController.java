@@ -2,6 +2,7 @@ package com.sinjee.admin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sinjee.admin.dto.ProductCategoryDTO;
+import com.sinjee.admin.dto.ProductInfoDTO;
 import com.sinjee.admin.form.DeleteAllProductForm;
 import com.sinjee.admin.form.ProductCategoryForm;
 import com.sinjee.admin.service.ProductCategoryService;
@@ -362,5 +363,23 @@ public class CategoryInfoController {
         CacheBeanCopier.copy(productCategoryDTO,productCategoryVO);
         productCategoryVO.setHashNumber(hashNumber);
         return ResultVOUtil.success(productCategoryVO) ;
+    }
+
+    //根据上移 下移
+    @CrossOrigin(origins = "*")
+    @GetMapping("/moveCategoryInfo")
+    public ResultVO moveCategoryInfo(@RequestParam String categoryNumber,
+                                    @RequestParam String hashNumber, @RequestParam Integer type){
+        //取得类目编码和哈希
+        if(!HashUtil.verify(categoryNumber,salt,hashNumber)){
+            return ResultVOUtil.error(101,"数据不一致!") ;
+        }
+
+
+        ProductCategoryDTO productCategoryDTO = productCategoryService.getProductCategoryDTOByNumber(categoryNumber) ;
+
+
+       return ResultVOUtil.success() ;
+
     }
 }

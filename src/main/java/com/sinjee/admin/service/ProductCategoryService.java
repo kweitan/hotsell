@@ -43,4 +43,8 @@ public interface ProductCategoryService {
     Integer countIndexNumber();
 
     boolean existCategoryInfo(String categoryNumber);
+
+    Integer moveCategoryInfo(String categoryNumber,Integer type,Integer sequenceId);
+
+    Integer findSequenceId();
 }

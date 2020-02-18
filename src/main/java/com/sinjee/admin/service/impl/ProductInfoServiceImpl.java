@@ -74,14 +74,14 @@ public class ProductInfoServiceImpl implements ProductInfoService {
     @Override
     public IPage<ProductInfoDTO> selectProductInfosByPage(Integer currentPage, Integer pageSize,String goodsName) {
         QueryWrapper<ProductInfo> wrapper = new QueryWrapper();
-        wrapper.eq("enable_flag",1).like("product_name",goodsName);
+        wrapper.eq("enable_flag",1).like("product_name",goodsName).orderByAsc("sequence_id");
         return returnPageByWrapper(currentPage,pageSize,wrapper);
     }
 
     @Override
     public IPage<ProductInfoDTO> selectProductInfosByProductStatus(Integer currentPage, Integer pageSize, Integer productStatus,String productName) {
         QueryWrapper<ProductInfo> wrapper = new QueryWrapper();
-        wrapper.eq("enable_flag",1).eq("product_status",productStatus).like("product_name",productName);
+        wrapper.eq("enable_flag",1).eq("product_status",productStatus).like("product_name",productName).orderByAsc("sequence_id");
         return returnPageByWrapper(currentPage,pageSize,wrapper);
     }
 
@@ -91,6 +91,9 @@ public class ProductInfoServiceImpl implements ProductInfoService {
         ProductInfo productInfo = new ProductInfo() ;
         //拷贝属性
         CacheBeanCopier.copy(productInfoDTO,productInfo);
+
+        productInfo.setSequenceId(findSequenceId());
+
         return productInfoMapper.saveProductInfo(productInfo);
     }
 
@@ -126,6 +129,9 @@ public class ProductInfoServiceImpl implements ProductInfoService {
         productDetailInfoDTO.setProductNumber(productNumber);
         productDetailInfoDTO.setEnableFlag(1);
         productDetailInfoService.save(productDetailInfoDTO);
+
+        //设置序列号
+        productInfo.setSequenceId(findSequenceId());
 
         //保存商品信息
         return productInfoMapper.saveProductInfo(productInfo);
@@ -259,7 +265,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
     @Override
     public List<ProductInfoDTO> getList() {
         QueryWrapper<ProductInfo> wrapper = new QueryWrapper();
-        wrapper.eq("enable_flag",1);
+        wrapper.eq("enable_flag",1).orderByAsc("sequence_id");
         List<ProductInfo> productInfoList = productInfoMapper.selectList(wrapper);
         return BeanConversionUtils.copyToAnotherList(ProductInfoDTO.class,productInfoList);
     }
@@ -300,5 +306,51 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
             productInfoMapper.update(productInfo,wrapper);
         }
+    }
+
+    @Override
+    public Integer moveProductInfo(String productNumber, Integer type,Integer sequenceId) {
+        Map<String,Object> map = new HashMap<>() ;
+        map.put("sequenceId",sequenceId) ;
+        map.put("type",type);
+        map.put("productNumber",productNumber) ;
+        ProductInfo productInfo = productInfoMapper.moveProductInfo(map) ;
+        if (null == productInfo && type == 0){
+            return -1 ; //-1表示 到顶了
+        }else if(null == productInfo && type == 1){
+            return -2 ; //-1表示 到底了
+        }
+
+        int tempId = sequenceId;
+        QueryWrapper<ProductInfo> oldWrapper = new QueryWrapper();
+        oldWrapper.eq("enable_flag",1).eq("product_number",productNumber);
+        ProductInfo oldProductInfo = new ProductInfo();
+        oldProductInfo.setSequenceId(productInfo.getSequenceId());
+        Integer res1 = productInfoMapper.update(oldProductInfo,oldWrapper);
+
+        QueryWrapper<ProductInfo> newWrapper = new QueryWrapper();
+        oldWrapper.eq("enable_flag",1).eq("product_number",productInfo.getProductNumber());
+        ProductInfo newProductInfo = new ProductInfo();
+        newProductInfo.setSequenceId(tempId);
+        Integer res2 = productInfoMapper.update(newProductInfo,newWrapper) ;
+        if (res1 > 0 && res2 >0){
+            return 1 ; //成功
+        }else {
+            //回滚事务
+            throw new MyException(101,"上下移动更新失败") ;
+        }
+
+    }
+
+    @Override
+    public Integer findSequenceId() {
+        QueryWrapper<ProductInfo> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1).orderByDesc("sequence_id");
+        List<ProductInfo> productInfoList = productInfoMapper.selectList(wrapper) ;
+        if (null == productInfoList || productInfoList.size() == 0){
+            return 1 ;
+        }
+
+        return productInfoList.get(0).getSequenceId() + 1;
     }
 }

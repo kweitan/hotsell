@@ -61,4 +61,19 @@
         select * from product_category
     </select>
 
+    <!--0:上移 1:下移-->
+    <select id="selectProductCategoryBySequenceId" resultType="com.sinjee.admin.entity.ProductCategory" >
+        select * from product_category where categoryNumber=#{map.categoryNumber} and enable_flag=1
+        <choose>
+            <when test="map.type == 0">
+                and sequence_id <![CDATA[ > ]]> #{map.sequenceId}
+                order by sequence_id limit 1
+            </when>
+            <otherwise>
+                and sequence_id <![CDATA[ < ]]> #{map.sequenceId}
+                order by sequence_id desc limit 1
+            </otherwise>
+        </choose>
+    </select>
+
 </mapper>

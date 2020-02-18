@@ -280,6 +280,7 @@ create table `refund_order` (
   `total_fee` decimal(8,2) not null comment '订单金额',
   `refund_fee` decimal(8,2) not null comment '退款金额',
   `refund_fee_type` varchar(8) DEFAULT 'CNY' comment '货币种类',
+  `refund_type` varchar(32) comment '退款方式',
   `refund_desc` varchar(128) comment '退款原因',
   `refund_status` varchar(16) comment '退款状态',
   `enable_flag` tinyint(3) DEFAULT '1' COMMENT '状态,1-可用 0-不可用',

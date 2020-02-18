@@ -9,6 +9,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Map;
+
 /***
  * 商品类目DAO接口
  */
@@ -26,5 +28,7 @@ public interface ProductCategoryMapper extends BaseMapper<ProductCategory> {
 
     /**分页查找类目信息**/
     IPage<ProductCategory> selectProductCategoryInfoByPage(IPage<ProductCategory> page, @Param(Constants.WRAPPER) Wrapper<ProductCategory> queryWrapper);
+
+    ProductCategory moveProductCategory(@Param("map") Map<String, Object> params);
 
 }

@@ -8,6 +8,7 @@
         <result column="total_fee" jdbcType="DECIMAL" property="totalFee" />
         <result column="refund_fee" jdbcType="DECIMAL" property="refundFee" />
         <result column="refund_status" jdbcType="VARCHAR" property="refundStatus" />
+        <result column="refund_type" jdbcType="VARCHAR" property="refundType" />
         <result column="refund_desc" jdbcType="VARCHAR" property="refundDesc" />
         <result column="refund_fee_type" jdbcType="VARCHAR" property="refundFeeType" />
         <result column="enable_flag" jdbcType="TINYINT" property="enableFlag" />

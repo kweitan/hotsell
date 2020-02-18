@@ -435,4 +435,30 @@ public class ProductInfoController {
 
     }
 
+    //根据上移 下移
+    @CrossOrigin(origins = "*")
+    @GetMapping("/moveProductInfo")
+    public ResultVO moveProductInfo(@RequestParam String productNumber,
+                           @RequestParam String hashNumber, @RequestParam Integer type){
+        //取得类目编码和哈希
+        if(!HashUtil.verify(productNumber,salt,hashNumber)){
+            return ResultVOUtil.error(101,"商品编码不一致!") ;
+        }
+
+        ProductInfoDTO productInfoDTO = productInfoService.findByNumber(productNumber) ;
+        if (null == productInfoDTO || StringUtils.isBlank(productInfoDTO.getProductNumber())){
+            return ResultVOUtil.error(101,"产品不存在") ;
+        }else {
+            Integer res = productInfoService.moveProductInfo(productInfoDTO.getProductNumber(),type,productInfoDTO.getSequenceId());
+            if (res == -1){
+                return ResultVOUtil.error(101,"到顶了") ;
+            }else if(res == -2){
+                return ResultVOUtil.error(101,"到底了") ;
+            }else{
+                return ResultVOUtil.success() ;
+            }
+        }
+
+    }
+
 }

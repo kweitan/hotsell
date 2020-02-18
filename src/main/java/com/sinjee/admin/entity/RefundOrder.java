@@ -35,4 +35,7 @@ public class RefundOrder extends BaseEntity {
     /**退款状态**/
     private String refundStatus ;
 
+    /**退款方式**/
+    private String refundType;
+
 }

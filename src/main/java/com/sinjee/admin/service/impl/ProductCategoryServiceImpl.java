@@ -11,12 +11,15 @@ import com.sinjee.admin.service.ProductCategoryService;
 import com.sinjee.common.BeanConversionUtils;
 import com.sinjee.common.CacheBeanCopier;
 
+import com.sinjee.exceptions.MyException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 小小极客
@@ -181,5 +184,50 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Integer moveCategoryInfo(String categoryNumber, Integer type, Integer sequenceId) {
+        Map<String,Object> map = new HashMap<>() ;
+        map.put("sequenceId",sequenceId) ;
+        map.put("type",type);
+        map.put("categoryNumber",categoryNumber) ;
+        ProductCategory productInfo = productCategoryMapper.moveProductCategory(map) ;
+        if (null == productInfo && type == 0){
+            return -1 ; //-1表示 到顶了
+        }else if(null == productInfo && type == 1){
+            return -2 ; //-1表示 到底了
+        }
+
+        int tempId = sequenceId;
+        QueryWrapper<ProductCategory> oldWrapper = new QueryWrapper();
+        oldWrapper.eq("enable_flag",1).eq("product_number",categoryNumber);
+        ProductCategory oldProductInfo = new ProductCategory();
+        oldProductInfo.setSequenceId(productInfo.getSequenceId());
+        Integer res1 = productCategoryMapper.update(oldProductInfo,oldWrapper);
+
+        QueryWrapper<ProductCategory> newWrapper = new QueryWrapper();
+        oldWrapper.eq("enable_flag",1).eq("product_number",productInfo.getCategoryNumber());
+        ProductCategory newProductInfo = new ProductCategory();
+        newProductInfo.setSequenceId(tempId);
+        Integer res2 = productCategoryMapper.update(newProductInfo,newWrapper) ;
+        if (res1 > 0 && res2 >0){
+            return 1 ; //成功
+        }else {
+            //回滚事务
+            throw new MyException(101,"上下移动更新失败") ;
+        }
+    }
+
+    @Override
+    public Integer findSequenceId() {
+        QueryWrapper<ProductCategory> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1).orderByDesc("sequence_id");
+        List<ProductCategory> productCategoryList = productCategoryMapper.selectList(wrapper) ;
+        if (null == productCategoryList || productCategoryList.size() == 0){
+            return 1 ;
+        }
+
+        return productCategoryList.get(0).getSequenceId() + 1;
     }
 }

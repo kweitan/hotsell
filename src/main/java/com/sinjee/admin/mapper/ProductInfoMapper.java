@@ -59,5 +59,5 @@ public interface ProductInfoMapper extends BaseMapper<ProductInfo> {
     IPage<ProductInfo> selectProductInfosByCategoryNumber(
             IPage<ProductInfo> page, @Param("map") Map<String, Object> params);
 
-    ProductInfo moveProductInfo(@Param("map") Map<String, Object> params);
+    ProductInfo selectMoveProductInfo(@Param("map") Map<String, Object> params);
 }

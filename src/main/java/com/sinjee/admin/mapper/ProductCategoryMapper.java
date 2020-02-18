@@ -29,6 +29,6 @@ public interface ProductCategoryMapper extends BaseMapper<ProductCategory> {
     /**分页查找类目信息**/
     IPage<ProductCategory> selectProductCategoryInfoByPage(IPage<ProductCategory> page, @Param(Constants.WRAPPER) Wrapper<ProductCategory> queryWrapper);
 
-    ProductCategory moveProductCategory(@Param("map") Map<String, Object> params);
+    ProductCategory selectMoveProductCategory(@Param("map") Map<String, Object> params);
 
 }

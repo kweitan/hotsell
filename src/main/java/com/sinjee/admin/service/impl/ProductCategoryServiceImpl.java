@@ -44,6 +44,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     public Integer saveProductCategoryInfo(ProductCategoryDTO productCategoryDTO) {
         ProductCategory productCategory = new ProductCategory();
         CacheBeanCopier.copy(productCategoryDTO,productCategory);
+        productCategory.setSequenceId(findSequenceId());
         return productCategoryMapper.insert(productCategory);
     }
 
@@ -70,7 +71,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     @Override
     public IPage<ProductCategoryDTO> selectProductCategoryInfoByPage(Integer currentPage, Integer pageSize,String selectName) {
         QueryWrapper<ProductCategory> wrapper = new QueryWrapper();
-        wrapper.eq("enable_flag",1).like("category_name",selectName);
+        wrapper.eq("enable_flag",1).like("category_name",selectName).orderByAsc("sequence_id");
         Page<ProductCategory> page = new Page<ProductCategory>(currentPage,pageSize) ;
         //从数据库分页获取数据
         IPage<ProductCategory> mapPage = productCategoryMapper.selectPage(page,wrapper);
@@ -90,7 +91,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     public List<ProductCategoryDTO> getAllProductCategoryDTOList(){
         QueryWrapper<ProductCategory> wrapper = new QueryWrapper();
         //1-表示类目上架 0-表示类目下架
-        wrapper.eq("enable_flag",1).eq("category_status",1);
+        wrapper.eq("enable_flag",1).eq("category_status",1).orderByAsc("sequence_id");
 
         List<ProductCategory> productCategoryList = productCategoryMapper.selectList(wrapper) ;
 
@@ -133,6 +134,9 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     public Integer save(ProductCategoryDTO productCategoryDTO) {
         ProductCategory productCategory = new ProductCategory() ;
         CacheBeanCopier.copy(productCategoryDTO,productCategory);
+
+        productCategory.setSequenceId(findSequenceId());
+
         return productCategoryMapper.insert(productCategory);
     }
 
@@ -149,7 +153,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     @Override
     public IPage<ProductCategoryDTO> selectProductCategoryBySearchName(Integer currentPage, Integer pageSize, String searchName) {
         QueryWrapper<ProductCategory> wrapper = new QueryWrapper();
-        wrapper.eq("enable_flag",1).like("category_name",searchName);
+        wrapper.eq("enable_flag",1).like("category_name",searchName).orderByAsc("sequence_id");
         Page<ProductCategory> page = new Page<ProductCategory>(currentPage,pageSize) ;
         //从数据库分页获取数据
         IPage<ProductCategory> mapPage = productCategoryMapper.selectProductCategoryInfoByPage(page,wrapper);
@@ -191,26 +195,24 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         Map<String,Object> map = new HashMap<>() ;
         map.put("sequenceId",sequenceId) ;
         map.put("type",type);
-        map.put("categoryNumber",categoryNumber) ;
-        ProductCategory productInfo = productCategoryMapper.moveProductCategory(map) ;
-        if (null == productInfo && type == 0){
+        ProductCategory productCategory = productCategoryMapper.selectMoveProductCategory(map) ;
+        if (null == productCategory && type == 1){
             return -1 ; //-1表示 到顶了
-        }else if(null == productInfo && type == 1){
+        }else if(null == productCategory && type == 0){
             return -2 ; //-1表示 到底了
         }
 
-        int tempId = sequenceId;
         QueryWrapper<ProductCategory> oldWrapper = new QueryWrapper();
-        oldWrapper.eq("enable_flag",1).eq("product_number",categoryNumber);
-        ProductCategory oldProductInfo = new ProductCategory();
-        oldProductInfo.setSequenceId(productInfo.getSequenceId());
-        Integer res1 = productCategoryMapper.update(oldProductInfo,oldWrapper);
+        oldWrapper.eq("enable_flag",1).eq("category_number",categoryNumber);
+        ProductCategory oldProductCategory = new ProductCategory();
+        oldProductCategory.setSequenceId(productCategory.getSequenceId());
+        Integer res1 = productCategoryMapper.update(oldProductCategory,oldWrapper);
 
         QueryWrapper<ProductCategory> newWrapper = new QueryWrapper();
-        oldWrapper.eq("enable_flag",1).eq("product_number",productInfo.getCategoryNumber());
-        ProductCategory newProductInfo = new ProductCategory();
-        newProductInfo.setSequenceId(tempId);
-        Integer res2 = productCategoryMapper.update(newProductInfo,newWrapper) ;
+        newWrapper.eq("enable_flag",1).eq("category_number",productCategory.getCategoryNumber());
+        ProductCategory newProductCategory = new ProductCategory();
+        newProductCategory.setSequenceId(sequenceId);
+        Integer res2 = productCategoryMapper.update(newProductCategory,newWrapper) ;
         if (res1 > 0 && res2 >0){
             return 1 ; //成功
         }else {

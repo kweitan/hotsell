@@ -377,9 +377,18 @@ public class CategoryInfoController {
 
 
         ProductCategoryDTO productCategoryDTO = productCategoryService.getProductCategoryDTOByNumber(categoryNumber) ;
-
-
-       return ResultVOUtil.success() ;
+        if (null == productCategoryDTO || StringUtils.isBlank(productCategoryDTO.getCategoryNumber())){
+            return ResultVOUtil.error(101,"类目不存在") ;
+        }else {
+            Integer res = productCategoryService.moveCategoryInfo(productCategoryDTO.getCategoryNumber(),type,productCategoryDTO.getSequenceId());
+            if (res == -1){
+                return ResultVOUtil.error(101,"到顶了") ;
+            }else if(res == -2){
+                return ResultVOUtil.error(101,"到底了") ;
+            }else{
+                return ResultVOUtil.success() ;
+            }
+        }
 
     }
 }

@@ -128,16 +128,16 @@
     </update>
 
     <!--0:上移 1:下移-->
-    <select id="selectProductBySequenceId" resultType="com.sinjee.admin.entity.ProductInfo" >
-        select * from product_info where product_number=#{map.productNumber} and enable_flag=1
+    <select id="selectMoveProductInfo" resultType="com.sinjee.admin.entity.ProductInfo" >
+        select * from product_info where enable_flag=1
         <choose>
-            <when test="map.type == 0">
-                and sequence_id <![CDATA[ > ]]> #{map.sequenceId}
+            <when test="map.type == 1">
+                and sequence_id = #{map.sequenceId} - 1
                 order by sequence_id limit 1
             </when>
             <otherwise>
-                and sequence_id <![CDATA[ < ]]> #{map.sequenceId}
-                order by sequence_id desc limit 1
+                and sequence_id = #{map.sequenceId} + 1
+                order by sequence_id limit 1
             </otherwise>
         </choose>
     </select>

@@ -313,15 +313,14 @@ public class ProductInfoServiceImpl implements ProductInfoService {
         Map<String,Object> map = new HashMap<>() ;
         map.put("sequenceId",sequenceId) ;
         map.put("type",type);
-        map.put("productNumber",productNumber) ;
-        ProductInfo productInfo = productInfoMapper.moveProductInfo(map) ;
-        if (null == productInfo && type == 0){
+//        map.put("productNumber",productNumber) ;
+        ProductInfo productInfo = productInfoMapper.selectMoveProductInfo(map) ;
+        if (null == productInfo && type == 1){
             return -1 ; //-1表示 到顶了
-        }else if(null == productInfo && type == 1){
+        }else if(null == productInfo && type == 0){
             return -2 ; //-1表示 到底了
         }
 
-        int tempId = sequenceId;
         QueryWrapper<ProductInfo> oldWrapper = new QueryWrapper();
         oldWrapper.eq("enable_flag",1).eq("product_number",productNumber);
         ProductInfo oldProductInfo = new ProductInfo();
@@ -329,9 +328,9 @@ public class ProductInfoServiceImpl implements ProductInfoService {
         Integer res1 = productInfoMapper.update(oldProductInfo,oldWrapper);
 
         QueryWrapper<ProductInfo> newWrapper = new QueryWrapper();
-        oldWrapper.eq("enable_flag",1).eq("product_number",productInfo.getProductNumber());
+        newWrapper.eq("enable_flag",1).eq("product_number",productInfo.getProductNumber());
         ProductInfo newProductInfo = new ProductInfo();
-        newProductInfo.setSequenceId(tempId);
+        newProductInfo.setSequenceId(sequenceId);
         Integer res2 = productInfoMapper.update(newProductInfo,newWrapper) ;
         if (res1 > 0 && res2 >0){
             return 1 ; //成功

@@ -16,44 +16,44 @@ import java.util.Map;
  * @author 小小极客
  * 时间 2020/2/2 22:04
  * @ClassName WechatAccessTokenUtil
- * 描述 WechatAccessTokenUtil
+ * 描述 中台签名工具类
  **/
 @Slf4j
-public class WechatAccessTokenUtil {
+public class AdminAccessTokenUtil {
 
 
     /**
      * 签名生成
-     * @param openid
+     * @param sellerNumber
      * @return
      */
-    public static String sign(String openid){
+    public static String sign(String sellerNumber){
 
-        String accessToken = null;
-        log.info("expireTime={}",ConfigInfoUtil.expireTime);
-        log.info("tokenSecret={}",ConfigInfoUtil.tokenSecret);
+        String adminToken = null;
+        log.info("adminExpireTime={}",ConfigInfoUtil.adminExpireTime);
+        log.info("adminTokenSecret={}",ConfigInfoUtil.adminTokenSecret);
         try {
-            Date expiresAt = new Date(System.currentTimeMillis() + Long.valueOf(ConfigInfoUtil.expireTime));
-            accessToken = JWT.create()
+            Date expiresAt = new Date(System.currentTimeMillis() + Long.valueOf(ConfigInfoUtil.adminExpireTime));
+            adminToken = JWT.create()
                     .withIssuer("auth0")
-                    .withClaim("openid", openid)
+                    .withClaim("sellerNumber", sellerNumber)
                     .withExpiresAt(expiresAt)
                     // 使用了HMAC256加密算法。
-                    .sign(Algorithm.HMAC256(ConfigInfoUtil.tokenSecret));
+                    .sign(Algorithm.HMAC256(ConfigInfoUtil.adminTokenSecret));
         } catch (Exception e){
             e.printStackTrace();
         }
-        return accessToken;
+        return adminToken;
     }
 
-    public static Map<String,Object> getMap(String accessToken){
+    public static Map<String,Object> getMap(String adminToken){
         Map<String,Object> map = new HashMap<>() ;
         try {
-            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(ConfigInfoUtil.tokenSecret)).withIssuer("auth0").build();
-            DecodedJWT jwt = jwtVerifier.verify(accessToken) ;
+            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(ConfigInfoUtil.adminTokenSecret)).withIssuer("auth0").build();
+            DecodedJWT jwt = jwtVerifier.verify(adminToken) ;
             map.put("issuer",jwt.getIssuer()) ;
-            map.put("openid",jwt.getClaim("openid").asString());
-            map.put("expiresTime",jwt.getExpiresAt()) ;
+            map.put("sellerNumber",jwt.getClaim("sellerNumber").asString());
+            map.put("adminExpireTime",jwt.getExpiresAt()) ;
 
         }catch (Exception e){
             throw new MyException(202,"token解析不正确!");
@@ -62,14 +62,14 @@ public class WechatAccessTokenUtil {
         return map;
     }
 
-    public static boolean verify(String accessToken){
+    public static boolean verify(String adminToken){
         try {
-            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(ConfigInfoUtil.tokenSecret)).withIssuer("auth0").build();
-            DecodedJWT jwt = jwtVerifier.verify(accessToken) ;
+            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(ConfigInfoUtil.adminTokenSecret)).withIssuer("auth0").build();
+            DecodedJWT jwt = jwtVerifier.verify(adminToken) ;
             //1.取出issuer
             jwt.getIssuer();
             //2.取出openid
-            jwt.getClaim("openid");
+            jwt.getClaim("sellerNumber");
             //3.取出过期时间
             jwt.getExpiresAt();
 

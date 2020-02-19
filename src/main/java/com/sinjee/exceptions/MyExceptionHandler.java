@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @author 小小极客
@@ -30,6 +31,16 @@ public class MyExceptionHandler {
     public ResultVO handlerException(MyException e,Object object) {
         log.error("Exception: ", e);
         return ResultVOUtil.error(e.getCode(), e.getMessage(),object);
+    }
+
+    /**
+     * 捕获登录异常处理 跳转登录界面
+     * @return
+     */
+    @ExceptionHandler(value = SellerAuthorizeException.class)
+    public ModelAndView handlerAuthorizeException() {
+        return new ModelAndView("redirect:"
+                .concat("/hotsell/seller/login"));
     }
 
 }

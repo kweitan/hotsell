@@ -13,7 +13,6 @@
         <result column="buyer_gender" jdbcType="TINYINT" property="buyerGender" />
         <result column="open_id" jdbcType="VARCHAR" property="openId" />
         <result column="union_id" jdbcType="VARCHAR" property="unionId" />
-        <result column="session_key" jdbcType="VARCHAR" property="sessionKey" />
         <result column="enable_flag" jdbcType="TINYINT" property="enableFlag" />
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
         <result column="creator" jdbcType="VARCHAR" property="creator" />

@@ -85,12 +85,12 @@ public class AESCBCUtil {
 
     public static void main(String[] args) {
         try {
-            String s = "您好啊 AESdlsjfskldjfls jfldsjkfdjlsjflkajlk;jfeig ;dkdjsdkjfsl";
-            String pass = "deij124d9j32jsep";
-            String encoded = encrypt(s, pass);
-            log.info("加密之前：{}", s);
+            String content = "123456abc***";
+            String salt = "4aW9Pnzx=Q80Xqib";
+            String encoded = encrypt(content, salt);
+            log.info("加密之前：{}", content);
             log.info("加密结果：{}", encoded);
-            log.info("解密结果：{}", decrypt(encoded, pass));
+            log.info("解密结果：{}", decrypt(encoded, salt));
         }catch (Exception e){
             e.printStackTrace();
         }

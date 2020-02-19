@@ -32,6 +32,7 @@
         <weixin.java.pay.version>3.6.0</weixin.java.pay.version>
         <commons.fileupload.version>1.4</commons.fileupload.version>
         <commons.io.version>2.4</commons.io.version>
+        <kaptcha.version>2.3.2</kaptcha.version>
     </properties>
 
     <dependencies>
@@ -204,6 +205,13 @@
             <groupId> org.springframework.boot </groupId>
             <artifactId> spring-boot-configuration-processor </artifactId>
             <optional> true </optional>
+        </dependency>
+
+        <!-- kaptcha -->
+        <dependency>
+            <groupId>com.github.penggle</groupId>
+            <artifactId>kaptcha</artifactId>
+            <version>${kaptcha.version}</version>
         </dependency>
 
     </dependencies>

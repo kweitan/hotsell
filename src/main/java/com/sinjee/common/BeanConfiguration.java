@@ -2,6 +2,7 @@ package com.sinjee.common;
 
 import com.sinjee.interceptor.AccessLimtInterceptor;
 import com.sinjee.interceptor.AccessTokenInterceptor;
+import com.sinjee.interceptor.AdminTokenInterceptor;
 import com.sinjee.interceptor.ApiIdempotencyInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ public class BeanConfiguration implements WebMvcConfigurer {
 
     @Autowired
     private AccessLimtInterceptor accessLimtInterceptor ;
+
+    @Autowired
+    private AdminTokenInterceptor adminTokenInterceptor ;
 
     @Value("${admin.server.uploadfiles.dir}")
     private String uploadFiles ;
@@ -64,6 +68,9 @@ public class BeanConfiguration implements WebMvcConfigurer {
         /***
          * 拦截中台的过滤器
          */
+        registry.addInterceptor(adminTokenInterceptor)
+                .addPathPatterns("/admin/**") ;
+
         WebMvcConfigurer.super.addInterceptors(registry);
     }
 

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+
+
+<style>
+    body{
+        margin: 0;
+        padding: 0;
+        background-color: #b8e5f8;
+    }
+    .login-content{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .login-content-items{
+        width: 400px;
+        height: 280px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #ffffff;
+        border-radius: 5px;
+    }
+
+    .dividing-line{
+        height: 1px;
+        background-color: #409EFF;
+        margin-top: 6px;
+        margin-bottom: 6px;
+    }
+
+    .login-content-logo{
+        font-size: 60px;
+        color: #409EFF;
+        font-weight: bold;
+    }
+</style>
+
+<body>
+<div class="login-content" id="app">
+    <div style="height: 120px;"></div>
+    <div class="login-content-logo">LOGO</div>
+    <div class="login-content-items">
+        <div style="height: 60px;"></div>
+        <el-input style="width: 350px;height: 48px;"
+                placeholder="请输入用户名"
+                v-model="username"
+                clearable>
+        </el-input>
+        <div class="dividing-line"></div>
+        <el-input placeholder="请输入密码" v-model="password" show-password style="width: 350px;height: 48px;"></el-input>
+        <div style="height: 20px;"></div>
+        <el-button type="primary" style="width: 350px;height: 36px;" :loading="true" >登 录</el-button>
+    </div>
+</div>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello Vue!',
+            username: '',
+            password: ''
+        }
+    })
+</script>
+</html>

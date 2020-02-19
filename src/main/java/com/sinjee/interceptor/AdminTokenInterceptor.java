@@ -1,12 +1,10 @@
 package com.sinjee.interceptor;
 
-import com.sinjee.annotation.AccessTokenIdempotency;
-import com.sinjee.common.Constant;
+import com.sinjee.admin.service.SellerInfoService;
+import com.sinjee.annotation.AdminTokenIdempotency;
 import com.sinjee.common.RedisUtil;
-import com.sinjee.exceptions.MyException;
-import com.sinjee.wechat.dto.BuyerInfoDTO;
-import com.sinjee.wechat.service.BuyerInfoService;
-import com.sinjee.wechat.utils.WechatAccessTokenUtil;
+import com.sinjee.exceptions.SellerAuthorizeException;
+import com.sinjee.wechat.utils.AdminAccessTokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,54 +29,51 @@ import java.util.TimeZone;
  **/
 @Slf4j
 @Component
-public class AccessTokenInterceptor implements HandlerInterceptor {
+public class AdminTokenInterceptor implements HandlerInterceptor {
 
     @Autowired
     private RedisUtil redisUtil ;
 
     @Autowired
-    private BuyerInfoService buyerInfoService ;
+    private SellerInfoService sellerInfoService ;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object) throws Exception {
-        log.info("进入拦截器AccessTokenInterceptor");
+
 
         // 如果不是映射到方法直接通过
         if(!(object instanceof HandlerMethod)){
             return true;
         }
-        String accessToken = request.getHeader("accessToken");// 从 http 请求头中取出 token
-        log.info("accessToken={}",accessToken);
+
+        log.info("进入拦截器AdminTokenInterceptor");
+
+        String adminToken = request.getHeader("adminToken");// 从 http 请求头中取出 adminToken
+
+        log.info("adminToken={}",adminToken);
         HandlerMethod handlerMethod=(HandlerMethod)object;
         Method method=handlerMethod.getMethod();
 
-        //检查是否有AccessTokenIdempotency注释，否跳过认证
-        AccessTokenIdempotency accessTokenIdempotency = method.getAnnotation(AccessTokenIdempotency.class) ;
-        if (null != accessTokenIdempotency){
-            if (StringUtils.isBlank(accessToken)){
-                throw new MyException(201,"请授权登录");
+        //检查是否有AdminTokenIdempotency注释，否跳过认证
+        AdminTokenIdempotency adminTokenIdempotency = method.getAnnotation(AdminTokenIdempotency.class) ;
+        if (null != adminTokenIdempotency){
+            if (StringUtils.isBlank(adminToken)){
+                log.info("已经过期,重新登录请求token");
+                throw new SellerAuthorizeException();
             }
 
-            Map<String,Object> map = WechatAccessTokenUtil.getMap(accessToken) ;
+            Map<String,Object> map = AdminAccessTokenUtil.getMap(adminToken) ;
 
-            //校验openid
-            String openid = (String)map.get("openid") ;
-            //String key = HashUtil.signByMD5(openid,md5Salt);
+            //sellerNumber
+            String sellerNumber = (String)map.get("sellerNumber") ;
 
-            boolean isExist = redisUtil.existsKey(openid);
+            boolean isExist = redisUtil.existsKey(sellerNumber);
             if (!isExist){
-
                 //从数据库查
-                BuyerInfoDTO buyerInfoDTO = buyerInfoService.find(openid) ;
-                if (null == buyerInfoDTO || StringUtils.isBlank(buyerInfoDTO.getOpenId())){
-                    throw new MyException(201,"请还未授权登录过");
-                }
-
-                //重新更新redis
-                redisUtil.setString(openid,buyerInfoDTO, Constant.Redis.EXPIRE_TIME_7DAY) ;
+                log.info("已经过期,重新登录请求token");
+                throw new SellerAuthorizeException();
             }
 
-            //205 表示token日期失效 重新刷新token 告诉微信小程序刷新token
             Date lastDate = (Date)map.get("expiresTime") ;
             Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+8:00")) ;
             calendar.setTime(lastDate);
@@ -86,11 +81,11 @@ public class AccessTokenInterceptor implements HandlerInterceptor {
 
             //表示已经过期
             if (System.currentTimeMillis() > lastTime){
-                throw new MyException(205,"已经过期,重新请求token");
+                log.info("已经过期,重新登录请求token");
+                throw new SellerAuthorizeException();
             }
 
-            request.setAttribute("openid",openid);
-
+            request.setAttribute("sellerNumber",sellerNumber);
 
         }
         return true;

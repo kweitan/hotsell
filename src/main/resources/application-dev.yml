@@ -141,9 +141,9 @@ myWechat:
 wechat:
   #accessToken 过期时间 1周 单位S
   accessTokenExpTime: 604800000
-  #accessToken 盐值
+  #accessToken 盐值[密钥]
   accessToekenScret: 3787idlkdkhjfoi4trqlafhslhUWOTAUWW323
-  #AES 密钥
+  #AES 密钥 [16位]
   md5Salt: ywqhdgeAFWE34375
 
 admin:
@@ -152,5 +152,12 @@ admin:
     uploadfiles:
       ###文件上传目录(window是d/e/f盘， linux是/)（注意Linux和Windows上的目录结构不同） g:/-window /->linux
       dir: g:/resources/common
+
+  #中台 过期时间 4周 单位S
+  adminTokenExpTime: 2419200000
+  #中台 盐值[密钥]
+  adminTokenScret: 9836122asfnb=JEOWAJwej33j4389405jlkrgjjh12bmz=
+  #卖家密码加密密钥
+  passwordSalt: 4aW9Pnzx=Q80Xqib
 
 

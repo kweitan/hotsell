@@ -310,3 +310,28 @@ create table `order_flow` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 comment ' 订单流水表';
 --- NEW -> SUCCESS -> SHIPMENT -> FINISHED -> ---
 --用户             -> REFUND -> CANCEL     -> REFUND -> CANCEL
+
+
+-- 卖家信息 --
+create table `seller_info` (
+  `seller_id` int unsigned not null auto_increment,
+  `seller_name` varchar(32) not null comment '卖家名称不能为空',
+  `seller_password` varchar(128) not null comment '卖家密码',
+  `avatar_url` varchar(128) comment '卖家头像',
+  `seller_country` varchar(32) comment '卖家国家',
+  `seller_province` varchar(32) comment '卖家省份',
+  `seller_city` varchar(32) comment '卖家城市',
+  `seller_gender` tinyint(3) comment '卖家性别 1-男 0-女',
+  `seller_number` varchar(64) not null unique key comment '卖家编号',
+  `seller_phone` varchar(16) comment '卖家电话',
+  `seller_qq` varchar(32) comment '卖家qq',
+  `seller_email` varchar(64) comment '卖家邮箱',
+  `seller_wechat_id` varchar(64) comment '卖家微信号',
+  `seller_pay_id` varchar(64) comment '卖家支付宝',
+  `enable_flag` tinyint(3) DEFAULT '1' COMMENT '状态,1-可用 0-不可用',
+  `create_time` timestamp not null comment '创建时间',
+  `creator` varchar(32) not null comment '创建者',
+  `update_time` timestamp not null comment '修改时间',
+  `updater` varchar(32) not null comment '更新者',
+    primary key (`seller_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 comment '卖家信息表';

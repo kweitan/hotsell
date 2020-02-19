@@ -31,7 +31,7 @@ import java.util.Map;
  **/
 @RestController
 @RequestMapping("/admin/productCategory")
-public class CategoryInfoController {
+public class AdminCategoryInfoController {
 
     @Autowired
     private ProductCategoryService productCategoryService ;

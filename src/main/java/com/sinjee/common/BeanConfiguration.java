@@ -68,8 +68,8 @@ public class BeanConfiguration implements WebMvcConfigurer {
         /***
          * 拦截中台的过滤器
          */
-        registry.addInterceptor(adminTokenInterceptor)
-                .addPathPatterns("/admin/**") ;
+//        registry.addInterceptor(adminTokenInterceptor)
+//                .addPathPatterns("/admin/**") ;
 
         WebMvcConfigurer.super.addInterceptors(registry);
     }

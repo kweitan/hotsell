@@ -23,6 +23,7 @@ import java.io.ByteArrayOutputStream;
  * @author kweitan
  */
 @Controller
+@RequestMapping("/admin")
 public class CaptchaController {
 
     @Autowired
@@ -66,7 +67,5 @@ public class CaptchaController {
         responseOutputStream.flush();
         responseOutputStream.close();
     }
-
-
 
 }

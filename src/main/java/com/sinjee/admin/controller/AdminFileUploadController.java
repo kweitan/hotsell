@@ -29,7 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/upload")
 @Slf4j
-public class FileUploadController {
+public class AdminFileUploadController {
 
     //文件上传路径
     /**

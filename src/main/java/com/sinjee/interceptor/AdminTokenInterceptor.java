@@ -25,7 +25,7 @@ import java.util.TimeZone;
  * @author 小小极客
  * 时间 2020/2/3 9:29
  * @ClassName AccessTokenInterceptor
- * 描述 AccessTokenInterceptor
+ * 描述 AccessTokenInterceptor 暂时使用AOP
  **/
 @Slf4j
 @Component

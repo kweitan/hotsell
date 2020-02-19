@@ -38,9 +38,9 @@ public class MyExceptionHandler {
      * @return
      */
     @ExceptionHandler(value = SellerAuthorizeException.class)
-    public ModelAndView handlerAuthorizeException() {
-        return new ModelAndView("redirect:"
-                .concat("/hotsell/seller/login"));
+    @ResponseBody
+    public ResultVO handlerAuthorizeException() {
+        return ResultVOUtil.error(911,"已经过期,重新登录请求token");
     }
 
 }

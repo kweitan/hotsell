@@ -33,7 +33,7 @@ public interface OrderMasterService {
 
     Integer applyOrder(String orderNumber,String openid);
 
-    Integer updataOrderStatus(QueryWrapper<OrderMaster> wrapper, String orderStatus,String payStatus);
+    Integer updataOrderStatus(QueryWrapper<OrderMaster> wrapper,String orderStatus,String payStatus,String orderNumber,String openid);
 
     IPage<OrderMasterDTO> findByTpye(Integer currentPage, Integer pageSize,String openid,String type);
 
@@ -43,6 +43,6 @@ public interface OrderMasterService {
     IPage<OrderMasterDTO> findOrderAllList(Integer currentPage, Integer pageSize,String searchType,String orderNumber);
 
     /** 中台 填写运单号**/
-    Integer enterTrackingNumber(String orderNumber, ExpressDelivery expressDelivery);
+    Integer enterTrackingNumber(String creator,String orderNumber, ExpressDelivery expressDelivery);
 
 }

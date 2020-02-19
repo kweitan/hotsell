@@ -22,7 +22,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/admin/address")
-public class AddressController {
+public class AdminAddressController {
 
 
     @Autowired

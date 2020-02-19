@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sinjee.admin.dto.ProductCategoryDTO;
 import com.sinjee.admin.dto.ProductDetailInfoDTO;
 import com.sinjee.admin.dto.ProductInfoDTO;
+import com.sinjee.admin.dto.SellerInfoDTO;
 import com.sinjee.admin.form.ProductCategoryInfoForm;
 import com.sinjee.admin.form.ProductInfoForm;
 import com.sinjee.admin.service.ProductCategoryMidService;
@@ -14,6 +15,7 @@ import com.sinjee.admin.vo.ProductDetailInfoVO;
 import com.sinjee.admin.vo.ProductInfoVO;
 import com.sinjee.common.*;
 import com.sinjee.exceptions.MyException;
+import com.sinjee.exceptions.SellerAuthorizeException;
 import com.sinjee.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +27,7 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -39,7 +42,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/product")
 @Slf4j
-public class ProductInfoController {
+public class AdminProductInfoController {
 
     @Autowired
     private ProductInfoService productInfoService ;
@@ -49,6 +52,9 @@ public class ProductInfoController {
 
     @Value("${myWechat.salt}")
     private String salt ;
+
+    @Autowired
+    private RedisUtil redisUtil ;
 
     @CrossOrigin(origins = "*")
     @GetMapping("/list")
@@ -99,18 +105,16 @@ public class ProductInfoController {
             @CacheEvict(cacheNames = "productList",allEntries=true),
             @CacheEvict(cacheNames = "categoryList",allEntries=true),
             @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
-    public ResultVO saveProductInfo( @Valid @RequestBody ProductInfoForm productInfoForm, BindingResult bindingResult) {
+    public ResultVO saveProductInfo(HttpServletRequest request , @Valid @RequestBody ProductInfoForm productInfoForm, BindingResult bindingResult) {
         log.info("ProductInfoForm2={}", GsonUtil.getInstance().toStr(productInfoForm));
+
+        //获取卖家信息
+        SellerInfoDTO sellerInfoDTO = Common.getSellerInfo(request,redisUtil) ;
 
         //1.校验参数
         if (bindingResult.hasErrors()){
             return ResultVOUtil.error(101,bindingResult.getFieldError().getDefaultMessage()) ;
         }
-
-        //校验
-//        if(!HashUtil.verify(productInfoForm.getProductNumber(),salt,productInfoForm.getHashNumber())){
-//            return ResultVOUtil.error(101,"商品编码不一致!") ;
-//        }
 
         ProductInfoDTO productInfoDTO = new ProductInfoDTO() ;
         ProductDetailInfoDTO productDetailInfoDTO = new ProductDetailInfoDTO() ;
@@ -132,9 +136,6 @@ public class ProductInfoController {
         //校验参数
         checkParams(productInfoForm);
 
-        //生成商品编码
-//        String productNumber = IdUtil.genId() ;
-
         //3.保存商品信息
         productInfoDTO.setProductIcon(productInfoForm.getProductIcon());
         productInfoDTO.setProductLabels(productInfoForm.getProductLabels());
@@ -145,20 +146,18 @@ public class ProductInfoController {
         productInfoDTO.setProductTips(productInfoForm.getProductTips());
         productInfoDTO.setProductUnit(productInfoForm.getProductUnit());
         productInfoDTO.setProductStandard(productInfoForm.getProductStandard());
-//        productInfoDTO.setProductNumber(productNumber);
 
 
         //4.保存商品明细信息
         productDetailInfoDTO.setProductDetailDescription(productInfoForm.getProductDetailDesc());
         productDetailInfoDTO.setProductDetailIcon(productInfoForm.getProductDetailIcon());
         productDetailInfoDTO.setProductDetailField(productInfoForm.getProductDetailField());
-//        productDetailInfoDTO.setProductNumber(productNumber);
 
         //保存登录用户信息
-        productInfoDTO.setCreator("kweitan");
-        productInfoDTO.setUpdater("kweitan");
-        productDetailInfoDTO.setCreator("kweitan");
-        productDetailInfoDTO.setUpdater("kweitan");
+        productInfoDTO.setCreator(sellerInfoDTO.getSellerName());
+        productInfoDTO.setUpdater(sellerInfoDTO.getSellerName());
+        productDetailInfoDTO.setCreator(sellerInfoDTO.getSellerName());
+        productDetailInfoDTO.setUpdater(sellerInfoDTO.getSellerName());
 
         productInfoDTO.setCreateTime(DateUtils.getTimestamp());
         productInfoDTO.setUpdateTime(DateUtils.getTimestamp());
@@ -191,9 +190,12 @@ public class ProductInfoController {
             @CacheEvict(cacheNames = "productList",allEntries=true),
             @CacheEvict(cacheNames = "categoryList",allEntries=true),
             @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
-    public ResultVO updateProductInfo( @Valid @RequestBody ProductInfoForm productInfoForm, BindingResult bindingResult){
+    public ResultVO updateProductInfo( HttpServletRequest request ,@Valid @RequestBody ProductInfoForm productInfoForm, BindingResult bindingResult){
 
         log.info("ProductInfoForm2={}", GsonUtil.getInstance().toStr(productInfoForm));
+
+        //获取卖家信息
+        SellerInfoDTO sellerInfoDTO = Common.getSellerInfo(request,redisUtil) ;
 
         //1.校验参数
         if (bindingResult.hasErrors()){
@@ -242,13 +244,12 @@ public class ProductInfoController {
         productDetailInfoDTO.setProductDetailDescription(productInfoForm.getProductDetailDesc());
         productDetailInfoDTO.setProductDetailIcon(productInfoForm.getProductDetailIcon());
         productDetailInfoDTO.setProductDetailField(productInfoForm.getProductDetailField());
-//        productDetailInfoDTO.setProductNumber(productNumber);
 
         //保存登录用户信息
-        productInfoDTO.setCreator("kweitan");
-        productInfoDTO.setUpdater("kweitan");
-        productDetailInfoDTO.setCreator("kweitan");
-        productDetailInfoDTO.setUpdater("kweitan");
+        productInfoDTO.setCreator(sellerInfoDTO.getSellerName());
+        productInfoDTO.setUpdater(sellerInfoDTO.getSellerName());
+        productDetailInfoDTO.setCreator(sellerInfoDTO.getSellerName());
+        productDetailInfoDTO.setUpdater(sellerInfoDTO.getSellerName());
 
         productInfoDTO.setCreateTime(DateUtils.getTimestamp());
         productInfoDTO.setUpdateTime(DateUtils.getTimestamp());

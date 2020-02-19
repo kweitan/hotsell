@@ -3,6 +3,7 @@ package com.sinjee.admin.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sinjee.admin.dto.OrderMasterDTO;
+import com.sinjee.admin.dto.SellerInfoDTO;
 import com.sinjee.admin.entity.ExpressDelivery;
 import com.sinjee.admin.entity.OrderDetail;
 import com.sinjee.admin.entity.OrderMaster;
@@ -12,6 +13,7 @@ import com.sinjee.annotation.AccessTokenIdempotency;
 import com.sinjee.common.*;
 import com.sinjee.enums.OrderStatusEnum;
 import com.sinjee.enums.PayStatusEnum;
+import com.sinjee.exceptions.SellerAuthorizeException;
 import com.sinjee.vo.ResultVO;
 import com.sinjee.wechat.vo.WechatOrderDetailVO;
 import com.sinjee.wechat.vo.WechatOrderVO;
@@ -42,6 +44,9 @@ public class AdminOrderController {
 
     @Autowired
     private OrderMasterService orderMasterService ;
+
+    @Autowired
+    private RedisUtil redisUtil ;
 
     /**
      * 根据操作类型 订单处理 类型
@@ -92,8 +97,11 @@ public class AdminOrderController {
      * 填写运单号
      */
     @CrossOrigin(origins = "*")
-    @PostMapping(value = "enterTrackingNumber")
-    public ResultVO enterTrackingNumber(@RequestBody @Valid ExpressDeliveryForm expressDeliveryForm, BindingResult bindingResult){
+    @PostMapping(value = "/enterTrackingNumber")
+    public ResultVO enterTrackingNumber(HttpServletRequest request,@RequestBody @Valid ExpressDeliveryForm expressDeliveryForm, BindingResult bindingResult){
+
+        //获取卖家信息
+        SellerInfoDTO sellerInfoDTO = Common.getSellerInfo(request,redisUtil) ;
 
         if (bindingResult.hasErrors()){
             return ResultVOUtil.error(101,bindingResult.getFieldError().getDefaultMessage()) ;
@@ -113,7 +121,7 @@ public class AdminOrderController {
         expressDelivery.setExpressNumber(KeyUtil.genUniqueKey());
         expressDelivery.setOrderNumber(expressDeliveryForm.getOrderNumber());
 
-        Integer res = orderMasterService.enterTrackingNumber(expressDeliveryForm.getOrderNumber(),expressDelivery) ;
+        Integer res = orderMasterService.enterTrackingNumber(sellerInfoDTO.getSellerName(),expressDeliveryForm.getOrderNumber(),expressDelivery) ;
         if (res > 0){
             ResultVOUtil.success() ;
         }

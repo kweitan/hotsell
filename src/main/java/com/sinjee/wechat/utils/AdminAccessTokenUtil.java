@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.sinjee.common.ConfigInfoUtil;
 import com.sinjee.exceptions.MyException;
+import com.sinjee.exceptions.SellerAuthorizeException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
@@ -41,7 +42,7 @@ public class AdminAccessTokenUtil {
                     // 使用了HMAC256加密算法。
                     .sign(Algorithm.HMAC256(ConfigInfoUtil.adminTokenSecret));
         } catch (Exception e){
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return adminToken;
     }
@@ -56,40 +57,12 @@ public class AdminAccessTokenUtil {
             map.put("adminExpireTime",jwt.getExpiresAt()) ;
 
         }catch (Exception e){
-            throw new MyException(202,"token解析不正确!");
+            log.error(e.getMessage());
+            log.info("token解析不正确!");
+            throw new SellerAuthorizeException();
         }
 
         return map;
     }
 
-    public static boolean verify(String adminToken){
-        try {
-            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(ConfigInfoUtil.adminTokenSecret)).withIssuer("auth0").build();
-            DecodedJWT jwt = jwtVerifier.verify(adminToken) ;
-            //1.取出issuer
-            jwt.getIssuer();
-            //2.取出openid
-            jwt.getClaim("sellerNumber");
-            //3.取出过期时间
-            jwt.getExpiresAt();
-
-            /***
-             *
-             * SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-             * Date date = new Date();
-             * date = s.parse("2007-06-06 15:15:00");
-             * Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+8:00"));
-             * calendar.setTime(date);
-             * long time = calendar.getTimeInMillis() / 1000;
-             * **/
-
-            //获取当前时间毫秒
-            System.currentTimeMillis();
-        }catch (Exception e){
-            log.error(e.getMessage());
-            return false ;
-        }
-
-        return true;
-    }
 }

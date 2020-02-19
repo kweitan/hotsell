@@ -247,6 +247,11 @@ public class OrderMasterServiceImpl implements OrderMasterService {
     @Override
     @Transactional
     public Integer cancelOrder(String orderNumber, String openid) {
+        //保存订单流水
+        OrderFlow orderFlow = Common.getOrderFlow(orderNumber,openid,
+                Constant.OrderFlowStatus.CANCEL,Constant.OrderFlowStatus.CANCEL,Constant.OrderFlowStatus.NEW) ;
+        orderFlowMapper.insert(orderFlow) ;
+
         QueryWrapper<OrderMaster> uWrapper = new QueryWrapper();
         uWrapper.eq("order_number",orderNumber).
                 eq("buyer_openid",openid).eq("enable_flag",1)
@@ -281,7 +286,12 @@ public class OrderMasterServiceImpl implements OrderMasterService {
 
     @Override
     @Transactional
-    public Integer updataOrderStatus(QueryWrapper<OrderMaster> wrapper,String orderStatus,String payStatus) {
+    public Integer updataOrderStatus(QueryWrapper<OrderMaster> wrapper,String orderStatus,String payStatus,String orderNumber,String openid) {
+        //保存订单流水
+        OrderFlow orderFlow = Common.getOrderFlow(orderNumber,openid,
+                Constant.OrderFlowStatus.FINISHED,Constant.OrderFlowStatus.FINISHED,Constant.OrderFlowStatus.SHIPMENT) ;
+        orderFlowMapper.insert(orderFlow) ;
+
         OrderMaster orderMaster = new OrderMaster() ;
         orderMaster.setOrderStatus(orderStatus);
         orderMaster.setPayStatus(payStatus);
@@ -416,16 +426,16 @@ public class OrderMasterServiceImpl implements OrderMasterService {
 
     @Override
     @Transactional
-    public Integer enterTrackingNumber(String orderNumber, ExpressDelivery expressDelivery) {
+    public Integer enterTrackingNumber(String creator,String orderNumber, ExpressDelivery expressDelivery) {
 
         //保存订单流水
-        OrderFlow orderFlow = Common.getOrderFlow(orderNumber,"","已经发货",
+        OrderFlow orderFlow = Common.getOrderFlow(orderNumber,creator,"已经发货",
                 Constant.OrderFlowStatus.SHIPMENT,Constant.OrderFlowStatus.SUCCESS) ;
         orderFlowMapper.insert(orderFlow) ;
 
         //更新物流信息表
-        expressDelivery.setCreator("");
-        expressDelivery.setUpdater("");
+        expressDelivery.setCreator(creator);
+        expressDelivery.setUpdater(creator);
         expressDelivery.setCreateTime(DateUtils.getTimestamp());
         expressDelivery.setUpdateTime(DateUtils.getTimestamp());
         expressDeliveryMapper.insert(expressDelivery) ;

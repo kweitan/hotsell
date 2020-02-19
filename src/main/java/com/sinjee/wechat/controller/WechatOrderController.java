@@ -280,7 +280,7 @@ public class WechatOrderController {
         String orderStatus = OrderStatusEnum.FINISHED.getCode();
         String payStatus = PayStatusEnum.CLOSED.getCode() ;
 
-        Integer res = orderMasterService.updataOrderStatus(wrapper,orderStatus,payStatus) ;
+        Integer res = orderMasterService.updataOrderStatus(wrapper,orderStatus,payStatus,orderNumber,openid) ;
 
         if (res > 0){
             return ResultVOUtil.success();

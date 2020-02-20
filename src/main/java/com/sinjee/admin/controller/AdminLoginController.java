@@ -1,6 +1,7 @@
 package com.sinjee.admin.controller;
 
 import com.sinjee.admin.dto.SellerInfoDTO;
+import com.sinjee.admin.form.SellerLoginForm;
 import com.sinjee.admin.service.SellerInfoService;
 import com.sinjee.common.*;
 import com.sinjee.vo.ResultVO;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 创建时间 2020 - 02 -19
@@ -37,8 +40,7 @@ public class AdminLoginController {
 
     @CrossOrigin(origins = "*")
     @PostMapping("/login")
-    public ResultVO login(HttpServletRequest request, String username,
-                          String password, String verifyCode){
+    public ResultVO login(HttpServletRequest request,@RequestBody SellerLoginForm sellerLoginForm){
 
         //校验账号是否冻结
         Object beforeVerify = redisUtil.getString(KeyUtil.getIpAddr(request)+IP_COUNT);
@@ -49,7 +51,8 @@ public class AdminLoginController {
             }
         }
 
-        if (StringUtils.isBlank(username) || StringUtils.isBlank(password) || StringUtils.isBlank(verifyCode)){
+        if (StringUtils.isBlank(sellerLoginForm.getUsername()) || StringUtils.isBlank(sellerLoginForm.getPassword())
+                || StringUtils.isBlank(sellerLoginForm.getVerifyCode())){
             return ResultVOUtil.error(101,"用户名密码为空");
         }
 
@@ -59,7 +62,7 @@ public class AdminLoginController {
         }
 
         String code = (String)obj ;
-        if (!code.equals(verifyCode)){
+        if (!code.equals(sellerLoginForm.getVerifyCode())){
             return ResultVOUtil.error(101,"验证码不正确");
 
         }
@@ -67,8 +70,8 @@ public class AdminLoginController {
         SellerInfoDTO sellerInfoDTO = null ;
         try {
             //校验用户密码
-            String passEnctry = AESCBCUtil.encrypt(password,passwordSalt) ;
-            sellerInfoDTO = sellerInfoService.verifyUser(username,passEnctry) ;
+            String passEnctry = AESCBCUtil.encrypt(sellerLoginForm.getPassword(),passwordSalt) ;
+            sellerInfoDTO = sellerInfoService.verifyUser(sellerLoginForm.getUsername(),passEnctry) ;
             if (null == sellerInfoDTO){
                 String res = "用户名或密码不正确" ;
                 Object count = redisUtil.getString(KeyUtil.getIpAddr(request)+IP_COUNT);
@@ -93,9 +96,15 @@ public class AdminLoginController {
 
         //认证成功 返回adminToken
         String adminToken = AdminAccessTokenUtil.sign(sellerInfoDTO.getSellerNumber()) ;
+        log.info("adminToken={}",adminToken);
+        Map<String,Object> map = new HashMap<>() ;
+        map.put("adminToken",adminToken);
+        map.put("sellerName",sellerInfoDTO.getSellerName());
+        map.put("avatarUrl",sellerInfoDTO.getAvatarUrl());
+        map.put("isLogin",true) ;
         redisUtil.setString(sellerInfoDTO.getSellerNumber(),sellerInfoDTO, Constant.Redis.EXPIRE_TIME_28DAY) ;
 
-        return ResultVOUtil.success(adminToken) ;
+        return ResultVOUtil.success(map) ;
     }
 
 }

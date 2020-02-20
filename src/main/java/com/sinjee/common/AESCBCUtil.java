@@ -85,7 +85,7 @@ public class AESCBCUtil {
 
     public static void main(String[] args) {
         try {
-            String content = "123456abc***";
+            String content = "guixin";
             String salt = "4aW9Pnzx=Q80Xqib";
             String encoded = encrypt(content, salt);
             log.info("加密之前：{}", content);

@@ -4,6 +4,7 @@ import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.sinjee.common.KeyUtil;
 import com.sinjee.common.MathUtil;
 import com.sinjee.common.RedisUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,6 +25,7 @@ import java.io.ByteArrayOutputStream;
  */
 @Controller
 @RequestMapping("/admin")
+@Slf4j
 public class CaptchaController {
 
     @Autowired
@@ -46,7 +48,10 @@ public class CaptchaController {
         try {
             //验证码
             String createText = defaultKaptcha.createText();
+            log.info("验证码={}",createText);
             //验证码存放到redis 有效期2分钟
+            String ip = KeyUtil.getIpAddr(request) ;
+            log.info("ip={}",ip);
             redisUtil.setString(KeyUtil.getIpAddr(request),createText,120);
             //使用生产的验证码字符串返回一个BufferedImage对象并转为byte写入到byte数组中
             BufferedImage challenge = defaultKaptcha.createImage(createText);

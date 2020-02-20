@@ -3,14 +3,14 @@ import types from "./../types";
 
 const user = {
     namespaced: true,
-    state ={
+    state : {
         adminToken:'' || localStorage.getItem("adminToken"),
         avatarUrl: '' || localStorage.getItem("avatarUrl"),
         sellerName: '' || localStorage.getItem("sellerName")
     },
 
 // 定义 getters
-    getters ={
+    getters : {
         adminToken(state){
             return state.adminToken
         },
@@ -22,7 +22,7 @@ const user = {
         }
     },
 
-    actions ={
+    actions : {
         SETUSERINFO({ commit }, userinfo ){
             commit(types.SETUSERINFO,userinfo)
         },
@@ -31,7 +31,7 @@ const user = {
         }
     },
 
-    mutations ={
+    mutations : {
         [types.SETUSERINFO](state,userinfo){
             state.adminToken = userinfo.adminToken;
             state.avatarUrl = userinfo.avatarUrl;
@@ -47,15 +47,14 @@ const user = {
             localStorage.setItem("adminToken","");
             localStorage.setItem("avatarUrl","");
             localStorage.setItem("sellerName", "");
-        },
+        }
     }
 }
 
 
 // 最后统一导出
-export default {
-    user
-}
+export default user
+
 
 // getter
 // this.$store.getters['moduleB/bFullName'];

@@ -22,7 +22,7 @@
 
     .login-content-items{
         width: 400px;
-        height: 280px;
+        height: 320px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -42,21 +42,71 @@
         color: #409EFF;
         font-weight: bold;
     }
+
+    .el-input__inner {
+        height: 33px;
+        font-size: 13px;
+        box-shadow: none;
+        border: 1px solid #e9e9e9;
+    }
+
+    .el-input__inner:hover {
+        border-color: #e9e9e9;
+    }
+
+    .el-input__inner:focus {
+        border-color: #42a5f5;
+        box-shadow: none;
+        transition-duration: .5s;
+    }
+
+    .el-input__inner::-webkit-input-placeholder {
+        line-height: 20px;
+    }
+
+    .el-input__inner, .el-checkbox__inner, .el-textarea__inner, .el-button {
+        border-radius: 0;
+        border: 0 none;
+        border-bottom: 1px solid #EBEEF5;
+    }
+    .verify-content{
+        display: flex;
+    }
+
+    .refreshImages{
+        position: absolute;
+        top: -16px;
+        left: 200px;
+        height: 46px;
+        width: 140px;
+    }
 </style>
 
 <body>
 <div class="login-content" id="app">
-    <div style="height: 120px;"></div>
+    <div style="height: 60px;"></div>
     <div class="login-content-logo">LOGO</div>
     <div class="login-content-items">
         <div style="height: 60px;"></div>
-        <el-input
+        <el-input style="width: 350px;height: 48px;"
                 placeholder="请输入用户名"
                 v-model="username"
                 clearable>
         </el-input>
         <div class="dividing-line"></div>
         <el-input placeholder="请输入密码" v-model="password" show-password style="width: 350px;height: 48px;"></el-input>
+        <div class="dividing-line"></div>
+        <div class="verify-content">
+            <div style="position: relative">
+                <el-input style="width: 350px;height: 48px;"
+                          placeholder="请输入验证码"
+                          v-model="verifyCode"
+                          clearable>
+                </el-input>
+                <image class="refreshImages" src="https://eticketstg.orangebank.com.cn/eticket-person/view/weixin/captcha"></image>
+            </div>
+
+        </div>
         <div style="height: 20px;"></div>
         <el-button type="primary" style="width: 350px;height: 36px;" :loading="true" >登 录</el-button>
     </div>
@@ -70,8 +120,10 @@
         el: '#app',
         data: {
             message: 'Hello Vue!',
-                username: '',
-                password: ''
+            username: '',
+            password: '',
+            verifyCode:'',
+            captcha: ''
         }
     })
 </script>

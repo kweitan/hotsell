@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinjee.admin.mapper.SysMenuMapper">
+    <resultMap id="BaseResultMap" type="com.sinjee.admin.entity.SysMenu">
+        <result column="sys_menu_id" jdbcType="INTEGER" property="sysMenuId" />
+        <result column="sys_menu_number" jdbcType="VARCHAR" property="sysMenuNnumber" />
+        <result column="sys_menu_name" jdbcType="VARCHAR" property="sysMenuName" />
+        <result column="sys_menu_url" jdbcType="VARCHAR" property="sysMenuUrl" />
+        <result column="sys_menu_level" jdbcType="TINYINT" property="sysMenuLevel" />
+        <result column="sys_menu_parent_id" jdbcType="INTEGER" property="sysMenuParentId" />
+        <result column="sys_menu_is_leaf" jdbcType="TINYINT" property="sysMenuIsLeaf" />
+        <result column="sys_menu_icon" jdbcType="VARCHAR" property="sysMenuIcon" />
+        <result column="sys_menu_path" jdbcType="VARCHAR" property="sysMenuPath" />
+        <result column="sys_menu_remark" jdbcType="VARCHAR" property="sysMenuRemark" />
+        <result column="version" jdbcType="INTEGER" property="version" />
+        <result column="enable_flag" jdbcType="TINYINT" property="enableFlag" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="creator" jdbcType="VARCHAR" property="creator" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="updater" jdbcType="VARCHAR" property="updater" />
+    </resultMap>
+
+
+</mapper>

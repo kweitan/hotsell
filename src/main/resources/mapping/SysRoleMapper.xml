@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinjee.admin.mapper.SysRoleMapper">
+    <resultMap id="BaseResultMap" type="com.sinjee.admin.entity.SysRole">
+        <result column="sys_role_id" jdbcType="INTEGER" property="sysRoleId" />
+        <result column="sys_role_name" jdbcType="VARCHAR" property="sysRoleName" />
+        <result column="sys_role_number" jdbcType="VARCHAR" property="sysRoleNumber" />
+        <result column="sys_role_type" jdbcType="VARCHAR" property="sysRoleType" />
+        <result column="sys_role_parent_id" jdbcType="INTEGER" property="sysRoleParentId" />
+        <result column="sys_role_remark" jdbcType="VARCHAR" property="sysRoleRemark" />
+        <result column="version" jdbcType="INTEGER" property="version" />
+        <result column="enable_flag" jdbcType="TINYINT" property="enableFlag" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="creator" jdbcType="VARCHAR" property="creator" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="updater" jdbcType="VARCHAR" property="updater" />
+    </resultMap>
+
+</mapper>

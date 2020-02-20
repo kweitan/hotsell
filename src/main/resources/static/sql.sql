@@ -335,3 +335,41 @@ create table `seller_info` (
   `updater` varchar(32) not null comment '更新者',
     primary key (`seller_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 comment '卖家信息表';
+
+	-- 菜单信息 --
+create table `sys_menu` (
+  `sys_menu_id` int unsigned not null auto_increment,
+  `sys_menu_name` varchar(32) not null comment '菜单名称',
+  `sys_menu_number` varchar(32) not null comment '菜单编码',
+  `sys_menu_url` varchar(128) comment '菜单路径',
+  `sys_menu_level` tinyint(3) comment '菜单级别',
+  `sys_menu_parent_id` int comment '父ID',
+  `sys_menu_is_leaf` tinyint(3) comment '菜单叶子节点 1-叶子 0-非叶子',
+  `sys_menu_icon` varchar(128) comment '菜单图标',
+  `sys_menu_path` varchar(64) comment '菜单path',
+  `sys_menu_remark` varchar(64) comment '备注',
+  `version` int comment '版本号',
+  `enable_flag` tinyint(3) DEFAULT '1' COMMENT '状态,1-可用 0-不可用',
+  `create_time` timestamp not null comment '创建时间',
+  `creator` varchar(32) not null comment '创建者',
+  `update_time` timestamp not null comment '修改时间',
+  `updater` varchar(32) not null comment '更新者',
+    primary key (`sys_menu_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 comment '菜单信息表';
+
+	-- 角色信息表 --
+create table `sys_role` (
+  `sys_role_id` int unsigned not null auto_increment,
+  `sys_role_name` varchar(32) not null comment '角色名称',
+  `sys_role_number` varchar(32) not null comment '角色编码',
+  `sys_role_type` varchar(16) comment '角色类型',
+  `sys_role_parent_id` int comment '父ID',
+  `sys_role_remark` varchar(64) comment '备注',
+  `version` int comment '版本号',
+  `enable_flag` tinyint(3) DEFAULT '1' COMMENT '状态,1-可用 0-不可用',
+  `create_time` timestamp not null comment '创建时间',
+  `creator` varchar(32) not null comment '创建者',
+  `update_time` timestamp not null comment '修改时间',
+  `updater` varchar(32) not null comment '更新者',
+    primary key (`sys_role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 comment '角色信息表';

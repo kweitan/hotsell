@@ -222,7 +222,13 @@ public class WechatOrderController {
             return ResultVOUtil.error(121,"数据不一致");
         }
 
-        Integer res = orderMasterService.applyOrder(orderNumber,openid) ;
+        //退款类型
+        String refundType = "" ;
+
+        //退款原因
+        String refundDesc = "" ;
+
+        Integer res = orderMasterService.applyOrder(orderNumber,openid,refundType,refundDesc) ;
 
         if (res > 0){
             return ResultVOUtil.success();

@@ -31,7 +31,7 @@ public interface OrderMasterService {
 
     Integer cancelOrder(String orderNumber,String openid);
 
-    Integer applyOrder(String orderNumber,String openid);
+    Integer applyOrder(String orderNumber,String openid,String refundType,String refundDesc);
 
     Integer updataOrderStatus(QueryWrapper<OrderMaster> wrapper,String orderStatus,String payStatus,String orderNumber,String openid);
 

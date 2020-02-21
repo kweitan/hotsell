@@ -8,9 +8,11 @@ import com.sinjee.admin.dto.ProductInfoDTO;
 import com.sinjee.admin.entity.ExpressDelivery;
 import com.sinjee.admin.entity.OrderDetail;
 import com.sinjee.admin.entity.OrderMaster;
+import com.sinjee.admin.entity.RefundOrder;
 import com.sinjee.admin.mapper.ExpressDeliveryMapper;
 import com.sinjee.admin.mapper.OrderDetailMapper;
 import com.sinjee.admin.mapper.OrderMasterMapper;
+import com.sinjee.admin.mapper.RefundOrderMapper;
 import com.sinjee.admin.service.OrderMasterService;
 import com.sinjee.admin.service.ProductInfoService;
 import com.sinjee.common.*;
@@ -57,6 +59,9 @@ public class OrderMasterServiceImpl implements OrderMasterService {
 
     @Autowired
     private ExpressDeliveryMapper expressDeliveryMapper ;
+
+    @Autowired
+    private RefundOrderMapper refundOrderMapper ;
 
     @Override
     @Transactional
@@ -268,14 +273,29 @@ public class OrderMasterServiceImpl implements OrderMasterService {
 
     @Override
     @Transactional
-    public Integer applyOrder(String orderNumber, String openid) {
+    public Integer applyOrder(String orderNumber, String openid,String refundType,String refundDesc) {
         QueryWrapper<OrderMaster> uWrapper = new QueryWrapper();
         uWrapper.eq("order_number",orderNumber).
                 eq("buyer_openid",openid).eq("enable_flag",1)
                 .eq("order_status","NEW").eq("pay_status","SUCCESS");
 
-        //向微信发起退款申请 成功则修改订单状态
-        //todo
+        //生成订单流水
+        OrderFlow orderFlow = Common.getOrderFlow(orderNumber,openid,
+                "用户退款申请",Constant.OrderFlowStatus.REFUND,Constant.OrderFlowStatus.SUCCESS) ;
+        orderFlowMapper.insert(orderFlow) ;
+
+        //向微信发起退款申请 成功则修改订单状态 保存到退款表中RefundOrder
+        RefundOrder refundOrder = new RefundOrder() ;
+        refundOrder.setOrderNumber(orderNumber);
+        refundOrder.setRefundNumber(IdUtil.genId());
+        refundOrder.setRefundType(refundType);
+        refundOrder.setRefundDesc(refundDesc);
+        refundOrder.setCreator(openid);
+        refundOrder.setUpdater(openid);
+        refundOrder.setUpdateTime(DateUtils.getTimestamp());
+        refundOrder.setCreateTime(DateUtils.getTimestamp());
+        refundOrderMapper.insert(refundOrder) ;
+
 
         OrderMaster orderMaster = new OrderMaster();
         orderMaster.setOrderStatus(OrderStatusEnum.REFUND.getCode());

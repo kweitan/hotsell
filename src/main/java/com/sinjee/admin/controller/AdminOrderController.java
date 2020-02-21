@@ -7,6 +7,7 @@ import com.sinjee.admin.dto.SellerInfoDTO;
 import com.sinjee.admin.entity.ExpressDelivery;
 import com.sinjee.admin.entity.OrderDetail;
 import com.sinjee.admin.entity.OrderMaster;
+import com.sinjee.admin.form.AdminOrderForm;
 import com.sinjee.admin.form.ExpressDeliveryForm;
 import com.sinjee.admin.service.OrderMasterService;
 import com.sinjee.annotation.AccessTokenIdempotency;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -128,4 +130,84 @@ public class AdminOrderController {
 
         return ResultVOUtil.error(101,"填写运单号失败") ;
     }
+
+    /**
+     * 查看订单详情
+     */
+    @CrossOrigin(origins = "*")
+    @GetMapping("/lookupOrderDetail")
+    public ResultVO lookupOrderDetail(@RequestParam String orderNumber,
+                                      @RequestParam String hashNumber){
+        //校验
+        if(!HashUtil.verify(orderNumber,salt,hashNumber)){
+            return ResultVOUtil.error(101,"数据不一致!") ;
+        }
+
+        OrderMasterDTO orderMasterDTO = orderMasterService.lookupDetailByOrderNumber(orderNumber) ;
+        WechatOrderVO wechatOrderVO = new WechatOrderVO() ;
+        CacheBeanCopier.copy(orderMasterDTO,wechatOrderVO);
+
+        List<WechatOrderDetailVO> wechatOrderDetailVOList = BeanConversionUtils.
+                copyToAnotherList(WechatOrderDetailVO.class,orderMasterDTO.getOrderDetailList()) ;
+
+        wechatOrderVO.setOrderDetailList(wechatOrderDetailVOList);
+
+        return ResultVOUtil.success(wechatOrderVO) ;
+    }
+
+    /**
+     * 修改订单支付金额
+     */
+    @CrossOrigin(origins = "*")
+    @PostMapping(value = "/modifyActPayFee")
+    public ResultVO modifyActPayFee(HttpServletRequest request, @RequestBody @Valid AdminOrderForm adminOrderForm, BindingResult bindingResult){
+        //获取卖家信息
+        SellerInfoDTO sellerInfoDTO = Common.getSellerInfo(request,redisUtil) ;
+
+        if (bindingResult.hasErrors()){
+            return ResultVOUtil.error(101,bindingResult.getFieldError().getDefaultMessage()) ;
+        }
+
+        if (!HashUtil.verify(adminOrderForm.getOrderNumber(),salt,adminOrderForm.getHashNumber())){
+            return ResultVOUtil.error(121,"数据不一致");
+        }
+
+        //检验金额格式是否正确
+        if (!(MathUtil.isFee(adminOrderForm.getActFee()) && MathUtil.isFee(adminOrderForm.getActPayFee()))){
+            return ResultVOUtil.error(121,"金额格式不对");
+        }
+
+        OrderMasterDTO orderMasterDTO = orderMasterService.findByOrderNumber(adminOrderForm.getOrderNumber()) ;
+
+        if (!("+".equals(adminOrderForm.getSymbol()) || "-".equals(adminOrderForm.getSymbol()))){
+            return ResultVOUtil.error(121,"加减金额符号不对");
+        }
+
+        //金额对比
+        BigDecimal totalFee = orderMasterDTO.getOrderAmount() ;
+        if ("+".equals(adminOrderForm.getSymbol())){
+            BigDecimal addFee = new BigDecimal(adminOrderForm.getActFee()).add(totalFee) ;
+            BigDecimal fee = new BigDecimal(adminOrderForm.getActPayFee()) ;
+            if(!MathUtil.equals(addFee.doubleValue(),fee.doubleValue())){
+                return ResultVOUtil.error(121,"实际支付金额不对");
+            }
+        }
+
+        if ("-".equals(adminOrderForm.getSymbol())){
+            BigDecimal subFee = totalFee.subtract(new BigDecimal(adminOrderForm.getActFee())) ;
+            BigDecimal fee = new BigDecimal(adminOrderForm.getActPayFee()) ;
+            if(!MathUtil.equals(subFee.doubleValue(),fee.doubleValue())){
+                return ResultVOUtil.error(121,"实际支付金额不对");
+            }
+        }
+
+        Integer res = orderMasterService.modifyActFee(sellerInfoDTO.getSellerName(),adminOrderForm.getOrderNumber(),adminOrderForm.getActPayFee()) ;
+        if (res > 0){
+            ResultVOUtil.success() ;
+        }
+
+        return ResultVOUtil.error(101,"修改支付金额出错") ;
+
+    }
+
 }

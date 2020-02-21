@@ -45,4 +45,10 @@ public interface OrderMasterService {
     /** 中台 填写运单号**/
     Integer enterTrackingNumber(String creator,String orderNumber, ExpressDelivery expressDelivery);
 
+    /** 中台 订单想起专用**/
+    OrderMasterDTO lookupDetailByOrderNumber(String orderNumber);
+
+    /** 中台 修改订单支付金额**/
+    Integer modifyActFee(String creator,String orderNumber,String actFee);
+
 }

@@ -79,7 +79,7 @@ public class WechatPayController {
             orderRequest.setOutTradeNo(orderNumber);
 
             /**标价金额 订单总金额，单位为分**/
-            orderRequest.setTotalFee(BaseWxPayRequest.yuanToFen(orderMasterDTO.getOrderAmount().toString()));//元转成分
+            orderRequest.setTotalFee(BaseWxPayRequest.yuanToFen(orderMasterDTO.getActAmount().toString()));//元转成分
 
             /**用户openid**/
             orderRequest.setOpenid(openid);

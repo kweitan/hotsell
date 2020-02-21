@@ -451,6 +451,40 @@ public class OrderMasterServiceImpl implements OrderMasterService {
         return orderMasterMapper.update(orderMaster,wrapper);
     }
 
+    @Override
+    public OrderMasterDTO lookupDetailByOrderNumber(String orderNumber) {
+        QueryWrapper<OrderMaster> wrapper = new QueryWrapper();
+        wrapper.eq("order_number",orderNumber).eq("enable_flag",1);
+        OrderMaster orderMaster = orderMasterMapper.selectOne(wrapper) ;
+        if (null == orderMaster || StringUtils.isBlank(orderMaster.getOrderNumber())){
+            throw new MyException(257,"订单不存在");
+        }
+        OrderMasterDTO orderMasterDTO = new OrderMasterDTO() ;
+        CacheBeanCopier.copy(orderMaster,orderMasterDTO);
+
+        QueryWrapper<OrderDetail> detailWrapper = new QueryWrapper();
+        detailWrapper.eq("order_number",orderMaster.getOrderNumber()).eq("enable_flag",1);
+        List<OrderDetail> orderDetailList = orderDetailMapper.selectList(detailWrapper) ;
+        orderMasterDTO.setOrderDetailList(orderDetailList);
+        return orderMasterDTO;
+    }
+
+    @Override
+    @Transactional
+    public Integer modifyActFee(String creator,String orderNumber, String actFee) {
+
+        //记录订单流水
+        OrderFlow orderFlow = Common.getOrderFlow(orderNumber,creator,
+                "修改订单金额",Constant.OrderFlowStatus.NEW,Constant.OrderFlowStatus.NEW) ;
+        orderFlowMapper.insert(orderFlow) ;
+
+        OrderMaster orderMaster = new OrderMaster() ;
+        orderMaster.setActAmount(new BigDecimal(actFee));
+        QueryWrapper<OrderMaster> wrapper = new QueryWrapper();
+        wrapper.eq("order_number",orderNumber).eq("enable_flag",1);
+        return orderMasterMapper.update(orderMaster,wrapper);
+    }
+
     private IPage<OrderMasterDTO> returnPageByMaster(Integer currentPage, Integer pageSize,QueryWrapper<OrderMaster> wrapper){
         Page<OrderMaster> page = new Page<>(currentPage,pageSize) ;
         //从数据库分页获取数据

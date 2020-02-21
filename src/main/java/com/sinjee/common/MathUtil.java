@@ -1,5 +1,9 @@
 package com.sinjee.common;
 
+import com.google.common.base.Strings;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -29,5 +33,18 @@ public class MathUtil {
     public static boolean isInteger(String str) {
         Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
         return pattern.matcher(str).matches();
+    }
+
+    /**
+     * 价格验证，正则（小数点前6位，小数点后2位）
+     * @param fee
+     * @return
+     */
+    public static boolean isFee(String fee) {
+        if (StringUtils.isBlank(fee))
+            return false;
+        Pattern p = Pattern.compile("^(?:0\\.\\d{0,1}[1-9]|(?!0)\\d{1,6}(?:\\.\\d{0,1}[1-9])?)$");
+        Matcher m = p.matcher(fee);
+        return m.find();
     }
 }

@@ -2,6 +2,7 @@ package com.sinjee.wechat;
 
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.github.binarywang.wxpay.service.impl.WxPayServiceImpl;
+import com.sinjee.common.MathUtil;
 
 import java.security.SecureRandom;
 import java.awt.AWTException;
@@ -49,31 +50,42 @@ public class WechatTest {
         }
 
         public static void main(String[] args) throws AWTException{
-            WechatTest app = new WechatTest();
-            StringBuffer msg = new StringBuffer();
-            long cnt = 0;
-            while(true){
-                cnt ++;
-                //msg = new StringBuffer();
-                //msg.append("\r随机消息"+cnt+"    ").append(StringUtil.dateToStr(new Date())+" \r");
-                //msg.append("*&@@/wx￥%#刷！@#￥%……分……&*/wx￥#");
-                //StringSelection stsel  = new StringSelection(msg.toString());
-                //app.getSystem().setContents(stsel, stsel);
-                //间隔5s
-                app.getRobot().delay(20000);
-                //移动鼠标到聊天窗口的输入框
-                app.moveMouse(72, 453);
-                //鼠标右击
-                //app.rightClick();
-                //移动鼠标到"粘贴"菜单
-                //app.moveMouse(173,511);
-                //选择"粘贴"
-                //app.leftClick();
-                //移动鼠标到"发送"按钮
-                //app.moveMouse(357,526);
-                //发送
-                app.leftClick();
-            }
+
+            System.out.println(MathUtil.isFee("22.22"));
+            System.out.println(MathUtil.isFee("0.01"));
+            System.out.println(MathUtil.isFee("0.000"));
+            System.out.println(MathUtil.isFee("0.00"));
+            System.out.println(MathUtil.isFee("0.9"));
+            System.out.println(MathUtil.isFee("0.090"));
+            System.out.println(MathUtil.isFee("654644645644.090"));
+            System.out.println(MathUtil.isFee("999999.090"));
+            System.out.println(MathUtil.isFee("000"));
+            System.out.println(MathUtil.isFee("0"));
+//            WechatTest app = new WechatTest();
+//            StringBuffer msg = new StringBuffer();
+//            long cnt = 0;
+//            while(true){
+//                cnt ++;
+//                //msg = new StringBuffer();
+//                //msg.append("\r随机消息"+cnt+"    ").append(StringUtil.dateToStr(new Date())+" \r");
+//                //msg.append("*&@@/wx￥%#刷！@#￥%……分……&*/wx￥#");
+//                //StringSelection stsel  = new StringSelection(msg.toString());
+//                //app.getSystem().setContents(stsel, stsel);
+//                //间隔5s
+//                app.getRobot().delay(20000);
+//                //移动鼠标到聊天窗口的输入框
+//                app.moveMouse(72, 453);
+//                //鼠标右击
+//                //app.rightClick();
+//                //移动鼠标到"粘贴"菜单
+//                //app.moveMouse(173,511);
+//                //选择"粘贴"
+//                //app.leftClick();
+//                //移动鼠标到"发送"按钮
+//                //app.moveMouse(357,526);
+//                //发送
+//                app.leftClick();
+//            }
         }
         public Robot getRobot() {
             return robot;

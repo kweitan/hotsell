@@ -107,4 +107,24 @@ public class AdminLoginController {
         return ResultVOUtil.success(map) ;
     }
 
+    /**
+     * 退出
+     * @param request
+     * @return
+     */
+    @CrossOrigin(origins = "*")
+    @PostMapping("/logout")
+    public ResultVO logout(HttpServletRequest request){
+        //清除IP登录统计
+        redisUtil.deleteKey(KeyUtil.getIpAddr(request)+IP_COUNT);
+
+        //获取卖家信息
+        SellerInfoDTO sellerInfoDTO = Common.getSellerInfo(request,redisUtil) ;
+
+        //情况用户登录资料
+        redisUtil.deleteKey(sellerInfoDTO.getSellerNumber()) ;
+
+        return ResultVOUtil.success() ;
+    }
+
 }

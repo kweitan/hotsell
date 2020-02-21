@@ -39,7 +39,7 @@ public class RedisUtil {
         if (time > 0) {
             redisTemplate.expire(key, time, TimeUnit.SECONDS);
         } else {
-            throw new MyException(0,"设置的时间不能为0或者小于0！！");
+            throw new MyException(1,"设置的时间不能为0或者小于0！！");
         }
     }
 

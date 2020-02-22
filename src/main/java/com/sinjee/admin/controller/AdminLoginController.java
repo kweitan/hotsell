@@ -4,6 +4,7 @@ import com.sinjee.admin.dto.SellerInfoDTO;
 import com.sinjee.admin.form.SellerLoginForm;
 import com.sinjee.admin.service.SellerInfoService;
 import com.sinjee.common.*;
+import com.sinjee.exceptions.SellerAuthorizeException;
 import com.sinjee.vo.ResultVO;
 import com.sinjee.wechat.utils.AdminAccessTokenUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -62,6 +63,8 @@ public class AdminLoginController {
         }
 
         String code = (String)obj ;
+        log.info("原生验证码={}",code);
+        log.info("传入验证码={}",sellerLoginForm.getVerifyCode());
         if (!code.equals(sellerLoginForm.getVerifyCode())){
             return ResultVOUtil.error(101,"验证码不正确");
 
@@ -101,7 +104,7 @@ public class AdminLoginController {
         map.put("adminToken",adminToken);
         map.put("sellerName",sellerInfoDTO.getSellerName());
         map.put("avatarUrl",sellerInfoDTO.getAvatarUrl());
-        map.put("isLogin",true) ;
+        map.put("isLogin",'1') ;
         redisUtil.setString(sellerInfoDTO.getSellerNumber(),sellerInfoDTO, Constant.Redis.EXPIRE_TIME_28DAY) ;
 
         return ResultVOUtil.success(map) ;
@@ -115,14 +118,22 @@ public class AdminLoginController {
     @CrossOrigin(origins = "*")
     @PostMapping("/logout")
     public ResultVO logout(HttpServletRequest request){
+
+        String adminToken = request.getHeader("adminToken");// 从 http 请求头中取出 adminToken
+        if (StringUtils.isBlank(adminToken)){
+            log.info("已经过期,重新登录请求token");
+            throw new SellerAuthorizeException();
+        }
+        Map<String,Object> map = AdminAccessTokenUtil.getMap(adminToken) ;
+        //sellerNumber
+        String sellerNumber = (String)map.get("sellerNumber") ;
+
+
         //清除IP登录统计
         redisUtil.deleteKey(KeyUtil.getIpAddr(request)+IP_COUNT);
 
-        //获取卖家信息
-        SellerInfoDTO sellerInfoDTO = Common.getSellerInfo(request,redisUtil) ;
-
         //情况用户登录资料
-        redisUtil.deleteKey(sellerInfoDTO.getSellerNumber()) ;
+        redisUtil.deleteKey(sellerNumber) ;
 
         return ResultVOUtil.success() ;
     }

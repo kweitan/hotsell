@@ -1,6 +1,7 @@
 package com.sinjee.admin.controller;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
+import com.sinjee.annotation.AccessLimit;
 import com.sinjee.common.KeyUtil;
 import com.sinjee.common.MathUtil;
 import com.sinjee.common.RedisUtil;
@@ -42,6 +43,7 @@ public class CaptchaController {
      */
     @CrossOrigin(origins = "*")
     @RequestMapping("/defaultKaptcha")
+    @AccessLimit(seconds=60,maxCount=5)
     public void defaultKaptcha(HttpServletRequest request, HttpServletResponse response) throws Exception {
         byte[] captchaChallengeAsJpeg = null;
         ByteArrayOutputStream jpegOutputStream = new ByteArrayOutputStream();
@@ -52,7 +54,7 @@ public class CaptchaController {
             //验证码存放到redis 有效期2分钟
             String ip = KeyUtil.getIpAddr(request) ;
             log.info("ip={}",ip);
-            redisUtil.setString(KeyUtil.getIpAddr(request),createText,120);
+            redisUtil.setString(ip,createText,120);
             //使用生产的验证码字符串返回一个BufferedImage对象并转为byte写入到byte数组中
             BufferedImage challenge = defaultKaptcha.createImage(createText);
             ImageIO.write(challenge, "jpg", jpegOutputStream);

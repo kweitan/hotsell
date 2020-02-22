@@ -54,7 +54,7 @@ public class BeanConfiguration implements WebMvcConfigurer {
          */
         registry.addInterceptor(accessLimtInterceptor)
                 // addPathPatterns 用于添加拦截规则 ， 先把所有路径都加入拦截， 再一个个排除
-                .addPathPatterns("/wechat/myforward/saveMyForward","/wechat/buyer/service");
+                .addPathPatterns("/wechat/myforward/saveMyForward","/wechat/buyer/service","/admin/defaultKaptcha");
         // excludePathPatterns 表示改路径不用拦截
 //                .excludePathPatterns("/");
 

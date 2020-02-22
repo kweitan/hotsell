@@ -155,8 +155,9 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         QueryWrapper<ProductCategory> wrapper = new QueryWrapper();
         wrapper.eq("enable_flag",1).like("category_name",searchName).orderByAsc("sequence_id");
         Page<ProductCategory> page = new Page<ProductCategory>(currentPage,pageSize) ;
+
         //从数据库分页获取数据
-        IPage<ProductCategory> mapPage = productCategoryMapper.selectProductCategoryInfoByPage(page,wrapper);
+        IPage<ProductCategory> mapPage = productCategoryMapper.selectPage(page,wrapper);
         log.info("总页数"+mapPage.getPages());
         log.info("总记录数"+mapPage.getTotal());
         List<ProductCategory> productCategoryList = mapPage.getRecords() ;

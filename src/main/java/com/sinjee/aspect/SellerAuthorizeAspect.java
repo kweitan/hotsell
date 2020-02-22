@@ -46,9 +46,12 @@ public class SellerAuthorizeAspect {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
 
+
+
         log.info("进入登录AOP拦截器");
         String adminToken = request.getHeader("adminToken");// 从 http 请求头中取出 adminToken
         if (StringUtils.isBlank(adminToken)){
+            log.info("adminToken 不存在==="+ request.getMethod());
             log.info("已经过期,重新登录请求token");
             throw new SellerAuthorizeException();
         }
@@ -59,6 +62,7 @@ public class SellerAuthorizeAspect {
         boolean isExist = redisUtil.existsKey(sellerNumber);
         if (!isExist){
             //从数据库查
+            log.info("redis不存在token");
             log.info("已经过期,重新登录请求token");
             throw new SellerAuthorizeException();
         }
@@ -70,6 +74,7 @@ public class SellerAuthorizeAspect {
 
         //表示已经过期
         if (System.currentTimeMillis() > lastTime){
+            log.info("超时");
             log.info("已经过期,重新登录请求token");
             throw new SellerAuthorizeException();
         }

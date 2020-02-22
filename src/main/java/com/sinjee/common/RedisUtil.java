@@ -162,8 +162,22 @@ public class RedisUtil {
     public Boolean setHash(String key, Map map, long time) {
         redisTemplate.opsForHash().putAll(key, map);
         redisTemplate.expire(key, time, TimeUnit.SECONDS);
+
+
+
         return true;
     }
+
+
+    public long increment(String key,long value){
+        return redisTemplate.opsForValue().increment(key,value) ;
+    }
+
+    public long getExpire(String key){
+        return redisTemplate.getExpire(key,TimeUnit.SECONDS) ;
+    }
+
+
 
     /**
      * 获取hash的值

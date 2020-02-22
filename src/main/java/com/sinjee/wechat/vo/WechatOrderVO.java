@@ -62,4 +62,6 @@ public class WechatOrderVO implements Serializable {
     private boolean haveOne;
 
     private String orderRemark ;
+
+    private String buyerId ;
 }

@@ -76,6 +76,7 @@ public class AdminOrderController {
                 WechatOrderVO wechatOrderVO = new WechatOrderVO() ;
                 CacheBeanCopier.copy(orderMasterDTO,wechatOrderVO);
                 wechatOrderVO.setHashNumber(hashNumber);
+                wechatOrderVO.setBuyerId(orderMasterDTO.getBuyerOpenid());
                 List<OrderDetail> orderDetailList = orderMasterDTO.getOrderDetailList();
                 wechatOrderVO.setOrderDetailList(BeanConversionUtils
                         .copyToAnotherList(WechatOrderDetailVO.class,orderDetailList));

@@ -4,6 +4,8 @@ import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
+import com.sinjee.admin.dto.SellerInfoDTO;
+import com.sinjee.admin.service.SellerInfoService;
 import com.sinjee.annotation.AccessLimit;
 import com.sinjee.common.*;
 import com.sinjee.vo.ResultVO;
@@ -44,6 +46,9 @@ public class WechatBuyerInfoController {
 
     @Autowired
     private RedisUtil redisUtil ;
+
+    @Autowired
+    private SellerInfoService sellerInfoService ;
 
 
     /**
@@ -207,13 +212,13 @@ public class WechatBuyerInfoController {
     }
 
     @GetMapping("/service")
-    @AccessLimit
+    @AccessLimit(seconds=600,maxCount = 2)
     public ResultVO getServiceContract() {
 
-        BuyerInfoDTO buyerInfoDTO = buyerInfoService.findServiceInfo() ;
+        SellerInfoDTO sellerInfoDTO = sellerInfoService.findService() ;
         Map<String,Object> map = new HashMap<>() ;
-        map.put("name",buyerInfoDTO.getBuyerName());
-        map.put("phone",buyerInfoDTO.getAvatarUrl()) ;
+        map.put("name",sellerInfoDTO.getSellerWechatId());
+        map.put("phone",sellerInfoDTO.getSellerPhone()) ;
         return ResultVOUtil.success(map);
     }
 }

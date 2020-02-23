@@ -95,7 +95,7 @@ public class WechatCategoryController {
      */
     @CrossOrigin(origins = "*")
     @GetMapping("/indexList")
-    @Cacheable(cacheNames = "indexList", key = "'indexList'", unless = "#result.getCode() != 0")
+//    @Cacheable(cacheNames = "indexList", key = "'indexList'", unless = "#result.getCode() != 0")
     public ResultVO index(){
 
         //2.查询数据

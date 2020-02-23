@@ -51,10 +51,11 @@ public class WechatTest {
 
         public static void main(String[] args) throws AWTException{
 
+            System.out.println(MathUtil.isFee("22.20"));
             System.out.println(MathUtil.isFee("22.22"));
             System.out.println(MathUtil.isFee("0.01"));
             System.out.println(MathUtil.isFee("0.000"));
-            System.out.println(MathUtil.isFee("0.00"));
+            System.out.println(MathUtil.isFee("0.80"));
             System.out.println(MathUtil.isFee("0.9"));
             System.out.println(MathUtil.isFee("0.090"));
             System.out.println(MathUtil.isFee("654644645644.090"));

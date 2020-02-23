@@ -45,16 +45,16 @@ class BuyerInfoServiceImplTest {
 //
 //        buyerInfoService.save(buyerInfoDTO) ;
 
-//        SellerInfo sellerInfoDTO = new SellerInfo() ;
-//        sellerInfoDTO.setSellerName("kweitan");
-//        sellerInfoDTO.setSellerPassword("3oEfxVnkrbO4tlAjb7dHOw==");
-//        sellerInfoDTO.setSellerNumber(IdUtil.genId());
-//        sellerInfoDTO.setCreator("admin");
-//        sellerInfoDTO.setUpdater("admin");
-//
-//        sellerInfoDTO.setCreateTime(DateUtils.getTimestamp());
-//        sellerInfoDTO.setUpdateTime(DateUtils.getTimestamp());
-//
-//        sellerInfoMapper.insert(sellerInfoDTO) ;
+        SellerInfo sellerInfoDTO = new SellerInfo() ;
+        sellerInfoDTO.setSellerName("kweitan");
+        sellerInfoDTO.setSellerPassword("3oEfxVnkrbO4tlAjb7dHOw==");
+        sellerInfoDTO.setSellerNumber(IdUtil.genId());
+        sellerInfoDTO.setCreator("admin");
+        sellerInfoDTO.setUpdater("admin");
+
+        sellerInfoDTO.setCreateTime(DateUtils.getTimestamp());
+        sellerInfoDTO.setUpdateTime(DateUtils.getTimestamp());
+
+        sellerInfoMapper.insert(sellerInfoDTO) ;
     }
 }

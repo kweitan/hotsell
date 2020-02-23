@@ -43,7 +43,7 @@ public class MathUtil {
     public static boolean isFee(String fee) {
         if (StringUtils.isBlank(fee))
             return false;
-        Pattern p = Pattern.compile("^(?:0\\.\\d{0,1}[1-9]|(?!0)\\d{1,6}(?:\\.\\d{0,1}[1-9])?)$");
+        Pattern p = Pattern.compile("^(?:0\\.\\d{0,1}[0-9]|(?!0)\\d{1,6}(?:\\.\\d{0,1}[0-9])?)$");
         Matcher m = p.matcher(fee);
         return m.find();
     }

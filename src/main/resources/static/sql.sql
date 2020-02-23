@@ -315,8 +315,8 @@ create table `order_flow` (
 -- 卖家信息 --
 create table `seller_info` (
   `seller_id` int unsigned not null auto_increment,
-  `seller_name` varchar(32) not null comment '卖家名称不能为空',
-  `seller_password` varchar(128) not null comment '卖家密码',
+  `seller_name` varchar(32) not null unique key comment '卖家名称不能为空',
+  `seller_password` varchar(128) not null unique key comment '卖家密码',
   `avatar_url` varchar(128) comment '卖家头像',
   `seller_country` varchar(32) comment '卖家国家',
   `seller_province` varchar(32) comment '卖家省份',

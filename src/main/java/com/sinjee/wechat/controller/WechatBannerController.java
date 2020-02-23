@@ -38,7 +38,7 @@ public class WechatBannerController {
      */
     @CrossOrigin(origins = "*")
     @GetMapping("/indexList")
-    @Cacheable(cacheNames = "bannerIndexList", key = "'bannerIndexList'", unless = "#result.getCode() != 0")
+//    @Cacheable(cacheNames = "bannerIndexList", key = "'bannerIndexList'", unless = "#result.getCode() != 0")
     public ResultVO index(){
 
         List<WechatBannerDTO> wechatBannerDTOList = wechatBannerService.getBannerIndexList();

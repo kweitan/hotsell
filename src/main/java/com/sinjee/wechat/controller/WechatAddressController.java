@@ -125,7 +125,7 @@ public class WechatAddressController {
         Integer res = 0 ;
         if ("add".equals(type)){
             addressInfoDTO.setCreator(buyerInfoDTO.getBuyerName());
-            addressInfoDTO.setUpdateTime(DateUtils.getTimestamp());
+            addressInfoDTO.setCreateTime(DateUtils.getTimestamp());
             res = addressInfoService.save(addressInfoDTO);
         }else if ("editor".equals(type)){
             addressInfoDTO.setAddressId(Integer.valueOf(wechatAddressForm.getNumber()));

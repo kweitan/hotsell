@@ -134,7 +134,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
         productInfo.setSequenceId(findSequenceId());
 
         //保存商品信息
-        return productInfoMapper.saveProductInfo(productInfo);
+        return productInfoMapper.insert(productInfo);
     }
 
     @Override

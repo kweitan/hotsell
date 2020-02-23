@@ -12,6 +12,7 @@ import com.sinjee.wechat.service.WechatBannerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -78,5 +79,25 @@ public class WechatBannerServiceImpl implements WechatBannerService {
         wechatBannerDTOPage.setTotal(mapPage.getTotal());
         wechatBannerDTOPage.setRecords(wechatBannerDTOList) ;
         return wechatBannerDTOPage ;
+    }
+
+    @Override
+    public WechatBannerDTO selectOne(Integer bannerId) {
+        QueryWrapper<WechatBanner> wrapper = new QueryWrapper();
+        wrapper.eq("banner_id",bannerId).eq("enable_flag",1);
+        WechatBanner wechatBanner = wechatBannerMapper.selectOne(wrapper);
+        WechatBannerDTO wechatBannerDTO = new WechatBannerDTO() ;
+        CacheBeanCopier.copy(wechatBanner,wechatBannerDTO);
+        return wechatBannerDTO;
+    }
+
+    @Override
+    @Transactional
+    public Integer delete(Integer bannerId) {
+        QueryWrapper<WechatBanner> wrapper = new QueryWrapper();
+        wrapper.eq("banner_id",bannerId).eq("enable_flag",1);
+        WechatBanner wechatBanner = new WechatBanner() ;
+        wechatBanner.setEnableFlag(0);
+        return wechatBannerMapper.update(wechatBanner,wrapper);
     }
 }

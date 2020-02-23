@@ -37,10 +37,18 @@ public class AccessLimtInterceptor implements HandlerInterceptor {
             }
             int seconds = accessLimit.seconds();
             int maxCount = accessLimit.maxCount();
+//            String signal = accessLimit.signal() ;
 
             String ip = KeyUtil.getIpAddr(request);
+            StringBuffer sb = new StringBuffer() ;
+            sb.append(request.getContextPath()).append(":").append(request.getServletPath())
+                    .append(":").append(ip) ;
 
-            String key = request.getContextPath() + ":" + request.getServletPath() + ":" + ip ;
+            String key = sb.toString() ;
+//            if (signal !=null && "".equals(signal)){
+//                sb.append(signal) ;
+//            }
+
             long preExpireTime = redisUtil.getExpire(key) ;
             log.info("preExpireTime={}",preExpireTime);
             Object value = redisUtil.getString(key);

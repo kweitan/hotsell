@@ -14,4 +14,8 @@ public interface WechatBannerService {
     List<WechatBannerDTO> getBannerIndexList();
 
     IPage<WechatBannerDTO> getBannerByPage(Integer currentPage, Integer pageSize, String region) ;
+
+    WechatBannerDTO selectOne(Integer bannerId);
+
+    Integer delete(Integer bannerId);
 }

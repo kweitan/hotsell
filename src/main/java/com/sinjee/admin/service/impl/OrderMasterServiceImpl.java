@@ -83,6 +83,7 @@ public class OrderMasterServiceImpl implements OrderMasterService {
             //订单详情入库
             OrderDetail orderDetailDTO = new OrderDetail() ;
             orderDetailDTO.setOrderNumber(orderId);
+            orderDetailDTO.setProductStandard(productInfoDTO.getProductStandard());
             orderDetailDTO.setProductIcon(productInfoDTO.getProductIcon());
             orderDetailDTO.setProductLabels(productInfoDTO.getProductLabels());
             orderDetailDTO.setProductName(productInfoDTO.getProductName());
@@ -107,6 +108,7 @@ public class OrderMasterServiceImpl implements OrderMasterService {
 
         orderMaster.setOrderNumber(orderId);
         orderMaster.setOrderAmount(orderAmount);
+        orderMaster.setActAmount(orderAmount);
         orderMaster.setOrderStatus(OrderStatusEnum.NEW.getCode());
         orderMaster.setPayStatus(PayStatusEnum.WAIT.getCode());
 

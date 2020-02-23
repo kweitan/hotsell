@@ -7,4 +7,7 @@ public interface SellerInfoService {
     SellerInfoDTO verifyUser(String username, String password);
 
     SellerInfoDTO find(String sellerNumber);
+
+
+    SellerInfoDTO findService();
 }

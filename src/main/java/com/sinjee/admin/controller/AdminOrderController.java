@@ -147,7 +147,7 @@ public class AdminOrderController {
         OrderMasterDTO orderMasterDTO = orderMasterService.lookupDetailByOrderNumber(orderNumber) ;
         WechatOrderVO wechatOrderVO = new WechatOrderVO() ;
         CacheBeanCopier.copy(orderMasterDTO,wechatOrderVO);
-
+        wechatOrderVO.setBuyerId(orderMasterDTO.getBuyerOpenid());
         List<WechatOrderDetailVO> wechatOrderDetailVOList = BeanConversionUtils.
                 copyToAnotherList(WechatOrderDetailVO.class,orderMasterDTO.getOrderDetailList()) ;
 
@@ -204,7 +204,7 @@ public class AdminOrderController {
 
         Integer res = orderMasterService.modifyActFee(sellerInfoDTO.getSellerName(),adminOrderForm.getOrderNumber(),adminOrderForm.getActPayFee()) ;
         if (res > 0){
-            ResultVOUtil.success() ;
+            return ResultVOUtil.success() ;
         }
 
         return ResultVOUtil.error(101,"修改支付金额出错") ;

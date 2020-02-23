@@ -3,6 +3,7 @@ package com.sinjee.admin.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sinjee.admin.dto.ProductCategoryDTO;
 import com.sinjee.admin.dto.ProductInfoDTO;
+import com.sinjee.admin.dto.SellerInfoDTO;
 import com.sinjee.admin.form.DeleteAllProductForm;
 import com.sinjee.admin.form.ProductCategoryForm;
 import com.sinjee.admin.service.ProductCategoryService;
@@ -17,6 +18,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +40,9 @@ public class AdminCategoryInfoController {
 
     @Value("${myWechat.salt}")
     private String salt ;
+
+    @Autowired
+    private RedisUtil redisUtil ;
 
     @CrossOrigin(origins = "*")
     @GetMapping("/getCategoryByNumber")
@@ -120,11 +125,15 @@ public class AdminCategoryInfoController {
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/save")
     @CacheEvict(cacheNames = "indexList",allEntries=true)
-    public ResultVO saveCategory(@RequestBody @Valid ProductCategoryForm productCategoryForm, BindingResult bindingResult){
+    public ResultVO saveCategory(HttpServletRequest request , @RequestBody @Valid ProductCategoryForm productCategoryForm, BindingResult bindingResult){
         //1.校验参数
         if (bindingResult.hasErrors()){
             return ResultVOUtil.error(101,bindingResult.getFieldError().getDefaultMessage()) ;
         }
+
+        //获取卖家信息
+        SellerInfoDTO sellerInfoDTO = Common.getSellerInfo(request,redisUtil) ;
+
 
         ProductCategoryDTO productCategoryDTO = new ProductCategoryDTO() ;
 
@@ -148,8 +157,8 @@ public class AdminCategoryInfoController {
 
 
         //2.取出当前用户
-        productCategoryDTO.setCreator("kweitan");
-        productCategoryDTO.setUpdater("kweitan");
+        productCategoryDTO.setCreator(sellerInfoDTO.getSellerName());
+        productCategoryDTO.setUpdater(sellerInfoDTO.getSellerName());
         productCategoryDTO.setCreateTime(DateUtils.getTimestamp());
         productCategoryDTO.setUpdateTime(DateUtils.getTimestamp());
 
@@ -171,11 +180,14 @@ public class AdminCategoryInfoController {
     @CrossOrigin(origins = "*")
     @PostMapping("/update")
     @CacheEvict(cacheNames = "indexList",allEntries=true)
-    public ResultVO updateCategory(@RequestBody @Valid ProductCategoryForm productCategoryForm, BindingResult bindingResult){
+    public ResultVO updateCategory(HttpServletRequest request ,@RequestBody @Valid ProductCategoryForm productCategoryForm, BindingResult bindingResult){
         //1.校验参数
         if (bindingResult.hasErrors()){
             return ResultVOUtil.error(101,bindingResult.getFieldError().getDefaultMessage()) ;
         }
+
+        //获取卖家信息
+        SellerInfoDTO sellerInfoDTO = Common.getSellerInfo(request,redisUtil) ;
 
         //2.取得类目编码和哈希
         if(!HashUtil.verify(productCategoryForm.getCategoryNumber(),salt,productCategoryForm.getHashNumber())){
@@ -209,9 +221,7 @@ public class AdminCategoryInfoController {
 //        productCategoryDTO.setEnableFlag(1);
 
         //2.取出当前用户
-        productCategoryDTO.setCreator("kweitan");
-        productCategoryDTO.setUpdater("kweitan");
-        productCategoryDTO.setCreateTime(DateUtils.getTimestamp());
+        productCategoryDTO.setUpdater(sellerInfoDTO.getSellerName());
         productCategoryDTO.setUpdateTime(DateUtils.getTimestamp());
 
         //4.更新
@@ -219,7 +229,7 @@ public class AdminCategoryInfoController {
         if (result > 0){
             return ResultVOUtil.success();
         }else {
-            return ResultVOUtil.error(101,"保存商品类目失败") ;
+            return ResultVOUtil.error(101,"修改商品类目失败") ;
         }
 
     }

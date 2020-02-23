@@ -45,7 +45,7 @@ public class WechatMyForwardController {
 
     @PostMapping("/saveMyForward")
     @AccessTokenIdempotency
-    @AccessLimit
+    @AccessLimit(seconds=60,maxCount = 10)
     public ResultVO save(HttpServletRequest request,String productNumber) {
         String openid = (String)request.getAttribute("openid") ;
         log.info("openid={}",openid);

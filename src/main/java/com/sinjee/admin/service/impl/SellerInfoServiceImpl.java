@@ -48,4 +48,14 @@ public class SellerInfoServiceImpl implements SellerInfoService {
         CacheBeanCopier.copy(sellerInfo,sellerInfoDTO);
         return sellerInfoDTO;
     }
+
+    @Override
+    public SellerInfoDTO findService() {
+        QueryWrapper<SellerInfo> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1).eq("seller_number","1332794395459616");
+        SellerInfo sellerInfo = sellerInfoMapper.selectOne(wrapper) ;
+        SellerInfoDTO sellerInfoDTO = new SellerInfoDTO() ;
+        CacheBeanCopier.copy(sellerInfo,sellerInfoDTO);
+        return sellerInfoDTO ;
+    }
 }

@@ -9,6 +9,7 @@
         <result column="openid" jdbcType="VARCHAR" property="openid" />
         <result column="buyer_review_id" jdbcType="INTEGER" property="buyerReviewId" />
         <result column="product_number" jdbcType="VARCHAR" property="productNumber" />
+        <result column="product_name" jdbcType="VARCHAR" property="productName" />
         <result column="person_name" jdbcType="VARCHAR" property="personName" />
         <result column="person_icon" jdbcType="VARCHAR" property="personIcon" />
         <result column="enable_flag" jdbcType="TINYINT" property="enableFlag" />

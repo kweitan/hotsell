@@ -24,4 +24,7 @@ public class WechatProductReviewForm implements Serializable {
 
     @NotEmpty(message="产品编码必填")
     private String productNumber;
+
+    @NotEmpty(message="产品名称必填")
+    private String productName;
 }

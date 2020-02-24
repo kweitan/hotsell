@@ -79,7 +79,7 @@ public class AdminCategoryInfoController {
         }
 
         //2.查询数据
-        Integer productStatus = 1 ; //1-表示已上架 0-表示下架
+//        Integer productStatus = 1 ; //1-表示已上架 0-表示下架
 
         IPage<ProductCategoryDTO> page = productCategoryService.selectProductCategoryInfoByPage(currentPage,pageSize,selectName);
 
@@ -270,7 +270,7 @@ public class AdminCategoryInfoController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/deleteCategory")
-    @CacheEvict(cacheNames = "indexList",allEntries=true)
+//    @CacheEvict(cacheNames = "indexList",allEntries=true)
     public ResultVO deleteCategory(@RequestParam String categoryNumber,
                                    @RequestParam String hashNumber){
         //取得类目编码和哈希

@@ -29,4 +29,6 @@ public class ProductReview extends WechatBaseEntity{
     private String openid ;
 
     private String orderNumber;
+
+    private String productName ;
 }

@@ -113,7 +113,7 @@ public class WechatProductReviewController {
 
         productReviewDTO.setWechatProductReviewFormList(wechatProductReviewFormList);
 
-        productReviewService.save(productReviewDTO) ;
+        productReviewService.save(buyerInfoDTO.getBuyerName(),productReviewDTO) ;
 
         return ResultVOUtil.success();
     }

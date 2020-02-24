@@ -132,7 +132,10 @@ myWechat:
   keyPath:
 
   #用户支付后 微信调用开发者服务器通知支付情况
-  notifyUrl:
+  notifyUrl: http://kweitan.natapp1.cc/hotsell/wechat/pay/payNotify
+
+  # 退款通知
+  refundNotifyUrl:
 
   #交易类型
   tradeType: JSAPI

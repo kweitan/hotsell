@@ -172,7 +172,7 @@ public class WechatPayController {
      * @return
      */
     @ResponseBody
-    @PostMapping(value = "refund")
+    @PostMapping(value = "/refund")
     @AccessTokenIdempotency
     public ResultVO refund(HttpServletRequest request, String orderNumber,String hashNumber, String refundDesc){
         String openid = (String)request.getAttribute("openid") ;
@@ -197,7 +197,7 @@ public class WechatPayController {
      * 向微信发起 查询订单 状态 https://api.mch.weixin.qq.com/pay/orderquery 向微信发起
      */
     @ResponseBody
-    @PostMapping(value = "orderQuery")
+    @PostMapping(value = "/orderQuery")
     @AccessTokenIdempotency
     public ResultVO orderQuery(String orderNumber,String hashNumber){
         // 订单状态查询 待开发
@@ -224,7 +224,7 @@ public class WechatPayController {
      * 退款查询 向微信发起
      */
     @ResponseBody
-    @PostMapping(value = "refundOrderQuery")
+    @PostMapping(value = "/refundOrderQuery")
     @AccessTokenIdempotency
     public ResultVO refundOrderQuery(HttpServletRequest request, String orderNumber, String subject){
         // 退款查询 待开发

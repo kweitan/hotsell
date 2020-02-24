@@ -7,12 +7,16 @@ import com.sinjee.admin.entity.OrderMaster;
 import com.sinjee.admin.mapper.OrderMasterMapper;
 import com.sinjee.common.BeanConversionUtils;
 import com.sinjee.common.CacheBeanCopier;
+import com.sinjee.common.Common;
+import com.sinjee.common.Constant;
 import com.sinjee.enums.OrderStatusEnum;
 import com.sinjee.enums.PayStatusEnum;
 import com.sinjee.exceptions.MyException;
 import com.sinjee.wechat.dto.ProductReviewDTO;
+import com.sinjee.wechat.entity.OrderFlow;
 import com.sinjee.wechat.entity.ProductReview;
 import com.sinjee.wechat.form.WechatProductReviewForm;
+import com.sinjee.wechat.mapper.OrderFlowMapper;
 import com.sinjee.wechat.mapper.ProductReviewMapper;
 import com.sinjee.wechat.service.ProductReviewService;
 import lombok.extern.slf4j.Slf4j;
@@ -37,9 +41,17 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     @Autowired
     private OrderMasterMapper orderMasterMapper ;
 
+    @Autowired
+    private OrderFlowMapper orderFlowMapper ;
+
     @Override
     @Transactional
-    public void save(ProductReviewDTO productReviewDTO) {
+    public void save(String buyerName,ProductReviewDTO productReviewDTO) {
+
+        //保存订单流水
+        OrderFlow orderFlow = Common.getOrderFlow(productReviewDTO.getOrderNumber(),buyerName,
+                "用户评价商品",Constant.OrderFlowStatus.FINISHED,Constant.OrderFlowStatus.REVIEW) ;
+        orderFlowMapper.insert(orderFlow) ;
 
         /**
          * 填写运单的时候 设置订单状态为SHIPMENT 待收货
@@ -63,6 +75,9 @@ public class ProductReviewServiceImpl implements ProductReviewService {
                 CacheBeanCopier.copy(productReviewDTO,productReview);
                 productReview.setProductReviewContent(wechatProductReviewForm.getProductReviewContent());
                 productReview.setProductNumber(wechatProductReviewForm.getProductNumber());
+                productReview.setProductName(wechatProductReviewForm.getProductName());
+
+                /** 这里的99 是微信小程序默认情况下 不选中差评 好评的默认值**/
                 if (wechatProductReviewForm.getProductReviewLevel() == 999){
                     productReview.setProductReviewLevel(1);
                 }else {
@@ -178,5 +193,47 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         }
 
         return BeanConversionUtils.copyToAnotherList(ProductReviewDTO.class,productReviewList);
+    }
+
+    @Override
+    public IPage<ProductReviewDTO> findListByPage(Integer currentPage, Integer pageSize, String productName, String personName) {
+        Page<ProductReview> page = new Page<>(currentPage,pageSize) ;
+
+        QueryWrapper<ProductReview> wrapper = new QueryWrapper();
+        wrapper.eq("enable_flag",1).like("product_name",productName).like("person_name",personName);
+        //从数据库分页获取数据
+        IPage<ProductReview> mapPage = productReviewMapper.selectPage(page,wrapper);
+
+        log.info("总页数"+mapPage.getPages());
+        log.info("总记录数"+mapPage.getTotal());
+        List<ProductReview> productReviewList = mapPage.getRecords() ;
+        List<ProductReviewDTO> productReviewDTOList = BeanConversionUtils.copyToAnotherList(ProductReviewDTO.class,productReviewList);
+
+        Page<ProductReviewDTO> productReviewDTOPage = new Page<>(currentPage,pageSize) ;
+        productReviewDTOPage.setPages(mapPage.getPages());
+        productReviewDTOPage.setTotal(mapPage.getTotal());
+        productReviewDTOPage.setRecords(productReviewDTOList) ;
+        return productReviewDTOPage ;
+    }
+
+    @Override
+    public Integer deleteProductReview(String productNumber) {
+        QueryWrapper<ProductReview> wrapper = new QueryWrapper();
+        wrapper.eq("product_number",productNumber)
+                .eq("enable_flag",1);
+        ProductReview productReview = new ProductReview() ;
+        productReview.setEnableFlag(0);
+        return productReviewMapper.update(productReview,wrapper);
+    }
+
+    @Override
+    public Integer modifyProductReview(String productNumber,String reviewContent,Integer reviewLevel) {
+        QueryWrapper<ProductReview> wrapper = new QueryWrapper();
+        wrapper.eq("product_number",productNumber)
+                .eq("enable_flag",1);
+        ProductReview productReview = new ProductReview() ;
+        productReview.setProductReviewContent(reviewContent);
+        productReview.setProductReviewLevel(reviewLevel);
+        return productReviewMapper.update(productReview,wrapper);
     }
 }

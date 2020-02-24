@@ -28,6 +28,7 @@ public interface Constant {
         String NEW = "NEW" ;
         String SUCCESS = "SUCCESS" ;
         String SHIPMENT = "SHIPMENT" ;
+        String REVIEW = "REVIEW" ;
         String REFUND = "REFUND" ;
         String FINISHED = "FINISHED" ;
         String CANCEL = "CANCEL" ;

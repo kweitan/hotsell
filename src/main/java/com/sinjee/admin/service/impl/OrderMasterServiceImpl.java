@@ -19,6 +19,7 @@ import com.sinjee.common.*;
 import com.sinjee.enums.OrderStatusEnum;
 import com.sinjee.enums.PayStatusEnum;
 import com.sinjee.exceptions.MyException;
+import com.sinjee.service.impl.WebSocket;
 import com.sinjee.wechat.entity.OrderFlow;
 import com.sinjee.wechat.form.ShopCartModel;
 import com.sinjee.wechat.mapper.OrderFlowMapper;
@@ -62,6 +63,9 @@ public class OrderMasterServiceImpl implements OrderMasterService {
 
     @Autowired
     private RefundOrderMapper refundOrderMapper ;
+
+    @Autowired
+    private WebSocket webSocket ;
 
     @Override
     @Transactional
@@ -123,7 +127,7 @@ public class OrderMasterServiceImpl implements OrderMasterService {
         productInfoService.decreaseStock(orderMasterDTO.getShopCartModelList());
 
         //发送websocket消息
-//        webSocket.sendMessage(orderDTO.getOrderId());
+        webSocket.sendMessage(orderId);
 
         return orderMasterDTO ;
     }

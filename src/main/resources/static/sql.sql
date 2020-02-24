@@ -174,6 +174,7 @@ create table `product_review` (
   `order_number` varchar(32) not null comment '订单编码 前三位代表品类 0000 中间日期20191215132700',
   `buyer_review_id` int unsigned,
   `product_number` varchar(32) not null comment '商品编码 前三位代表品类 0000 中间日期20191215132700',
+  `product_name` varchar(64) not null comment '商品名称',
   `person_name` varchar(32) comment '评论者昵称',
   `person_icon` varchar(128) comment '评论者图像',
   `enable_flag` tinyint(3) DEFAULT '1' COMMENT '状态,1-可用 0-不可用',

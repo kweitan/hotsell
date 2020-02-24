@@ -22,7 +22,7 @@ import java.util.List;
  * @author kweitan
  */
 @RestController
-@RequestMapping("/admin/productReview")
+    @RequestMapping("/admin/productReview")
 @Slf4j
 public class AdminProductReviewController {
 

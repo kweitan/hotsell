@@ -37,43 +37,43 @@ class ProductReviewServiceImplTest {
 
     @Test
     void save() {
-
-        List<ProductInfoDTO> productInfoDTOList = productInfoService.getList() ;
-        if (productInfoDTOList != null && productInfoDTOList.size()>0){
-            productInfoDTOList.stream().forEach(productInfoDTO -> {
-                String productNumber = productInfoDTO.getProductNumber();
-                ProductDetailInfoDTO productDetailInfoDTO = new ProductDetailInfoDTO() ;
-                productDetailInfoDTO.setProductDetailDescription("商品详情XXXXXXX");
-                productDetailInfoDTO.setProductNumber(productNumber);
-                Map<String,Object> map = new HashMap<>() ;
-                map.put("品牌","SINJEE");
-                map.put("产地","广东");
-                map.put("存储条件","冷冻");
-                productDetailInfoDTO.setProductDetailField(GsonUtil.getInstance().toStr(map));
-                productDetailInfoDTO.setProductDetailIcon("/pages/images/banner01.jpg&/pages/images/banner02.jpg&/pages/images/banner03.jpg");
-                productDetailInfoDTO.setCreator("kweitan");
-                productDetailInfoDTO.setUpdater("kweitan");
-                productDetailInfoDTO.setCreateTime(new java.sql.Timestamp(new java.util.Date().getTime()));
-                productDetailInfoDTO.setUpdateTime(new java.sql.Timestamp(new java.util.Date().getTime()));
-                productDetailInfoService.save(productDetailInfoDTO);
-
-                for (int i=0;i<101;i++){
-                    ProductReviewDTO productReviewDTO = new ProductReviewDTO() ;
-                    productReviewDTO.setBuyerReviewId(1);
-                    productReviewDTO.setPersonIcon("/pages/images/huagua.jpg");
-                    productReviewDTO.setPersonName("kweitan");
-                    productReviewDTO.setProductNumber(productNumber);
-                    productReviewDTO.setProductReviewLevel(1);
-                    productReviewDTO.setProductReviewContent("好吃，好香！！！！");
-                    productReviewDTO.setCreator("kweitan");
-                    productReviewDTO.setUpdater("kweitan");
-                    productReviewDTO.setCreateTime(new java.sql.Timestamp(new java.util.Date().getTime()));
-                    productReviewDTO.setUpdateTime(new java.sql.Timestamp(new java.util.Date().getTime()));
-                    productReviewService.save(productReviewDTO);
-                }
-
-            });
-        }
+//
+//        List<ProductInfoDTO> productInfoDTOList = productInfoService.getList() ;
+//        if (productInfoDTOList != null && productInfoDTOList.size()>0){
+//            productInfoDTOList.stream().forEach(productInfoDTO -> {
+//                String productNumber = productInfoDTO.getProductNumber();
+//                ProductDetailInfoDTO productDetailInfoDTO = new ProductDetailInfoDTO() ;
+//                productDetailInfoDTO.setProductDetailDescription("商品详情XXXXXXX");
+//                productDetailInfoDTO.setProductNumber(productNumber);
+//                Map<String,Object> map = new HashMap<>() ;
+//                map.put("品牌","SINJEE");
+//                map.put("产地","广东");
+//                map.put("存储条件","冷冻");
+//                productDetailInfoDTO.setProductDetailField(GsonUtil.getInstance().toStr(map));
+//                productDetailInfoDTO.setProductDetailIcon("/pages/images/banner01.jpg&/pages/images/banner02.jpg&/pages/images/banner03.jpg");
+//                productDetailInfoDTO.setCreator("kweitan");
+//                productDetailInfoDTO.setUpdater("kweitan");
+//                productDetailInfoDTO.setCreateTime(new java.sql.Timestamp(new java.util.Date().getTime()));
+//                productDetailInfoDTO.setUpdateTime(new java.sql.Timestamp(new java.util.Date().getTime()));
+//                productDetailInfoService.save(productDetailInfoDTO);
+//
+//                for (int i=0;i<101;i++){
+//                    ProductReviewDTO productReviewDTO = new ProductReviewDTO() ;
+//                    productReviewDTO.setBuyerReviewId(1);
+//                    productReviewDTO.setPersonIcon("/pages/images/huagua.jpg");
+//                    productReviewDTO.setPersonName("kweitan");
+//                    productReviewDTO.setProductNumber(productNumber);
+//                    productReviewDTO.setProductReviewLevel(1);
+//                    productReviewDTO.setProductReviewContent("好吃，好香！！！！");
+//                    productReviewDTO.setCreator("kweitan");
+//                    productReviewDTO.setUpdater("kweitan");
+//                    productReviewDTO.setCreateTime(new java.sql.Timestamp(new java.util.Date().getTime()));
+//                    productReviewDTO.setUpdateTime(new java.sql.Timestamp(new java.util.Date().getTime()));
+//                    productReviewService.save(productReviewDTO);
+//                }
+//
+//            });
+//        }
     }
 
     @Test

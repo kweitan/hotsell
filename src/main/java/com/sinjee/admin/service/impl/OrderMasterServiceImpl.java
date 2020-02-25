@@ -111,12 +111,14 @@ public class OrderMasterServiceImpl implements OrderMasterService {
         CacheBeanCopier.copy(orderMasterDTO,orderMaster);
 
         orderMaster.setOrderNumber(orderId);
-        orderMaster.setOrderAmount(orderAmount);
+
 
         //价格大于100 免运费 价格小于100 加15运费(默认) 后期增加运费管理 物流选择
         //TODO
         BigDecimal hundred = new BigDecimal (100);
         if(hundred.compareTo(orderAmount) == -1){
+            orderMaster.setOrderAmount(orderAmount);
+        }else{
             orderMaster.setOrderAmount(orderAmount.add(new BigDecimal(15)));
         }
 

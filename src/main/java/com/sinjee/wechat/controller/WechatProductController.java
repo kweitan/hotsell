@@ -147,6 +147,7 @@ public class WechatProductController {
         CacheBeanCopier.copy(productDetailInfoDTO,productDetailInfoVO);
         String hashNumber = HashUtil.sign(productInfoDTO.getProductNumber(),salt);
         productDetailInfoVO.setHashNumber(hashNumber);
+        productDetailInfoVO.setProductName(productInfoDTO.getProductName());
 
         //返回前端
         ResultVO resultVO = new ResultVO();

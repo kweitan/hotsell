@@ -48,4 +48,5 @@ public class ProductDetailInfoVO extends ProductInfoVO implements Serializable {
     //创建时间
     @JsonFormat(pattern="yyyy-MM-dd")
     private Timestamp createTime ;
+
 }

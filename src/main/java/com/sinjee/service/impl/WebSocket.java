@@ -39,6 +39,7 @@ public class WebSocket {
     @OnMessage
     public void onMessage(String message) {
         log.info("【websocket消息】收到客户端发来的消息:{}", message);
+//        if(msg=='heartbeat') socket.send(anything);
     }
 
     public void sendMessage(String message) {

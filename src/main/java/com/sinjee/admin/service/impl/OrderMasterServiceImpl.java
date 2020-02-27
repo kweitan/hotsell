@@ -116,10 +116,12 @@ public class OrderMasterServiceImpl implements OrderMasterService {
         //价格大于100 免运费 价格小于100 加15运费(默认) 后期增加运费管理 物流选择
         //TODO
         BigDecimal hundred = new BigDecimal (100);
-        if(hundred.compareTo(orderAmount) == -1){
+        if(hundred.compareTo(orderAmount) == -1 || hundred.compareTo(orderAmount) == 0){
             orderMaster.setOrderAmount(orderAmount);
         }else{
-            orderMaster.setOrderAmount(orderAmount.add(new BigDecimal(15)));
+            orderMaster.setOrderAmount(orderAmount);
+            // 默认15元运费
+            orderAmount = orderAmount.add(new BigDecimal(15)) ;
         }
 
         orderMaster.setActAmount(orderAmount);

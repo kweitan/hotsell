@@ -278,33 +278,55 @@ public class ProductInfoServiceImpl implements ProductInfoService {
             if (productInfo == null || StringUtils.isBlank(productInfo.getProductNumber())) {
                 throw new MyException(255,"商品不存在");
             }
-            Integer result = productInfo.getProductStock() + Integer.valueOf(shopCartModel.getProductCount());
-            productInfo.setProductStock(result);
-            productInfoMapper.updateProductInfo(productInfo);
+            //库存退回
+            Integer res = productInfoMapper.increase(shopCartModel.getProductNumber(),Integer.valueOf(shopCartModel.getProductCount()));
+            if (res <= 0){
+                throw new MyException(256,shopCartModel.getProductNumber()+"商品库存退回出错");
+            }
+//            Integer result = productInfo.getProductStock() + Integer.valueOf(shopCartModel.getProductCount());
+//            productInfo.setProductStock(result);
+//            productInfoMapper.updateProductInfo(productInfo);
         }
 
     }
 
+    /**
+     * 预扣库存
+     * @param shopCartModelList
+     */
     @Override
     @Transactional
     public void decreaseStock(List<ShopCartModel> shopCartModelList) {
         for (ShopCartModel shopCartModel: shopCartModelList) {
+
             ProductInfo productInfo = productInfoMapper.selectProductByNumber(shopCartModel.getProductNumber());
             if (productInfo == null || StringUtils.isBlank(productInfo.getProductNumber())) {
                 throw new MyException(255,"商品不存在");
             }
 
-            Integer result = productInfo.getProductStock() - Integer.valueOf(shopCartModel.getProductCount());
-            if (result < 0) {
-                throw new MyException(256,"商品库存不对");
+            //预扣库存
+            Integer res = productInfoMapper.decrease(shopCartModel.getProductNumber(),Integer.valueOf(shopCartModel.getProductCount()));
+            if (res <= 0){
+                throw new MyException(256,shopCartModel.getProductNumber()+"商品库存不足");
             }
 
-            productInfo.setProductStock(result);
 
-            QueryWrapper<ProductInfo> wrapper = new QueryWrapper();
-            wrapper.eq("enable_flag",1).eq("product_number",productInfo.getProductNumber());
-
-            productInfoMapper.update(productInfo,wrapper);
+//            ProductInfo productInfo = productInfoMapper.selectProductByNumber(shopCartModel.getProductNumber());
+//            if (productInfo == null || StringUtils.isBlank(productInfo.getProductNumber())) {
+//                throw new MyException(255,"商品不存在");
+//            }
+//
+//            Integer result = productInfo.getProductStock() - Integer.valueOf(shopCartModel.getProductCount());
+//            if (result < 0) {
+//                throw new MyException(256,"商品库存不对");
+//            }
+//
+//            productInfo.setProductStock(result);
+//
+//            QueryWrapper<ProductInfo> wrapper = new QueryWrapper();
+//            wrapper.eq("enable_flag",1).eq("product_number",productInfo.getProductNumber());
+//
+//            productInfoMapper.update(productInfo,wrapper);
         }
     }
 

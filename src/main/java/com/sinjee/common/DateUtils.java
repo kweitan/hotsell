@@ -74,6 +74,20 @@ public class DateUtils {
     }
 
     /**
+     * 获取传进来日期时间
+     *
+     *
+     * @return
+     *
+     */
+    public static String getFormatDateTime(Date date) {
+        String datestr = null;
+        SimpleDateFormat df = new SimpleDateFormat(DateUtils.DATE_TIME_FORMAT);
+        datestr = df.format(date);
+        return datestr;
+    }
+
+    /**
      * 获取当前日期时间
      *
      *

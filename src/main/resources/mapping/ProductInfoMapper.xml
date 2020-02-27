@@ -121,6 +121,19 @@
         WHERE product_id=#{productId} and enable_flag=1 and product_status=0
     </update>
 
+    <update id="decrease" parameterType="java.lang.Integer">
+        update product_info set
+          product_stock = product_stock - #{stock}
+        WHERE product_number=#{productNumber} and enable_flag=1 and product_status=1 and
+        product_stock - #{stock} >= 0
+    </update>
+
+    <update id="increase" parameterType="java.lang.Integer">
+        update product_info set
+          product_stock = product_stock + #{stock}
+        WHERE product_number=#{productNumber} and enable_flag=1 and product_status=1
+    </update>
+
     <update id="offProductInfo" parameterType="java.lang.Integer">
         update product_info set
           product_status=0

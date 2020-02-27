@@ -32,8 +32,10 @@ public class WebSocket {
 
     @OnClose
     public void onClose() {
-        webSocketSet.remove(this);
-        log.info("【websocket消息】连接断开, 总数:{}", webSocketSet.size());
+        if (null != webSocketSet){
+            webSocketSet.remove(this);
+            log.info("【websocket消息】连接断开, 总数:{}", webSocketSet.size());
+        }
     }
 
     @OnMessage

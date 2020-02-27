@@ -20,10 +20,10 @@ import java.util.Map;
 public interface ProductInfoMapper extends BaseMapper<ProductInfo> {
 
     //扣库存呢
-    Integer decrease(String productNumber,Integer stock);
+    Integer decrease(@Param("map") Map<String, Object> params);
 
     //退库存呢
-    Integer increase(String productNumber,Integer stock);
+    Integer increase(@Param("map") Map<String, Object> params);
 
     //保存商品信息
     Integer saveProductInfo(ProductInfo productInfoEntity);

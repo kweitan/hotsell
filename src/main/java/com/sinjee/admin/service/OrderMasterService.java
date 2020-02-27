@@ -51,4 +51,10 @@ public interface OrderMasterService {
     /** 中台 修改订单支付金额**/
     Integer modifyActFee(String creator,String orderNumber,String actFee);
 
+    /** 中台 修改订单订单备注**/
+    Integer modifyOrderRemark(String orderNumber,String remark);
+//
+//    /** 中台 定时任务处理未支付订单**/
+//    List<OrderMaster> findAll(String orderStatus,String payStatus);
+
 }

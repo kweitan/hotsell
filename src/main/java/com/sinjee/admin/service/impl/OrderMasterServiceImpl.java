@@ -440,24 +440,24 @@ public class OrderMasterServiceImpl implements OrderMasterService {
 
         }else if ("WAIT".equals(searchType)){
             //待支付订单
-            wrapper.eq("order_status","NEW").eq("pay_status","WAIT") ;
+            wrapper.eq("order_status",OrderStatusEnum.NEW.getCode()).eq("pay_status",PayStatusEnum.WAIT.getCode()) ;
         }else if ("SUCCESS".equals(searchType)){
             //待发货订单
-            wrapper.eq("order_status","NEW").eq("pay_status","SUCCESS") ;
+            wrapper.eq("order_status",OrderStatusEnum.NEW.getCode()).eq("pay_status",PayStatusEnum.SUCCESS.getCode()) ;
         }else if ("SHIPMENT".equals(searchType)){
             //待收货订单
-            wrapper.eq("order_status","SHIPMENT").eq("pay_status","SUCCESS") ;
+            wrapper.eq("order_status",OrderStatusEnum.SHIPMENT.getCode()).eq("pay_status",PayStatusEnum.SUCCESS.getCode()) ;
         }else if ("REFUND".equals(searchType)){
             //退款订单申请
-            wrapper.eq("order_status","REFUND").eq("pay_status","SUCCESS") ;
+            wrapper.eq("order_status",OrderStatusEnum.REFUND.getCode()).eq("pay_status",PayStatusEnum.SUCCESS.getCode()) ;
         }else if ("FINISHED".equals(searchType)){
             //成功完成订单 可以评价
-            wrapper.eq("order_status","FINISHED").eq("pay_status","CLOSE") ;
+            wrapper.eq("order_status",OrderStatusEnum.FINISHED.getCode()).eq("pay_status",PayStatusEnum.CLOSED.getCode()) ;
         }else if ("CANCEL".equals(searchType)){
             //失败 和 作废订单
-            wrapper.eq("order_status","CANCEL").eq("pay_status","CLOSE") ;
+            wrapper.eq("order_status",OrderStatusEnum.CANCEL.getCode()).eq("pay_status",PayStatusEnum.CLOSED.getCode()) ;
         }
-        wrapper.eq("enable_flag",1);
+        wrapper.eq("enable_flag",1).orderByDesc("create_time");
         if (StringUtils.isNotBlank(orderNumber)){
             wrapper.eq("order_number",orderNumber);
         }
@@ -520,6 +520,15 @@ public class OrderMasterServiceImpl implements OrderMasterService {
 
         OrderMaster orderMaster = new OrderMaster() ;
         orderMaster.setActAmount(new BigDecimal(actFee));
+        QueryWrapper<OrderMaster> wrapper = new QueryWrapper();
+        wrapper.eq("order_number",orderNumber).eq("enable_flag",1);
+        return orderMasterMapper.update(orderMaster,wrapper);
+    }
+
+    @Override
+    public Integer modifyOrderRemark(String orderNumber, String remark) {
+        OrderMaster orderMaster = new OrderMaster() ;
+        orderMaster.setOrderRemark(remark);
         QueryWrapper<OrderMaster> wrapper = new QueryWrapper();
         wrapper.eq("order_number",orderNumber).eq("enable_flag",1);
         return orderMasterMapper.update(orderMaster,wrapper);

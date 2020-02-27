@@ -120,10 +120,28 @@ public class AdminOrderController {
 
         Integer res = orderMasterService.enterTrackingNumber(sellerInfoDTO.getSellerName(),expressDeliveryForm.getOrderNumber(),expressDelivery) ;
         if (res > 0){
-            ResultVOUtil.success() ;
+            return  ResultVOUtil.success() ;
         }
 
         return ResultVOUtil.error(101,"填写运单号失败") ;
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/saveOrderRemark")
+    public ResultVO saveOrderRemark(@RequestParam String orderNumber,
+                                    @RequestParam String hashNumber,
+                                    @RequestParam String orderRemark){
+        //校验
+        if(!HashUtil.verify(orderNumber,salt,hashNumber)){
+            return ResultVOUtil.error(101,"数据不一致!") ;
+        }
+
+        Integer res =  orderMasterService.modifyOrderRemark(orderNumber,orderRemark);
+        if (res > 0){
+            return ResultVOUtil.success() ;
+        }
+
+        return ResultVOUtil.error(101,"修改订单备注失败") ;
     }
 
     /**
@@ -145,6 +163,7 @@ public class AdminOrderController {
         List<WechatOrderDetailVO> wechatOrderDetailVOList = BeanConversionUtils.
                 copyToAnotherList(WechatOrderDetailVO.class,orderMasterDTO.getOrderDetailList()) ;
 
+        wechatOrderVO.setHashNumber(hashNumber);
         wechatOrderVO.setOrderDetailList(wechatOrderDetailVOList);
 
         return ResultVOUtil.success(wechatOrderVO) ;

@@ -278,8 +278,13 @@ public class ProductInfoServiceImpl implements ProductInfoService {
             if (productInfo == null || StringUtils.isBlank(productInfo.getProductNumber())) {
                 throw new MyException(255,"商品不存在");
             }
+
+            Map<String, Object> params = new HashMap<>() ;
+            params.put("productNumber",shopCartModel.getProductNumber());
+            params.put("stock",Integer.valueOf(shopCartModel.getProductCount()));
+
             //库存退回
-            Integer res = productInfoMapper.increase(shopCartModel.getProductNumber(),Integer.valueOf(shopCartModel.getProductCount()));
+            Integer res = productInfoMapper.increase(params);
             if (res <= 0){
                 throw new MyException(256,shopCartModel.getProductNumber()+"商品库存退回出错");
             }
@@ -304,8 +309,14 @@ public class ProductInfoServiceImpl implements ProductInfoService {
                 throw new MyException(255,"商品不存在");
             }
 
+
+//            Integer r = Integer.valueOf(shopCartModel.getProductCount()) ;
+            Map<String, Object> params = new HashMap<>() ;
+            params.put("productNumber",shopCartModel.getProductNumber());
+            params.put("stock",Integer.valueOf(shopCartModel.getProductCount()));
+
             //预扣库存
-            Integer res = productInfoMapper.decrease(shopCartModel.getProductNumber(),Integer.valueOf(shopCartModel.getProductCount()));
+            Integer res = productInfoMapper.decrease(params);
             if (res <= 0){
                 throw new MyException(256,shopCartModel.getProductNumber()+"商品库存不足");
             }

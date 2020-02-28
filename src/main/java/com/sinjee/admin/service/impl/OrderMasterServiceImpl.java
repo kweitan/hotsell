@@ -31,10 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 创建时间 2020 - 01 -06
@@ -66,6 +63,7 @@ public class OrderMasterServiceImpl implements OrderMasterService {
 
     @Autowired
     private WebSocket webSocket ;
+
 
     @Override
     @Transactional
@@ -281,12 +279,24 @@ public class OrderMasterServiceImpl implements OrderMasterService {
         uWrapper.eq("order_number",orderNumber).
                 eq("buyer_openid",openid).eq("enable_flag",1)
         .eq("order_status","NEW");
-        uWrapper.and(wrapper -> wrapper.eq("pay_status","WAIT").or().eq("pay_status","SUCCESS"));
+        uWrapper.and(wrapper -> wrapper.eq("pay_status",PayStatusEnum.WAIT.getCode()).or().eq("pay_status",PayStatusEnum.SUCCESS.getCode()));
 
         OrderMaster orderMaster = new OrderMaster();
         orderMaster.setPayStatus(PayStatusEnum.CLOSED.getCode());
         orderMaster.setOrderStatus(OrderStatusEnum.CANCEL.getCode());
         orderMaster.setUpdateTime(DateUtils.getTimestamp());
+
+        //回滚库存
+        QueryWrapper<OrderDetail> detailWrap = new QueryWrapper();
+        detailWrap.eq("order_number",orderNumber).eq("enable_flag",1);
+        List<OrderDetail> orderDetailList = orderDetailMapper.selectList(detailWrap);
+        for (OrderDetail orderDetail: orderDetailList){
+            List<ShopCartModel> shopCartModelList = new ArrayList<>() ;
+            ShopCartModel shopCartModel = new ShopCartModel() ;
+            shopCartModel.setProductNumber(orderDetail.getProductNumber());
+            shopCartModel.setProductCount(String.valueOf(orderDetail.getProductQuantity()));
+            productInfoService.increaseStock(shopCartModelList); //回滚库存
+        }
 
         return orderMasterMapper.update(orderMaster,uWrapper);
     }
@@ -297,7 +307,7 @@ public class OrderMasterServiceImpl implements OrderMasterService {
         QueryWrapper<OrderMaster> uWrapper = new QueryWrapper();
         uWrapper.eq("order_number",orderNumber).
                 eq("buyer_openid",openid).eq("enable_flag",1)
-                .eq("order_status","NEW").eq("pay_status","SUCCESS");
+                .eq("order_status",OrderStatusEnum.NEW.getCode()).eq("pay_status",PayStatusEnum.SUCCESS.getCode());
 
         //生成订单流水
         OrderFlow orderFlow = Common.getOrderFlow(orderNumber,openid,
@@ -346,32 +356,32 @@ public class OrderMasterServiceImpl implements OrderMasterService {
             //待支付(继续支付 取消订单)【继续支付】 【取消订单】
             wrapper.eq("buyer_openid",openid)
                     .eq("enable_flag",1)
-                    .eq("order_status","NEW")
-            .eq("pay_status","WAIT");
+                    .eq("order_status",OrderStatusEnum.NEW.getCode())
+            .eq("pay_status",PayStatusEnum.WAIT.getCode());
         }else if ("WAITSEND".equals(type)){
             //待发货【申请退款】【取消订单】
             wrapper.eq("buyer_openid",openid)
                     .eq("enable_flag",1)
-                    .eq("order_status","NEW")
-                    .eq("pay_status","SUCCESS");
+                    .eq("order_status",OrderStatusEnum.NEW.getCode())
+                    .eq("pay_status",PayStatusEnum.SUCCESS.getCode());
         }else if ("SHIPMENT".equals(type)){
             //待收货(不能退款)【查看物流】 【催单】
             wrapper.eq("buyer_openid",openid)
                     .eq("enable_flag",1)
-                    .eq("order_status","SHIPMENT")
-                    .eq("pay_status","SUCCESS");
+                    .eq("order_status",OrderStatusEnum.SHIPMENT.getCode())
+                    .eq("pay_status",PayStatusEnum.SUCCESS.getCode());
         }else if ("REVIEW".equals(type)){
             //已经完成(申请退款 继续评价 也就是待评价)【继续评价】 (orderStatus:NEW AND payStatus:SUCCESS || orderStatus:NEW AND payStatus:WAIT) 都可以取消订单
             wrapper.eq("buyer_openid",openid)
                     .eq("enable_flag",1)
-                    .eq("order_status","FINISHED")
-                    .eq("pay_status","CLOSED");
+                    .eq("order_status",OrderStatusEnum.SHIPMENT.getCode())
+                    .eq("pay_status",PayStatusEnum.CLOSED.getCode());
         }else if ("CANCEL".equals(type)){
             //已经取消(再来一单)(包括退款和取消)【再来一单)】
             wrapper.eq("buyer_openid",openid)
                     .eq("enable_flag",1)
-                    .eq("order_status","CANCEL")
-                    .eq("pay_status","CLOSED");
+                    .eq("order_status",OrderStatusEnum.CANCEL.getCode())
+                    .eq("pay_status",PayStatusEnum.CLOSED.getCode());
         }else{
             wrapper.eq("buyer_openid",openid)
                     .eq("enable_flag",1) ;
@@ -482,7 +492,7 @@ public class OrderMasterServiceImpl implements OrderMasterService {
 
         //更新订单状态为 已发货
         QueryWrapper<OrderMaster> wrapper = new QueryWrapper();
-        wrapper.eq("order_status","NEW").eq("pay_status","SUCCESS") ;
+        wrapper.eq("order_status",OrderStatusEnum.NEW.getCode()).eq("pay_status",PayStatusEnum.SUCCESS.getCode()) ;
         wrapper.eq("enable_flag",1);
         wrapper.eq("order_number",orderNumber);
         OrderMaster orderMaster = new OrderMaster() ;
@@ -532,6 +542,48 @@ public class OrderMasterServiceImpl implements OrderMasterService {
         QueryWrapper<OrderMaster> wrapper = new QueryWrapper();
         wrapper.eq("order_number",orderNumber).eq("enable_flag",1);
         return orderMasterMapper.update(orderMaster,wrapper);
+    }
+
+    @Override
+    @Transactional
+    public void updateOrderStatus() {
+
+        //更新订单状态
+        //判断时间是否过期
+        Calendar calendar = Calendar.getInstance() ;
+        //分钟内订单未支付 取消
+        calendar.add(Calendar.MINUTE,-10);
+        //< createDate <![CDATA[ and create < #{createDate} ]]>
+        String createDate = DateUtils.getFormatDateTime(calendar.getTime()) ;
+
+        QueryWrapper<OrderMaster> wrapper = new QueryWrapper();
+        wrapper.eq("order_status", OrderStatusEnum.NEW.getCode())
+                .eq("pay_status", PayStatusEnum.WAIT.getCode())
+                .lt("create_time",createDate)
+                .eq("enable_flag",1);
+        List<OrderMaster> orderMasterList = orderMasterMapper.selectList(wrapper) ;
+        for (OrderMaster orderMaster : orderMasterList){
+            QueryWrapper<OrderMaster> wrap = new QueryWrapper();
+            wrap.eq("order_id",orderMaster.getOrderId());
+            OrderMaster entity = new OrderMaster() ;
+            entity.setOrderStatus(OrderStatusEnum.CANCEL.getCode());
+            entity.setPayStatus(PayStatusEnum.CLOSED.getCode());
+            orderMasterMapper.update(entity,wrap) ;
+
+            //回滚库存
+            QueryWrapper<OrderDetail> detailWrap = new QueryWrapper();
+            detailWrap.eq("order_number",orderMaster.getOrderNumber()).eq("enable_flag",1);
+            List<OrderDetail> orderDetailList = orderDetailMapper.selectList(detailWrap);
+            for (OrderDetail orderDetail: orderDetailList){
+                List<ShopCartModel> shopCartModelList = new ArrayList<>() ;
+                ShopCartModel shopCartModel = new ShopCartModel() ;
+                shopCartModel.setProductNumber(orderDetail.getProductNumber());
+                shopCartModel.setProductCount(String.valueOf(orderDetail.getProductQuantity()));
+                productInfoService.increaseStock(shopCartModelList); //回滚库存
+            }
+        }
+
+
     }
 
     private IPage<OrderMasterDTO> returnPageByMaster(Integer currentPage, Integer pageSize,QueryWrapper<OrderMaster> wrapper){

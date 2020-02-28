@@ -53,6 +53,9 @@ public interface OrderMasterService {
 
     /** 中台 修改订单订单备注**/
     Integer modifyOrderRemark(String orderNumber,String remark);
+
+    /** 中台 定时任务处理未支付订单**/
+    void updateOrderStatus();
 //
 //    /** 中台 定时任务处理未支付订单**/
 //    List<OrderMaster> findAll(String orderStatus,String payStatus);

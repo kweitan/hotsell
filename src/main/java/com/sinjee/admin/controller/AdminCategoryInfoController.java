@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -124,7 +125,11 @@ public class AdminCategoryInfoController {
 
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/save")
-    @CacheEvict(cacheNames = "indexList",allEntries=true)
+//    @CacheEvict(cacheNames = "indexList",allEntries=true)
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "productList",allEntries=true),
+            @CacheEvict(cacheNames = "categoryList",allEntries=true),
+            @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
     public ResultVO saveCategory(HttpServletRequest request , @RequestBody @Valid ProductCategoryForm productCategoryForm, BindingResult bindingResult){
         //1.校验参数
         if (bindingResult.hasErrors()){
@@ -179,7 +184,11 @@ public class AdminCategoryInfoController {
 
     @CrossOrigin(origins = "*")
     @PostMapping("/update")
-    @CacheEvict(cacheNames = "indexList",allEntries=true)
+//    @CacheEvict(cacheNames = "indexList",allEntries=true)
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "productList",allEntries=true),
+            @CacheEvict(cacheNames = "categoryList",allEntries=true),
+            @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
     public ResultVO updateCategory(HttpServletRequest request ,@RequestBody @Valid ProductCategoryForm productCategoryForm, BindingResult bindingResult){
         //1.校验参数
         if (bindingResult.hasErrors()){
@@ -236,6 +245,10 @@ public class AdminCategoryInfoController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/upCategory")
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "productList",allEntries=true),
+            @CacheEvict(cacheNames = "categoryList",allEntries=true),
+            @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
     public ResultVO upCategory(@RequestParam String categoryNumber,
                                    @RequestParam String hashNumber){
         //取得类目编码和哈希
@@ -253,6 +266,10 @@ public class AdminCategoryInfoController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/downCategory")
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "productList",allEntries=true),
+            @CacheEvict(cacheNames = "categoryList",allEntries=true),
+            @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
     public ResultVO downCategory(@RequestParam String categoryNumber,
                                @RequestParam String hashNumber){
         //取得类目编码和哈希
@@ -270,7 +287,10 @@ public class AdminCategoryInfoController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/deleteCategory")
-//    @CacheEvict(cacheNames = "indexList",allEntries=true)
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "productList",allEntries=true),
+            @CacheEvict(cacheNames = "categoryList",allEntries=true),
+            @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
     public ResultVO deleteCategory(@RequestParam String categoryNumber,
                                    @RequestParam String hashNumber){
         //取得类目编码和哈希

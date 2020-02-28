@@ -101,10 +101,10 @@ public class AdminProductInfoController {
 
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/save")
-//    @Caching(evict = {
-//            @CacheEvict(cacheNames = "productList",allEntries=true),
-//            @CacheEvict(cacheNames = "categoryList",allEntries=true),
-//            @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "productList",allEntries=true),
+            @CacheEvict(cacheNames = "categoryList",allEntries=true),
+            @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
     public ResultVO saveProductInfo(HttpServletRequest request , @Valid @RequestBody ProductInfoForm productInfoForm, BindingResult bindingResult) {
         log.info("ProductInfoForm2={}", GsonUtil.getInstance().toStr(productInfoForm));
 
@@ -186,10 +186,10 @@ public class AdminProductInfoController {
 
     @CrossOrigin(origins = "*")
     @PostMapping("/update")
-//    @Caching(evict = {
-//            @CacheEvict(cacheNames = "productList",allEntries=true),
-//            @CacheEvict(cacheNames = "categoryList",allEntries=true),
-//            @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "productList",allEntries=true),
+            @CacheEvict(cacheNames = "categoryList",allEntries=true),
+            @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
     public ResultVO updateProductInfo( HttpServletRequest request ,@Valid @RequestBody ProductInfoForm productInfoForm, BindingResult bindingResult){
 
         log.info("ProductInfoForm2={}", GsonUtil.getInstance().toStr(productInfoForm));
@@ -284,10 +284,10 @@ public class AdminProductInfoController {
      */
     @CrossOrigin(origins = "*")
     @GetMapping("/upProductInfo")
-//    @Caching(evict = {
-//            @CacheEvict(cacheNames = "productList",allEntries=true),
-//            @CacheEvict(cacheNames = "categoryList",allEntries=true),
-//            @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "productList",allEntries=true),
+            @CacheEvict(cacheNames = "categoryList",allEntries=true),
+            @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
     public ResultVO upProductInfo(@RequestParam String productNumber,
                                @RequestParam String hashNumber){
         //取得类目编码和哈希
@@ -311,10 +311,10 @@ public class AdminProductInfoController {
      */
     @CrossOrigin(origins = "*")
     @GetMapping("/downProductInfo")
-//    @Caching(evict = {
-//            @CacheEvict(cacheNames = "productList",allEntries=true),
-//            @CacheEvict(cacheNames = "categoryList",allEntries=true),
-//            @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "productList",allEntries=true),
+            @CacheEvict(cacheNames = "categoryList",allEntries=true),
+            @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
     public ResultVO downProductInfo(@RequestParam String productNumber,
                                  @RequestParam String hashNumber){
         //取得类目编码和哈希
@@ -332,10 +332,10 @@ public class AdminProductInfoController {
 
     @CrossOrigin(origins = "*")
     @PostMapping("/delete")
-//    @Caching(evict = {
-//            @CacheEvict(cacheNames = "productList",allEntries=true),
-//            @CacheEvict(cacheNames = "categoryList",allEntries=true),
-//            @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "productList",allEntries=true),
+            @CacheEvict(cacheNames = "categoryList",allEntries=true),
+            @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
     public ResultVO deleteProductInfo(@RequestParam String productNumber,
                                    @RequestParam String hashNumber){
         //取得类目编码和哈希
@@ -420,6 +420,10 @@ public class AdminProductInfoController {
     //根据产品编码 删除产品
     @CrossOrigin(origins = "*")
     @GetMapping("/deleteProductInfoByNumber")
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "productList",allEntries=true),
+            @CacheEvict(cacheNames = "categoryList",allEntries=true),
+            @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
     public ResultVO delete(@RequestParam String productNumber,
                                             @RequestParam String hashNumber){
         //取得类目编码和哈希
@@ -439,6 +443,10 @@ public class AdminProductInfoController {
     //根据上移 下移
     @CrossOrigin(origins = "*")
     @GetMapping("/moveProductInfo")
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "productList",allEntries=true),
+            @CacheEvict(cacheNames = "categoryList",allEntries=true),
+            @CacheEvict(cacheNames = "productInfoDetail",allEntries=true)})
     public ResultVO moveProductInfo(@RequestParam String productNumber,
                            @RequestParam String hashNumber, @RequestParam Integer type){
         //取得类目编码和哈希

@@ -19,6 +19,9 @@ public class WechatMiniAccountConfig {
     @Value("${myWechat.miniAppId}")
     private String miniAppId ;
 
+    @Value("${myWechat.mpAppId}")
+    private String mpAppId ;
+
     @Value("${myWechat.miniAppSecret}")
     private String miniAppSecret ;
 
@@ -52,7 +55,7 @@ public class WechatMiniAccountConfig {
     @Bean
     public WxPayConfig getWxPayConfig(){
         WxPayConfig payConfig = new WxPayConfig();
-        payConfig.setAppId(miniAppId);
+        payConfig.setAppId(mpAppId);
         payConfig.setMchId(mchId);
         payConfig.setMchKey(mchKey);
         payConfig.setKeyPath(keyPath);

@@ -63,7 +63,7 @@ public class BeanConfiguration implements WebMvcConfigurer {
          */
         registry.addInterceptor(apiIdempotencyInterceptor)
                 // addPathPatterns 用于添加拦截规则 ， 先把所有路径都加入拦截， 再一个个排除
-                .addPathPatterns("/wechat/order/createOrder");
+                .addPathPatterns("/wechat/order/createOrder","/wechat/address/addOrEdit");
 
         /***
          * 拦截中台的过滤器

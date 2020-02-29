@@ -125,14 +125,15 @@ myWechat:
   openAppSecret:
 
   #支付/商户号
-  mchId:
-  mchKey:
+  mchId: 1483469312
+  mchKey: 098F6BCD4621D373CADE4E832627B4F6
+  mpAppId: wxd898fcb01713c658
 
   #支付不需要证书 退款需要
   keyPath:
 
   #用户支付后 微信调用开发者服务器通知支付情况
-  notifyUrl: http://kweitan.natapp1.cc/hotsell/wechat/pay/payNotify
+  notifyUrl: https://guixin.mynatapp.cc/hotsell/wechat/pay/payNotify
 
   # 退款通知
   refundNotifyUrl:

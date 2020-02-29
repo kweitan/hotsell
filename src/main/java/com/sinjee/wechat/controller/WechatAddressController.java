@@ -1,6 +1,7 @@
 package com.sinjee.wechat.controller;
 
 import com.sinjee.annotation.AccessTokenIdempotency;
+import com.sinjee.annotation.ApiIdempotency;
 import com.sinjee.common.*;
 import com.sinjee.vo.ResultVO;
 import com.sinjee.wechat.dto.AddressInfoDTO;
@@ -87,6 +88,7 @@ public class WechatAddressController {
     @CrossOrigin(origins = "*")
     @PostMapping("/addOrEdit")
     @AccessTokenIdempotency
+    @ApiIdempotency
     public ResultVO addOrEdit(HttpServletRequest request, @Valid WechatAddressForm wechatAddressForm, BindingResult bindingResult){
 
         log.info("addressInfo={}",GsonUtil.getInstance().toStr(wechatAddressForm));

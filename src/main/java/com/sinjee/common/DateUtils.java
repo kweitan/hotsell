@@ -39,9 +39,10 @@ public class DateUtils {
     }
 
     public static String getCurrentDateBy() {
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+8:00")) ;
         String datestr = null;
         SimpleDateFormat df = new SimpleDateFormat(DateUtils.DATE_DTIME_FORMAT);
-        datestr = df.format(new Date());
+        datestr = df.format(calendar.getTime());
         return datestr;
     }
 

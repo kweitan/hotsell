@@ -57,7 +57,7 @@ public class WechatPayController {
      */
     @ResponseBody
     @RequestMapping(value = "wxpay")
-    @AccessTokenIdempotency
+//    @AccessTokenIdempotency
     public ResultVO pay(HttpServletRequest request, String orderNumber, String subject,String hashNumber){
         String openid = (String)request.getAttribute("openid") ;
         if (!HashUtil.verify(orderNumber,salt,hashNumber)){
@@ -91,7 +91,7 @@ public class WechatPayController {
             orderRequest.setTimeStart(DateUtils.getCurrentDateBy());
 
             /**用户支付时间 交易结束时间 设置10分钟**/
-            orderRequest.setTimeExpire(DateUtils.getCurrentDateAdd(10));
+            orderRequest.setTimeExpire(DateUtils.getCurrentDateAdd(30));
 
             /**
              * 发起预支付 wxPayService.createOrder(orderRequest)

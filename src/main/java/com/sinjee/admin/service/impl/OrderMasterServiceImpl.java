@@ -118,8 +118,8 @@ public class OrderMasterServiceImpl implements OrderMasterService {
             orderMaster.setOrderAmount(orderAmount);
         }else{
             orderMaster.setOrderAmount(orderAmount);
-            // 默认15元运费
-            orderAmount = orderAmount.add(new BigDecimal(15)) ;
+            // 默认15元运费 调试用 暂时不加
+            orderAmount = orderAmount.add(new BigDecimal(0)) ;
         }
 
         orderMaster.setActAmount(orderAmount);

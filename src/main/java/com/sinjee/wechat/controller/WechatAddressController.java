@@ -88,7 +88,7 @@ public class WechatAddressController {
     @CrossOrigin(origins = "*")
     @PostMapping("/addOrEdit")
     @AccessTokenIdempotency
-    @ApiIdempotency
+//    @ApiIdempotency
     public ResultVO addOrEdit(HttpServletRequest request, @Valid WechatAddressForm wechatAddressForm, BindingResult bindingResult){
 
         log.info("addressInfo={}",GsonUtil.getInstance().toStr(wechatAddressForm));

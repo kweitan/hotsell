@@ -75,4 +75,6 @@ public class ProductInfoForm implements Serializable {
 
     //排序ID
     private Integer sequenceId ;
+
+    private Integer productStatus ;
 }

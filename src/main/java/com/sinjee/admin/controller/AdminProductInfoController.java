@@ -261,7 +261,7 @@ public class AdminProductInfoController {
         productInfoDTO.setEnableFlag(1);
 
         //未上架
-        productInfoDTO.setProductStatus(0);
+//        productInfoDTO.setProductStatus(productInfoForm.);
 
         productInfoDTO.setAllCategoryLists(numberLists);
 

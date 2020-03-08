@@ -65,6 +65,9 @@ public class WechatBuyerInfoController {
             WxMaJscode2SessionResult session = wxMaService.getUserService().getSessionInfo(code);
             String openid = session.getOpenid();
 
+            //测试获取access_token
+//            wxMaService.getAccessToken();
+
             //1.先从redis中查询
             boolean isExist = redisUtil.existsKey(openid);
             if (!isExist){
